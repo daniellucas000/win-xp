@@ -1,0 +1,14 @@
+@use 'variables' as *;
+
+* {
+    box-sizing: border-box;
+    font-family: $xp-font;
+    font-size: $xp-font-size;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    user-select: none;
+}
