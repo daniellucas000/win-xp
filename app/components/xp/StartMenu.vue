@@ -5,20 +5,19 @@ const emit = defineEmits<{ close: [] }>()
 const store = useWindowsStore()
 
 const pinnedApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
-  { icon: '/images/xp/icons/InternetExplorer6.png', label: 'Internet Explorer',  app: 'ie',          bold: true },
+  { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer',  app: 'ie',          bold: true },
   { icon: '/images/xp/icons/MSWord.png',            label: 'Microsoft Word 2003', app: 'notepad',     bold: true },
-  { icon: '/images/xp/icons/Firefox.png',           label: 'Mozilla Firefox',     app: 'ie' },
   { icon: '/images/xp/icons/MSNMessenger.png',      label: 'Internet Messenger',  app: 'ie' },
-  { icon: '/images/xp/icons/MPC.png',               label: 'Media Player Classic', app: 'mediaplayer' },
+  { icon: '/images/xp/icons/media-player.png',               label: 'Media Player Classic', app: 'mediaplayer' },
   { icon: '/images/xp/icons/FoxitReader.png',       label: 'Foxit Reader',         app: 'notepad' },
-  { icon: '/images/xp/icons/Paint.png',             label: 'Paint',                app: 'paint' },
+  { icon: '/images/xp/icons/paint.png',             label: 'Paint',                app: 'paint' },
   { icon: '/images/xp/icons/TourXP.png',            label: 'Tour Windows XP',      app: 'ie' },
 ]
 
 const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
-  { icon: '/images/xp/icons/MyPictures.png',      label: 'My Pictures',       app: 'explorer',     bold: true },
-  { icon: '/images/xp/icons/MyMusic.png',         label: 'My Music',          app: 'mediaplayer',  bold: true },
-  { icon: '/images/xp/icons/MyComputer.png',      label: 'My Computer',       app: 'explorer',     bold: true },
+  { icon: '/images/xp/icons/my-pictures.png',      label: 'My Pictures',       app: 'explorer',     bold: true },
+  { icon: '/images/xp/icons/my-musics.png',         label: 'My Music',          app: 'mediaplayer',  bold: true },
+  { icon: '/images/xp/icons/mycomputer.png',      label: 'My Computer',       app: 'explorer',     bold: true },
   { icon: '/images/xp/icons/DisplayProperties.png', label: 'Display Properties', app: 'explorer' },
   { icon: '/images/xp/icons/Programs.png',        label: 'Installer',         app: 'explorer' },
   { icon: '/images/xp/icons/HelpandSupport.png',  label: 'Help and Support',  app: 'notepad' },
@@ -26,11 +25,10 @@ const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[]
 ]
 
 const allPrograms: { icon: string; label: string; app: AppName }[] = [
-  { icon: '/images/xp/icons/Minesweeper.png', label: 'Minesweeper',   app: 'minesweeper' },
-  { icon: '/images/xp/icons/Paint.png',       label: 'Paint',         app: 'paint' },
-  { icon: '/images/xp/icons/Notepad.png',     label: 'Notepad',       app: 'notepad' },
-  { icon: '/images/xp/icons/MPC.png',         label: 'Media Player',  app: 'mediaplayer' },
-  { icon: '/images/xp/icons/Firefox.png',     label: 'Mozilla Firefox', app: 'ie' },
+  { icon: '/images/xp/icons/minesweeper.png', label: 'Minesweeper',   app: 'minesweeper' },
+  { icon: '/images/xp/icons/paint.png',       label: 'Paint',         app: 'paint' },
+  { icon: '/images/xp/icons/notepad.png',     label: 'Notepad',       app: 'notepad' },
+  { icon: '/images/xp/icons/media-player.png',         label: 'Media Player',  app: 'mediaplayer' },
 ]
 
 const showAllPrograms = ref(false)
@@ -43,19 +41,15 @@ function launch(app: AppName) {
 
 <template>
   <div class="start-menu">
-    <!-- Topo com perfil -->
     <div class="start-menu__header">
-      <img src="/files/profiles/chess.png" class="start-menu__avatar" />
+      <!-- <img src="/files/profiles/chess.png" class="start-menu__avatar" /> -->
       <span class="start-menu__username">Administrator</span>
     </div>
 
-    <!-- Divisor laranja -->
     <div class="start-menu__header-divider" />
 
-    <!-- Corpo -->
     <div class="start-menu__body">
 
-      <!-- Coluna esquerda -->
       <div class="start-menu__left">
         <button
           v-for="app in pinnedApps"
@@ -70,7 +64,6 @@ function launch(app: AppName) {
 
         <div class="start-menu__divider" />
 
-        <!-- All Programs -->
         <div
           class="start-menu__item start-menu__item--all-programs"
           :class="{ 'start-menu__item--active': showAllPrograms }"
@@ -80,7 +73,6 @@ function launch(app: AppName) {
           <span class="start-menu__item--bold">All Programs</span>
           <span class="start-menu__arrow">▶</span>
 
-          <!-- Submenu All Programs -->
           <div v-if="showAllPrograms" class="start-menu__all-programs">
             <button
               v-for="prog in allPrograms"
@@ -95,10 +87,8 @@ function launch(app: AppName) {
         </div>
       </div>
 
-      <!-- Divisor vertical -->
       <div class="start-menu__col-divider" />
 
-      <!-- Coluna direita -->
       <div class="start-menu__right">
         <button
           v-for="app in rightApps"
@@ -116,11 +106,11 @@ function launch(app: AppName) {
     <!-- Rodapé -->
     <div class="start-menu__footer">
       <button class="start-menu__footer-btn">
-        <img src="/images/xp/icons/Logout.png" class="start-menu__item-icon" />
+        <img src="/images/xp/icons/log-off.png" class="start-menu__item-icon" />
         <span>Log Off</span>
       </button>
       <button class="start-menu__footer-btn">
-        <img src="/images/xp/icons/Power.png" class="start-menu__item-icon" />
+        <img src="/images/xp/icons/power-off.png" class="start-menu__item-icon" />
         <span>Turn Off Computer</span>
       </button>
     </div>

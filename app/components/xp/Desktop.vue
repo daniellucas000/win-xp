@@ -6,14 +6,13 @@ const store = useWindowsStore()
 const contextMenu = ref({ open: false, x: 0, y: 0 })
 
 const desktopIcons: { icon: string; label: string; app: AppName }[] = [
+  { icon: '/images/xp/icons/recycle-bin-empty.png',   label: 'Lixeira',       app: 'explorer' },
   { icon: '/images/xp/icons/mycomputer.png',        label: 'My Computer',       app: 'explorer' },
-  { icon: '/images/xp/icons/iexplore.png', label: 'Internet Explorer', app: 'ie' },
-//   { icon: '/images/xp/icons/Firefox.png',           label: 'Mozilla Firefox',   app: 'ie' },
-  { icon: '/images/xp/icons/Notepad.png',           label: 'Notepad',           app: 'notepad' },
-  { icon: '/images/xp/icons/Paint.png',             label: 'Paint',             app: 'paint' },
-  { icon: '/images/xp/icons/Minesweeper.png',       label: 'Minesweeper',       app: 'minesweeper' },
-  { icon: '/images/xp/icons/MPC.png',               label: 'Media Player',      app: 'mediaplayer' },
-  { icon: '/images/xp/icons/RecycleBinempty.png',   label: 'Recycle Bin',       app: 'explorer' },
+  { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer', app: 'ie' },
+  { icon: '/images/xp/icons/notepad.png',           label: 'Notepad',           app: 'notepad' },
+  { icon: '/images/xp/icons/paint.png',             label: 'Paint',             app: 'paint' },
+  { icon: '/images/xp/icons/minesweeper.png',       label: 'Campo minado',       app: 'minesweeper' },
+  { icon: '/images/xp/icons/media-player.png',               label: 'Media Player',      app: 'mediaplayer' },
 ]
 
 function onRightClick(e: MouseEvent) {

@@ -46,9 +46,8 @@ function closeStart() {
 
     <!-- System Tray -->
     <div class="taskbar__tray">
-      <img src="/images/xp/icons/TourXP.png"      class="taskbar__tray-icon" />
-      <img src="/images/xp/icons/SecurityError.png" class="taskbar__tray-icon" />
-      <img src="/images/xp/icons/Volume.png"       class="taskbar__tray-icon" />
+      <img src="/images/xp/icons/tour-xp-small.png" class="taskbar__tray-icon" />
+      <img src="/images/xp/icons/sound-small.png" class="taskbar__tray-icon" />
       <span class="taskbar__time">{{ currentTime }}</span>
     </div>
   </div>
@@ -91,11 +90,11 @@ function closeStart() {
   );
 
   &__start {
-    width: 100px;
+    width: 93px;
     height: 100%;
     flex-shrink: 0;
     cursor: default;
-    background-image: url('/images/xp/start_btn_normal.png');
+    background-image: url('/images/xp/icons/start-btn.png');
     background-size: cover;
     background-repeat: no-repeat;
     border: none;

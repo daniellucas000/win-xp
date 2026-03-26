@@ -1,7 +1,7 @@
 <template>
   <div class="os">
     <XpDesktop />
-    <XpTaskbar />
+    <XpTaskBar />
   </div>
 </template>
 

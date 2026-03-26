@@ -38,7 +38,7 @@ function onTitlebarMousedown(e: MouseEvent) {
       @mousedown="onTitlebarMousedown"
       @dblclick="store.maximize(win.id)"
     >
-      <span class="window__title">{{ win.title }}</span>
+      <h4 class="window__title"><img src="/images/xp/icons/mycomputer-small.png" alt="">{{ win.title }}</h4>
 
       <div class="window__controls">
         <button class="window__btn window__btn--minimize" @click.stop="store.minimize(win.id)">
@@ -78,35 +78,31 @@ function onTitlebarMousedown(e: MouseEvent) {
     align-items: center;
     justify-content: space-between;
     height: 28px;
-    padding: 0 4px;
+    padding: 5px;
     cursor: default;
     flex-shrink: 0;
-
+    border-radius: 8px 8px 0px 0px;
+    
     &--active {
-      background: radial-gradient(circle at 0 20%, #0032c1 0, #0032c188 1%, #0032c100 2%, #0032c100 100%), radial-gradient(circle at 100% 20%, #0032c1 0, #0032c188 1%, #0032c100 2%, #0032c100 100%), linear-gradient(to bottom, #3d95ff 0, #2b90ff 7%, #0372ff 9%, #0054e3 18%, #0054e3 19%, #0058ee 50%, #026afe 80%, #026afe 90%, #0065fd 93%, #71aaff 96%, #c4d6ff 100%);
-      box-shadow: inset -1px -1px 1px #0026acaa, inset -2px -1px 1px #0020c8aa, inset -3px -1px 1px #003be0aa, inset 1px -1px 1px #0020c8aa, inset 2px -1px 1px #0038d8aa, inset 3px -1px 1px #0046e4aa, inset 0 -1px red;
+      background: linear-gradient(180deg, #3D95FF 6.7%, #0372FF 10.36%, #0365F1 13.89%, #0053E1 25.84%, #0058EE 56.29%, #026AFE 74.1%, #026AFE 84.7%, #0060FC 90.79%, #0043CF 96.43%);
+      box-shadow: inset 8px 0px 5px -5px rgba(34, 37, 46, 0.54), inset -8px 0px 5px -5px rgba(0, 15, 102, 0.66);
     }
 
     &--inactive {
-      background: linear-gradient(
-        to bottom,
-        #7a96df 0%,
-        #5a7fce 3%,
-        #5a7fce 90%,
-        #4a6fbe 100%
-      );
+      background: rgba(242, 217, 217, 0.5);
     }
   }
 
   &__title {
-    color: white;
-    font-size: 11px;
-    font-weight: bold;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 15px;
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
   }
 
   &__controls {
@@ -117,21 +113,10 @@ function onTitlebarMousedown(e: MouseEvent) {
   }
 
   &__btn {
-    width: 21px;
-    height: 21px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    cursor: default;
-    border: 1px solid;
-    border-top-color: #fff;
-    border-left-color: #fff;
-    border-bottom-color: $xp-border-dark;
-    border-right-color: $xp-border-dark;
-    background: linear-gradient(to bottom, #f0f0ea, #d8d0c4);
-    color: black;
+    background: linear-gradient(180deg, #245FF5 33%, #256BF8 66%);
+    border: 1px solid #FFFFFF;
+    box-shadow: inset -2px -3px 5px #0844C3, inset 10px 2px 8px rgba(255, 255, 255, 0.33);
+    border-radius: 2px;
 
     &:active {
       border-top-color: $xp-border-dark;
@@ -141,8 +126,9 @@ function onTitlebarMousedown(e: MouseEvent) {
     }
 
     &--close {
-      background: linear-gradient(to bottom, #e05020, #c03010);
-      color: white;
+      background: linear-gradient(180deg, #E46446 0%, #E65D32 100%);
+      border: 1px solid #FFFFFF;
+      box-shadow: inset -2px -3px 5px #AA2300, inset 10px 2px 8px -2px rgba(255, 255, 255, 0.1);
     }
   }
 
