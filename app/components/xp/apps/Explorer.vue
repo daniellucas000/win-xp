@@ -13,15 +13,14 @@ const drives: FileItem[] = [
   { name: 'Local Disk (C:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '40 GB' },
   { name: 'Local Disk (D:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '80 GB' },
   { name: 'DVD Drive (E:)',   type: 'folder', icon: '/images/xp/icons/dvd-drive.png',    size: '' },
-  { name: 'Control Panel',   type: 'folder', icon: '/images/xp/icons/control-panel.png', size: '' },
 ]
 
 const documents: FileItem[] = [
-  { name: 'My Documents',  type: 'folder', icon: '/images/xp/icons/my-documents.png', modified: '1/1/2004' },
-  { name: 'My Pictures',   type: 'folder', icon: '/images/xp/icons/my-pictures.png',  modified: '1/1/2004' },
-  { name: 'My Music',      type: 'folder', icon: '/images/xp/icons/my-music.png',     modified: '1/1/2004' },
-  { name: 'Desktop',       type: 'folder', icon: '/images/xp/icons/FolderClosed.png', modified: '1/1/2004' },
-  { name: 'readme.txt',    type: 'file',   icon: '/images/xp/icons/TXT.png',          modified: '1/1/2004', size: '1 KB' },
+  { name: 'Meus Documentos', type: 'folder', icon: '/images/xp/icons/my-documents.png', modified: '01/01/2004' },
+  { name: 'Minhas Imagens',  type: 'folder', icon: '/images/xp/icons/my-pictures.png',  modified: '01/01/2004' },
+  { name: 'Minhas Músicas',  type: 'folder', icon: '/images/xp/icons/my-musics.png',     modified: '01/01/2004' },
+  { name: 'Área de Trabalho',type: 'folder', icon: '/images/xp/icons/desktop.png', modified: '01/01/2004' },
+  { name: 'leia-me.txt',     type: 'file',   icon: '/images/xp/icons/file-text.png',          modified: '01/01/2004', size: '1 KB' },
 ]
 
 const items = computed(() =>
@@ -53,12 +52,17 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
 <template>
   <div class="explorer">
     <div class="explorer__menubar">
-      <span class="explorer__menu-item">Arquivo</span>
-      <span class="explorer__menu-item">Editar</span>
-      <span class="explorer__menu-item">Exibir</span>
-      <span class="explorer__menu-item">Favoritos</span>
-      <span class="explorer__menu-item">Ferramentas</span>
-      <span class="explorer__menu-item">Ajuda</span>
+      <div>
+        <span class="explorer__menu-item">Arquivo</span>
+        <span class="explorer__menu-item">Editar</span>
+        <span class="explorer__menu-item">Exibir</span>
+        <span class="explorer__menu-item">Favoritos</span>
+        <span class="explorer__menu-item">Ferramentas</span>
+        <span class="explorer__menu-item">Ajuda</span>
+      </div>
+      <span class="explorer__menu-item--flag">
+        <img src="/images/xp/icons/browserflag.png" alt="">
+      </span>
     </div>
 
     <div class="explorer__toolbar">
@@ -67,19 +71,19 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
         :disabled="!canGoBack"
         @click="goBack"
       >
-        <img src="/images/xp/icons/back.png" alt=""> Back
+        <img src="/images/xp/icons/back.png" alt=""> Voltar
       </button>
-      <button class="explorer__btn" disabled>Forward <img src="/images/xp/icons/forward.png" alt=""></button>
-      <button class="explorer__btn" @click="goBack">⬆ Up</button>
+      <button class="explorer__btn" disabled>Avançar <img src="/images/xp/icons/forward.png" alt=""></button>
+      <button class="explorer__btn" @click="goBack"><img src="/images/xp/icons/folder-up.png" alt=""></button>
       <div class="explorer__separator" />
-      <button class="explorer__btn">🔍 Search</button>
-      <button class="explorer__btn">📁 Folders</button>
+      <button class="explorer__btn"><img src="/images/xp/icons/search.png" alt="">Search</button>
+      <button class="explorer__btn"><img src="/images/xp/icons/folders.png" alt="">Folders</button>
       <div class="explorer__separator" />
       <button
         class="explorer__btn"
         :class="{ 'explorer__btn--active': view === 'icons' }"
         @click="view = 'icons'"
-      >⊞</button>
+      ><img src="/images/xp/icons/views.png" alt=""></button>
       <button
         class="explorer__btn"
         :class="{ 'explorer__btn--active': view === 'list' }"
@@ -100,17 +104,21 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
       <div class="explorer__sidebar">
         <div class="explorer__sidebar-section">
           <div class="explorer__sidebar-title">System Tasks</div>
-          <a class="explorer__sidebar-link">View system information</a>
-          <a class="explorer__sidebar-link">Add or remove programs</a>
-          <a class="explorer__sidebar-link">Change a setting</a>
+          <div class="explorer__sidebar-content">
+            <a class="explorer__sidebar-link">View system information</a>
+            <a class="explorer__sidebar-link">Add or remove programs</a>
+            <a class="explorer__sidebar-link">Change a setting</a>
+          </div>
         </div>
 
         <div class="explorer__sidebar-section">
           <div class="explorer__sidebar-title">Other Places</div>
-          <a class="explorer__sidebar-link">My Network Places</a>
-          <a class="explorer__sidebar-link">My Documents</a>
-          <a class="explorer__sidebar-link">Shared Documents</a>
-          <a class="explorer__sidebar-link">Control Panel</a>
+          <div class="explorer__sidebar-content">
+            <a class="explorer__sidebar-link">My Network Places</a>
+            <a class="explorer__sidebar-link">My Documents</a>
+            <a class="explorer__sidebar-link">Shared Documents</a>
+            <a class="explorer__sidebar-link">Control Panel</a>
+          </div>
         </div>
 
         <div class="explorer__sidebar-section">
@@ -170,10 +178,6 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
         </table>
       </div>
     </div>
-
-    <div class="explorer__statusbar">
-      <span>{{ items.length }} object(s)</span>
-    </div>
   </div>
 </template>
 
@@ -186,8 +190,8 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
 
   &__menubar {
     display: flex;
-    flex-shrink: 0;
-    padding: 2px 0;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid $xp-border-dark;
   }
 
@@ -196,6 +200,13 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
     font-size: 11px;
     cursor: default;
     &:hover { background: #316ac5; color: white; }
+
+    &--flag {
+      display: flex;
+      border-color: $xp-border-dark;
+      border-style: solid;
+      border-width: 0 0 1px 1px;
+    }
   }
 
   &__toolbar {
@@ -301,27 +312,36 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
   }
 
   &__sidebar {
-    width: 160px;
     flex-shrink: 0;
-    border-right: 1px solid $xp-border-dark;
     overflow-y: auto;
-    background: #e8f0fb;
+    background: linear-gradient(to bottom, #7ba2e7, #6375d6);
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 4px;
+    gap: 10px;
+    padding: 12px 12px 0;
+    width: 180px;
   }
 
   &__sidebar-section {
-    background: white;
-    border: 1px solid #b0c4e8;
     border-radius: 4px;
     overflow: hidden;
+    background: #d6dff7;
+
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: #fff;
+    transition-property: opacity, transform;
+    transition-duration: .3s;
+    transition-timing-function: ease-out;
+  }
+
+  &__sidebar-content {
+    padding: 10px;
   }
 
   &__sidebar-title {
-    background: linear-gradient(to bottom, #4a90d9, #2a70b9);
-    color: white;
+    background: linear-gradient(to right, #fff, #c6d3f7);
+    color: #215dc6;
     font-size: 11px;
     font-weight: bold;
     padding: 3px 6px;
@@ -332,7 +352,7 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
     font-size: 11px;
     color: #316ac5;
     padding: 2px 6px;
-    cursor: default;
+    cursor: pointer;
     text-decoration: underline;
     &:hover { color: #ff6600; }
   }
@@ -440,16 +460,6 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
     height: 16px;
     vertical-align: middle;
     margin-right: 4px;
-  }
-
-  &__statusbar {
-    height: 20px;
-    flex-shrink: 0;
-    border-top: 1px solid $xp-border-dark;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    font-size: 11px;
   }
 }
 </style>

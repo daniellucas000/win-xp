@@ -25,7 +25,6 @@ function goTo(target: string) {
 
 <template>
   <div class="ie">
-    <!-- Menu bar -->
     <div class="ie__menubar">
       <span class="ie__menu-item">File</span>
       <span class="ie__menu-item">Edit</span>
@@ -35,7 +34,6 @@ function goTo(target: string) {
       <span class="ie__menu-item">Help</span>
     </div>
 
-    <!-- Toolbar -->
     <div class="ie__toolbar">
       <button class="ie__btn" title="Back">◀</button>
       <button class="ie__btn" title="Forward">▶</button>
@@ -51,7 +49,6 @@ function goTo(target: string) {
       <button class="ie__go-btn" @click="navigate">Go</button>
     </div>
 
-    <!-- Favorites bar -->
     <div class="ie__favbar">
       <span class="ie__favbar-label">Favorites:</span>
       <button
@@ -64,7 +61,6 @@ function goTo(target: string) {
       </button>
     </div>
 
-    <!-- Content -->
     <div class="ie__content">
       <div v-if="loading" class="ie__loading">
         Loading...
@@ -77,7 +73,6 @@ function goTo(target: string) {
       />
     </div>
 
-    <!-- Status bar -->
     <div class="ie__statusbar">
       <span>{{ loading ? 'Opening page...' : 'Done' }}</span>
       <div class="ie__statusbar-right">

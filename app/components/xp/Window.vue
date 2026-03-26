@@ -69,12 +69,15 @@ function onTitlebarMousedown(e: MouseEvent) {
   position: absolute;
   display: flex;
   flex-direction: column;
-  border: 2px solid $xp-border-darker;
+  border: 1px solid;
+  border-color: #778edb #7586dc #7586dc #758cdc;
+  box-shadow: -1px 0 0 #758cdd, 1px 0 0 #7588de, 0 1px 0 #6d74cd;
   border-radius: 8px 8px 0 0;
   overflow: hidden;
 
   &--focused {
-    border-color: #0055e5;
+    border-color: #0144d0 #003ddc #0048f1 #0855dd;
+    box-shadow: -1px 0 2px 0 #5d8aee, 1px 0 2px 1px #003ddc, 0 1px 2px 1px #003ddc;
   }
 
   &__titlebar {
@@ -93,7 +96,10 @@ function onTitlebarMousedown(e: MouseEvent) {
     }
 
     &--inactive {
-      background: rgba(242, 217, 217, 0.5);
+      background: radial-gradient(circle at 0 25%, #7276d1 0, #7276d1aa 1%, #7276d100 2%, #7276d100 100%), radial-gradient(circle at 100% 25%, #7276d1 0, #7276d1aa 1%, #7276d100 2%, #7276d100 100%), linear-gradient(to bottom, #9ab4e9 0, #9db9eb 7%, #8bb0e9 9%, #7b9de1 18%, #7996de 19%, #7a96e0 50%, #7fa2e6 80%, #80a5e6 90%, #7fa2e5 91%, #7b99e1 94%, #778edb 100%);
+      box-shadow: inset 2px 0 0 #747cd566, inset 1px 0 0 #747cd5, inset -2px 0 0 #6e6dc566, inset -1px 0 0 #6e6dc5;
+      color: #d8e4f8;
+      text-shadow: none;
     }
   }
 

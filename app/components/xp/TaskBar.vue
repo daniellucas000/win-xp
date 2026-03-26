@@ -91,6 +91,7 @@ function closeStart() {
     background-size: cover;
     background-repeat: no-repeat;
     border: none;
+    margin-right: 8px;
 
     &:hover {
       filter: brightness(1.1);
@@ -105,9 +106,8 @@ function closeStart() {
     flex: 1;
     height: 100%;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 2px;
-    padding: 3px 2px 0;
     overflow: hidden;
   }
 
@@ -120,14 +120,19 @@ function closeStart() {
     align-items: center;
     cursor: default;
     border-radius: 3px 3px 0 0;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: linear-gradient(to bottom, #1a55b0, #2a65c0);
-    color: white;
     font-size: 11px;
 
+    background: linear-gradient(to bottom, #1951b9, #1a50b8);
+    box-shadow: inset 1px 1px 0 #1848a6, inset 0 -2px 2px #2156b7, 0 -1px 0 #2266d5;
+    border: 1px solid #123d94;
+    border-left: 1px solid #082970;
+    color: #fff;
+
     &--active {
-      background: linear-gradient(to bottom, #3a70d4, #4a80e0);
-      border-color: rgba(255, 255, 255, 0.5);
+      background: linear-gradient(to bottom, #3a80f3, #3980f4);
+      box-shadow: inset 1px 1px 2px #68a7f7, inset 0 -2px 2px #316fe8, inset 1px 0 0 #6da4f6;
+      border: 1px solid;
+      border-color: #3172da #2653b8 #2653b8 #3172da;
     }
 
     &:hover {

@@ -9,6 +9,7 @@ const desktopIcons: { icon: string; label: string; app: AppName }[] = [
   { icon: '/images/xp/icons/recycle-bin-empty.png',   label: 'Lixeira',       app: 'explorer' },
   { icon: '/images/xp/icons/mycomputer.png',        label: 'Meu computador',       app: 'explorer' },
   { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer', app: 'ie' },
+  { icon: '/images/xp/icons/msn.png', label: 'MSN Messenger', app: 'msn' },
   { icon: '/images/xp/icons/notepad.png',           label: 'Bloco de notas',           app: 'notepad' },
   { icon: '/images/xp/icons/paint.png',             label: 'Paint',             app: 'paint' },
   { icon: '/images/xp/icons/minesweeper.png',       label: 'Campo minado',       app: 'minesweeper' },
@@ -59,6 +60,7 @@ function closeContext() {
       <XpAppsIe           v-else-if="win.app === 'ie'" />
       <XpAppsMediaPlayer  v-else-if="win.app === 'mediaplayer'" />
       <XpAppsExplorer     v-else-if="win.app === 'explorer'" />
+      <XpAppsMsn          v-else-if="win.app === 'msn'" />
     </XpWindow>
 
     <!-- Context Menu -->

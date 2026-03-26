@@ -6,22 +6,15 @@ const store = useWindowsStore()
 
 const pinnedApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
   { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer',  app: 'ie',          bold: true },
-  { icon: '/images/xp/icons/MSWord.png',            label: 'Microsoft Word 2003', app: 'notepad',     bold: true },
-  { icon: '/images/xp/icons/MSNMessenger.png',      label: 'Internet Messenger',  app: 'ie' },
   { icon: '/images/xp/icons/media-player.png',               label: 'Media Player Classic', app: 'mediaplayer' },
-  { icon: '/images/xp/icons/FoxitReader.png',       label: 'Foxit Reader',         app: 'notepad' },
   { icon: '/images/xp/icons/paint.png',             label: 'Paint',                app: 'paint' },
-  { icon: '/images/xp/icons/TourXP.png',            label: 'Tour Windows XP',      app: 'ie' },
+  { icon: '/images/xp/icons/xptour.png',            label: 'Tour Windows XP',      app: 'ie' },
 ]
 
 const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
   { icon: '/images/xp/icons/my-pictures.png',      label: 'My Pictures',       app: 'explorer',     bold: true },
   { icon: '/images/xp/icons/my-musics.png',         label: 'My Music',          app: 'mediaplayer',  bold: true },
   { icon: '/images/xp/icons/mycomputer.png',      label: 'Meu computador',       app: 'explorer',     bold: true },
-  { icon: '/images/xp/icons/DisplayProperties.png', label: 'Display Properties', app: 'explorer' },
-  { icon: '/images/xp/icons/Programs.png',        label: 'Installer',         app: 'explorer' },
-  { icon: '/images/xp/icons/HelpandSupport.png',  label: 'Help and Support',  app: 'notepad' },
-  { icon: '/images/xp/icons/Run.png',             label: 'Run...',            app: 'notepad' },
 ]
 
 const allPrograms: { icon: string; label: string; app: AppName }[] = [
@@ -29,6 +22,7 @@ const allPrograms: { icon: string; label: string; app: AppName }[] = [
   { icon: '/images/xp/icons/paint.png',       label: 'Paint',         app: 'paint' },
   { icon: '/images/xp/icons/notepad.png',     label: 'Notepad',       app: 'notepad' },
   { icon: '/images/xp/icons/media-player.png',         label: 'Media Player',  app: 'mediaplayer' },
+  { icon: '/images/xp/icons/msn.png',         label: 'MSN Messenger', app: 'msn' },
 ]
 
 const showAllPrograms = ref(false)
