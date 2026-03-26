@@ -10,6 +10,10 @@ const { start } = useDrag(
   (x, y) => store.updatePosition(props.win.id, x, y)
 )
 
+const maximizeIcon = computed(() =>
+  props.win.maximized ? '/images/xp/icons/maximized.png' : '/images/xp/icons/maximize.png'
+)
+
 function onTitlebarMousedown(e: MouseEvent) {
   if (props.win.maximized) return
   store.focusWindow(props.win.id)
@@ -42,13 +46,13 @@ function onTitlebarMousedown(e: MouseEvent) {
 
       <div class="window__controls">
         <button class="window__btn window__btn--minimize" @click.stop="store.minimize(win.id)">
-          <span>_</span>
+          <img src="/images/xp/icons/minimize.png" alt="">
         </button>
         <button class="window__btn window__btn--maximize" @click.stop="store.maximize(win.id)">
-          <span>{{ win.maximized ? '❐' : '□' }}</span>
+            <img :src="maximizeIcon" alt="">
         </button>
         <button class="window__btn window__btn--close" @click.stop="store.close(win.id)">
-          <span>✕</span>
+          <span><img src="/images/xp/icons/close.png" alt=""></span>
         </button>
       </div>
     </div>
@@ -113,10 +117,15 @@ function onTitlebarMousedown(e: MouseEvent) {
   }
 
   &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(180deg, #245FF5 33%, #256BF8 66%);
     border: 1px solid #FFFFFF;
     box-shadow: inset -2px -3px 5px #0844C3, inset 10px 2px 8px rgba(255, 255, 255, 0.33);
     border-radius: 2px;
+    height: 21px;
+    width: 21px;
 
     &:active {
       border-top-color: $xp-border-dark;
@@ -129,6 +138,7 @@ function onTitlebarMousedown(e: MouseEvent) {
       background: linear-gradient(180deg, #E46446 0%, #E65D32 100%);
       border: 1px solid #FFFFFF;
       box-shadow: inset -2px -3px 5px #AA2300, inset 10px 2px 8px -2px rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
     }
   }
 

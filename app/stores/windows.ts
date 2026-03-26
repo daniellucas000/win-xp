@@ -22,7 +22,7 @@ const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   paint:       { title: 'Untitled - Paint',             width: 700, height: 500 },
   ie:          { title: 'Microsoft Internet Explorer',  width: 800, height: 560 },
   mediaplayer: { title: 'Windows Media Player',         width: 520, height: 400 },
-  explorer:    { title: 'My Computer',                  width: 600, height: 420 },
+  explorer:    { title: 'Meu computador',                  width: 600, height: 420 },
 }
 
 let zCounter = 100

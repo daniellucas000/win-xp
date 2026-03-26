@@ -17,7 +17,7 @@ const pinnedApps: { icon: string; label: string; app: AppName; bold?: boolean }[
 const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
   { icon: '/images/xp/icons/my-pictures.png',      label: 'My Pictures',       app: 'explorer',     bold: true },
   { icon: '/images/xp/icons/my-musics.png',         label: 'My Music',          app: 'mediaplayer',  bold: true },
-  { icon: '/images/xp/icons/mycomputer.png',      label: 'My Computer',       app: 'explorer',     bold: true },
+  { icon: '/images/xp/icons/mycomputer.png',      label: 'Meu computador',       app: 'explorer',     bold: true },
   { icon: '/images/xp/icons/DisplayProperties.png', label: 'Display Properties', app: 'explorer' },
   { icon: '/images/xp/icons/Programs.png',        label: 'Installer',         app: 'explorer' },
   { icon: '/images/xp/icons/HelpandSupport.png',  label: 'Help and Support',  app: 'notepad' },
@@ -42,8 +42,8 @@ function launch(app: AppName) {
 <template>
   <div class="start-menu">
     <div class="start-menu__header">
-      <!-- <img src="/files/profiles/chess.png" class="start-menu__avatar" /> -->
-      <span class="start-menu__username">Administrator</span>
+      <img src="https://preview.redd.it/windows-xp-account-picture-in-full-resolution-the-original-v0-tbzkv5zf8oc51.jpg?width=2800&format=pjpg&auto=webp&s=eedf636413fc123036e992d628678562a379ecb7" class="start-menu__avatar" />
+      <span class="start-menu__username">Daniel</span>
     </div>
 
     <div class="start-menu__header-divider" />
@@ -70,8 +70,10 @@ function launch(app: AppName) {
           @mouseenter="showAllPrograms = true"
           @mouseleave="showAllPrograms = false"
         >
-          <span class="start-menu__item--bold">All Programs</span>
-          <span class="start-menu__arrow">▶</span>
+          <span class="start-menu__arrow">
+            <span class="start-menu__item--bold">All Programs</span>
+            <img src="/images/xp/icons/program-arrow.png" alt="">
+          </span>
 
           <div v-if="showAllPrograms" class="start-menu__all-programs">
             <button
@@ -127,50 +129,43 @@ function launch(app: AppName) {
   display: flex;
   flex-direction: column;
   background: #4282d6;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.5);
+  border-radius: 6px 6px 0px 0px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), inset -4px 0px 4px -1px rgba(0, 46, 137, 0.25);
   z-index: 9999;
+  border: 1px solid #215CC5;
 
   &__header {
-    position: relative;
-    height: 65px;
-    flex-shrink: 0;
-    border-radius: 8px 8px 0 0;
-    background: linear-gradient(to right, #245cdc, #3d7fe8);
     display: flex;
     align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
   }
 
   &__avatar {
-    width: 48px;
-    height: 48px;
-    position: absolute;
-    top: 9px;
-    left: 9px;
-    border: 2px solid white;
+    width: 52px;
+    height: 52px;
+    border-radius: 5px;
   }
 
   &__username {
-    position: absolute;
-    left: 80px;
-    top: 22px;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-    font-family: 'Trebuchet MS', sans-serif;
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+    text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
   }
 
   &__header-divider {
     height: 3px;
     flex-shrink: 0;
-    background: linear-gradient(to right, transparent, #da884a, transparent);
+    background: linear-gradient(to right, transparent, #FF813B, transparent);
   }
 
   &__body {
     flex: 1;
     display: flex;
-    background: #f8f8f0;
+    background: #ffffff;
     margin: 0 2px;
     overflow: hidden;
   }
@@ -179,20 +174,24 @@ function launch(app: AppName) {
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
+    padding: 6px;
+    gap: 4px;
   }
 
   &__right {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #d3e5fa;
+    background: #D3E5FA;
     overflow: hidden;
+    padding: 6px;
+    gap: 4px;
   }
 
   &__col-divider {
     width: 1px;
-    background: #c0c0c0;
+    background: #95BDEE;
     flex-shrink: 0;
   }
 
@@ -206,8 +205,8 @@ function launch(app: AppName) {
   &__item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
+    gap: 4px;
+    padding: 2px;
     cursor: default;
     font-size: 11px;
     color: black;
@@ -218,7 +217,7 @@ function launch(app: AppName) {
     flex-shrink: 0;
 
     &:hover {
-      background: #316ac5;
+      background: #316AC5;
       color: white;
     }
 
@@ -228,12 +227,14 @@ function launch(app: AppName) {
 
     &--all-programs {
       position: relative;
-      margin-top: auto;
-      padding: 6px 8px;
+      margin: auto 0 2px;
 
       &:hover {
         background: #316ac5;
-        color: white;
+        
+        span {
+          color: white;
+        }
       }
     }
 
@@ -255,8 +256,20 @@ function launch(app: AppName) {
   }
 
   &__arrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-left: auto;
     font-size: 9px;
+
+    span {
+      font-weight: 700;
+      font-size: 11px;
+      line-height: 13px;
+      text-align: right;
+      letter-spacing: 0.02em;
+      color: #000000;
+    }
   }
 
   &__all-programs {

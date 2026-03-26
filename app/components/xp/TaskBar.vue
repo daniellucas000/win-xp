@@ -80,14 +80,7 @@ function closeStart() {
   flex-direction: row;
   align-items: center;
   z-index: 9998;
-  background: linear-gradient(
-    to bottom,
-    #1f6fd4 0%,
-    #3b85e8 4%,
-    #2970d8 6%,
-    #2970d8 90%,
-    #1a4faa 100%
-  );
+  background: linear-gradient(180deg, #3168D5 2.8%, #4993E6 6.99%, #286ADD 14.1%, #2359D6 19.93%, #2157D7 36.28%, #245DDB 57.21%, #2662DF 75.35%, #2663E0 90.7%, #1E50C4 94.89%, #3155B0 100%);
 
   &__start {
     width: 93px;
@@ -158,6 +151,8 @@ function closeStart() {
     gap: 4px;
     background: linear-gradient(to bottom, #1252a4, #1f5fbe);
     border-left: 1px solid #0a3d8f;
+    box-shadow: -1px 0px 1px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(180deg, #095BC9 2.45%, #19B9F3 5.41%, #19B9F3 9.78%, #149EED 10.59%, #1290E8 19.47%, #0D8DEA 60.17%, #0F9EEF 80.89%, #119DEB 90.27%, #226BCE 97.21%);
   }
 
   &__tray-icon {

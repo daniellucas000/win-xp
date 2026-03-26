@@ -7,9 +7,9 @@ const contextMenu = ref({ open: false, x: 0, y: 0 })
 
 const desktopIcons: { icon: string; label: string; app: AppName }[] = [
   { icon: '/images/xp/icons/recycle-bin-empty.png',   label: 'Lixeira',       app: 'explorer' },
-  { icon: '/images/xp/icons/mycomputer.png',        label: 'My Computer',       app: 'explorer' },
+  { icon: '/images/xp/icons/mycomputer.png',        label: 'Meu computador',       app: 'explorer' },
   { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer', app: 'ie' },
-  { icon: '/images/xp/icons/notepad.png',           label: 'Notepad',           app: 'notepad' },
+  { icon: '/images/xp/icons/notepad.png',           label: 'Bloco de notas',           app: 'notepad' },
   { icon: '/images/xp/icons/paint.png',             label: 'Paint',             app: 'paint' },
   { icon: '/images/xp/icons/minesweeper.png',       label: 'Campo minado',       app: 'minesweeper' },
   { icon: '/images/xp/icons/media-player.png',               label: 'Media Player',      app: 'mediaplayer' },
@@ -36,7 +36,7 @@ function closeContext() {
 
     <!-- Ícones -->
     <div class="desktop__icons">
-      <div
+      <button
         v-for="item in desktopIcons"
         :key="item.label"
         class="desktop__icon"
@@ -44,7 +44,7 @@ function closeContext() {
       >
         <img :src="item.icon" class="desktop__icon-img" />
         <span class="desktop__icon-label">{{ item.label }}</span>
-      </div>
+      </button>
     </div>
 
     <!-- Janelas abertas -->
@@ -106,6 +106,8 @@ function closeContext() {
     padding: 4px;
     cursor: default;
     border-radius: 4px;
+    background: none;
+    border: none;
 
     &:hover {
       background: rgba(49, 106, 197, 0.3);
