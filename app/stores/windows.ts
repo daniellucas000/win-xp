@@ -14,6 +14,7 @@ export interface WindowState {
   maximized: boolean
   focused: boolean
   zIndex: number
+  folderId?: number | string
 }
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
@@ -31,7 +32,7 @@ let zCounter = 100
 export const useWindowsStore = defineStore('windows', () => {
   const windows = ref<WindowState[]>([])
 
-  function open(app: AppName) {
+  function open(app: AppName, options?: { folderId?: number; title?: string }) {
     const id = `${app}-${Date.now()}`
     const offset = windows.value.length * 24
 
@@ -44,7 +45,8 @@ export const useWindowsStore = defineStore('windows', () => {
       maximized: false,
       focused: true,
       zIndex: ++zCounter,
-      ...APP_DEFAULTS[app],
+      folderId: options?.folderId,
+      title: options?.title || APP_DEFAULTS[app]?.title || '',
     } as WindowState)
 
     focusWindow(id)

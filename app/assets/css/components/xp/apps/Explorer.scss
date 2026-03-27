@@ -27,6 +27,69 @@
     }
   }
 
+  &__menu-wrapper {
+    position: relative;
+    display: inline-block;
+
+    &:hover .explorer__menu-dropdown {
+      display: block;
+    }
+  }
+
+  &__menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #888;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+    z-index: 1000;
+  }
+
+  &__menu-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 4px 20px;
+    font-size: 11px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: #316ac5;
+      color: white;
+    }
+  }
+
+  &__menu-divider {
+    height: 1px;
+    background: #888;
+    margin: 4px 0;
+  }
+
+  &__new-item-input {
+    background: white;
+    border: 1px solid #000080;
+    font-size: 11px;
+    padding: 1px 2px;
+    width: 120px;
+  }
+
+  &__icon--creating {
+    background: #e8f0fb;
+    border: 1px dotted #316ac5;
+  }
+
   &__toolbar {
     display: flex;
     align-items: center;
@@ -239,6 +302,57 @@
     word-break: break-word;
   }
 
+  &__icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__icon--trash {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    min-width: 250px;
+    gap: 8px;
+
+    .explorer__icon-wrapper {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .explorer__icon-label {
+      margin-top: 0;
+      text-align: left;
+    }
+
+    .explorer__icon-img {
+      width: 32px;
+      height: 32px;
+    }
+
+    &.explorer__icon--selected {
+      .explorer__icon-label {
+        color: white;
+      }
+    }
+  }
+
+  &__icon-input {
+    background: white;
+    border: 1px solid #000080;
+    font-size: 11px;
+    text-align: center;
+    padding: 1px 2px;
+    width: 100%;
+    max-width: 76px;
+  }
+
+  &__icon--renaming {
+    background: rgba(49, 106, 197, 0.5);
+    outline: 1px dotted white;
+  }
+
   &__table {
     width: 100%;
     border-collapse: collapse;
@@ -278,5 +392,35 @@
     height: 16px;
     vertical-align: middle;
     margin-right: 4px;
+  }
+
+  &__trash-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  &__trash-btn {
+    background: #e8e8e8;
+    border: 1px solid #888;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #d0d0d0;
+    }
+
+    &--delete {
+      &:hover {
+        background: #ff6b6b;
+        color: white;
+      }
+    }
+  }
+
+  &__td--actions {
+    display: flex;
+    gap: 8px;
   }
 }

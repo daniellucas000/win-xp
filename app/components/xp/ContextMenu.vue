@@ -1,7 +1,14 @@
 <script setup lang="ts">
+interface DesktopIcon {
+  id: number
+  isSystem: boolean
+  isProtected?: boolean
+  isDeleted?: boolean
+}
+
 interface SubmenuItem {
-  icon: string
   label: string
+  action?: () => void
 }
 
 interface MenuItem {
@@ -14,34 +21,110 @@ interface MenuItem {
 interface Props {
   x: number
   y: number
+  selectedIcon?: DesktopIcon | null
+  onCreateFolder?: () => void
+  onCreateTextDocument?: () => void
+  onSortByName?: () => void
+  onSortBySize?: () => void
+  onSortByType?: () => void
+  onSortByModified?: () => void
+  onDelete?: (id: number) => void
+  onRestore?: (id: number) => void
+  onEmptyTrash?: () => void
 }
 
-defineProps<Props>()
-const open = defineModel<boolean>('modelValue') 
+const props = defineProps<Props>()
+const open = defineModel<boolean>('modelValue')  
 
-const sections: MenuItem[][] = [
+const baseSections: MenuItem[][] = [
   [
-    { label: 'Arrange Icons By', hasSubmenu: true },
-    { label: 'Refresh' },
+    { 
+      label: 'Organizar ícones por', 
+      hasSubmenu: true,
+      submenu: [
+        { label: 'Nome', action: props.onSortByName },
+        { label: 'Tamanho', action: props.onSortBySize },
+        { label: 'Tipo', action: props.onSortByType },
+        { label: 'Modificado', action: props.onSortByModified },
+      ],
+    },
+    { label: 'Atualizar' },
   ],
   [
-    { label: 'Paste', disabled: true },
-    { label: 'Paste Shortcut', disabled: true },
-    { label: 'Undo Delete', disabled: true },
+    { label: 'Colar', disabled: true },
+    { label: 'Colar atalho', disabled: true },
+    { label: 'Desfazer exclusão', disabled: true },
   ],
   [
     {
-      label: 'New',
+      label: 'Novo',
       hasSubmenu: true,
       submenu: [
-        { icon: '/images/xp/icons/file-txt.png', label: 'Text Document' },
+        { label: 'Documento de texto', action: props.onCreateTextDocument },
+        { label: 'Pasta', action: props.onCreateFolder },
       ],
     },
   ],
   [
-    { label: 'Properties' },
+    { label: 'Propriedades' },
   ],
 ]
+
+const sections = computed(() => {
+  const icon = props.selectedIcon
+  let result = [...baseSections]
+  
+  if (icon?.isDeleted) {
+    result = [
+      [
+        { 
+          label: 'Restaurar', 
+          action: () => props.onRestore?.(icon.id) 
+        },
+        { 
+          label: 'Excluir', 
+          action: () => props.onDelete?.(icon.id) 
+        },
+      ],
+    ]
+  } else if (icon && !icon.isSystem) {
+    result = [
+      [
+        { label: 'Abrir' },
+        { label: 'Explorar' },
+      ],
+      [
+        { 
+          label: 'Excluir', 
+          action: () => props.onDelete?.(icon.id) 
+        },
+        { label: 'Renomear' },
+      ],
+      [
+        { label: 'Propriedades' },
+      ],
+    ]
+  } else if (icon?.isSystem && icon.id === 1) {
+    result = [
+      [
+        { 
+          label: 'Abrir', 
+          action: () => {} 
+        },
+        { 
+          label: 'Esvaziar lixeira', 
+          action: () => props.onEmptyTrash?.() 
+        },
+      ],
+      [
+        { label: 'Propriedades' },
+      ],
+    ]
+  }
+  
+  return result
+})
+
 </script>
 
 <template>
@@ -58,20 +141,18 @@ const sections: MenuItem[][] = [
         :key="item.label"
         class="context-menu__item"
         :class="{ 'context-menu__item--disabled': item.disabled }"
-        @click="!item.disabled && (open = false)"  
+        @click="!item.disabled && (item.action?.(), open = false)"  
       >
         <span class="context-menu__item-label">{{ item.label }}</span>
         <span v-if="item.hasSubmenu" class="context-menu__arrow">▶</span>
 
-        <!-- Submenu -->
         <div v-if="item.submenu" class="context-menu__submenu">
           <div
             v-for="sub in item.submenu"
             :key="sub.label"
             class="context-menu__item"
-            @click.stop="open = false"  
+            @click.stop="sub.action?.(); open = false"
           >
-            <img :src="sub.icon" class="context-menu__sub-icon" />
             <span class="context-menu__item-label">{{ sub.label }}</span>
           </div>
         </div>

@@ -1,59 +1,353 @@
 <script setup lang="ts">
-type FileItem = {
+import type { WindowState } from '~/stores/windows'
+
+interface FileItem {
+  id: number
   name: string
   type: 'folder' | 'file'
   icon: string
   size?: string
   modified?: string
+  content?: string
 }
 
-const currentPath = ref('My Computer')
+interface Props {
+  win?: WindowState
+}
+
+const props = defineProps<Props>()
+
+const TRASH_KEY = 'xp-desktop-trash'
+const FOLDERS_KEY = 'xp-desktop-folders'
+
+const isTrashMode = computed(() => props.win?.folderId === 'trash')
+
+const currentFolderId = ref<number | null>(isTrashMode.value ? null : (props.win?.folderId || null))
+const currentPath = ref(props.win?.title || 'Meu computador')
+
+const history = ref<string[]>([])
+const historyIndex = ref(-1)
+
+const folders = ref<FileItem[]>([])
+const trashItems = ref<FileItem[]>([])
+const selectedItem = ref<number | null>(null)
+const view = ref<'icons' | 'list'>('icons')
+const renamingItem = ref<number | null>(null)
+const renameInput = ref('')
+const isCreatingFolder = ref(false)
+const isCreatingFile = ref(false)
+const newItemName = ref('')
 
 const drives: FileItem[] = [
-  { name: 'Local Disk (C:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '40 GB' },
-  { name: 'Local Disk (D:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '80 GB' },
-  { name: 'DVD Drive (E:)',   type: 'folder', icon: '/images/xp/icons/dvd-drive.png',    size: '' },
+  { id: 1, name: 'Disco Local (C:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '40 GB' },
+  { id: 2, name: 'Disco Local (D:)',  type: 'folder', icon: '/images/xp/icons/hd-drive.png',      size: '80 GB' },
+  { id: 3, name: 'DVD Drive (E:)',   type: 'folder', icon: '/images/xp/icons/dvd-drive.png',    size: '' },
 ]
 
-const documents: FileItem[] = [
-  { name: 'Meus Documentos', type: 'folder', icon: '/images/xp/icons/my-documents.png', modified: '01/01/2004' },
-  { name: 'Minhas Imagens',  type: 'folder', icon: '/images/xp/icons/my-pictures.png',  modified: '01/01/2004' },
-  { name: 'Minhas Músicas',  type: 'folder', icon: '/images/xp/icons/my-musics.png',     modified: '01/01/2004' },
-  { name: 'Área de Trabalho',type: 'folder', icon: '/images/xp/icons/desktop.png', modified: '01/01/2004' },
-  { name: 'leia-me.txt',     type: 'file',   icon: '/images/xp/icons/file-text.png',          modified: '01/01/2004', size: '1 KB' },
-]
+function loadFolders() {
+  if (typeof window === 'undefined') return
+  
+  const saved = localStorage.getItem(FOLDERS_KEY)
+  if (saved) {
+    try {
+      folders.value = JSON.parse(saved)
+    } catch {
+      folders.value = []
+    }
+  } else {
+    folders.value = []
+  }
+}
 
-const items = computed(() =>
-  currentPath.value === 'My Computer' ? drives : documents
-)
+function saveFolders() {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(FOLDERS_KEY, JSON.stringify(folders.value))
+}
 
-const selectedItem = ref<string | null>(null)
-const view = ref<'icons' | 'list'>('icons')
+function loadTrashItems() {
+  if (typeof window === 'undefined') return
+  
+  const saved = localStorage.getItem(TRASH_KEY)
+  if (saved) {
+    try {
+      trashItems.value = JSON.parse(saved).map((item: any) => ({
+        ...item,
+        name: item.label || item.name,
+        modified: new Date(item.modifiedAt).toLocaleDateString('pt-BR')
+      }))
+    } catch {
+      trashItems.value = []
+    }
+  } else {
+    trashItems.value = []
+  }
+}
 
-function selectItem(name: string) {
-  selectedItem.value = name
+function saveTrashItems() {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(TRASH_KEY, JSON.stringify(trashItems.value))
+}
+
+function restoreItem(id: number) {
+  const itemIndex = trashItems.value.findIndex(i => i.id === id)
+  if (itemIndex === -1) return
+  
+  const item = trashItems.value[itemIndex]
+  
+  const desktopSaved = localStorage.getItem('xp-desktop-icons')
+  const desktopItems = desktopSaved ? JSON.parse(desktopSaved) : []
+  
+  desktopItems.push({
+    ...item,
+    isDeleted: false,
+    modifiedAt: new Date().toISOString()
+  })
+  
+  localStorage.setItem('xp-desktop-icons', JSON.stringify(desktopItems))
+  
+  trashItems.value.splice(itemIndex, 1)
+  saveTrashItems()
+  
+  loadTrashItems()
+}
+
+function deletePermanently(id: number) {
+  const itemIndex = trashItems.value.findIndex(i => i.id === id)
+  if (itemIndex === -1) return
+  
+  trashItems.value.splice(itemIndex, 1)
+  saveTrashItems()
+}
+
+function createNewFolder() {
+  if (!currentFolderId.value) return
+  
+  const newFolder: FileItem = {
+    id: Date.now(),
+    name: 'Nova Pasta',
+    type: 'folder',
+    icon: '/images/xp/icons/folder.png',
+    modified: new Date().toLocaleDateString('pt-BR')
+  }
+  
+  folders.value.push(newFolder)
+  saveFolders()
+  
+  isCreatingFolder.value = false
+  newItemName.value = ''
+  
+  const newIndex = folders.value.length - 1
+  renamingItem.value = folders.value[newIndex].id
+  renameInput.value = folders.value[newIndex].name
+  nextTick(() => {
+    const input = document.querySelector('.explorer__icon-input') as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function createNewFile() {
+  if (!currentFolderId.value) return
+  
+  const newFile: FileItem = {
+    id: Date.now(),
+    name: 'Novo Documento de Texto.txt',
+    type: 'file',
+    icon: '/images/xp/icons/file-text.png',
+    size: '0 KB',
+    modified: new Date().toLocaleDateString('pt-BR'),
+    content: ''
+  }
+  
+  folders.value.push(newFile)
+  saveFolders()
+  
+  isCreatingFile.value = false
+  newItemName.value = ''
+  
+  const newIndex = folders.value.length - 1
+  renamingItem.value = folders.value[newIndex].id
+  renameInput.value = folders.value[newIndex].name
+  nextTick(() => {
+    const input = document.querySelector('.explorer__icon-input') as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function startCreateFolder() {
+  isCreatingFolder.value = true
+  newItemName.value = 'Nova Pasta'
+  nextTick(() => {
+    const input = document.querySelector('.explorer__new-item-input') as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function startCreateFile() {
+  isCreatingFile.value = true
+  newItemName.value = 'Novo Documento de Texto.txt'
+  nextTick(() => {
+    const input = document.querySelector('.explorer__new-item-input') as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function confirmCreateFolder() {
+  if (!newItemName.value.trim() || !currentFolderId.value) return
+  
+  const newFolder: FileItem = {
+    id: Date.now(),
+    name: newItemName.value.trim(),
+    type: 'folder',
+    icon: '/images/xp/icons/folder.png',
+    modified: new Date().toLocaleDateString('pt-BR')
+  }
+  
+  folders.value.push(newFolder)
+  saveFolders()
+  
+  isCreatingFolder.value = false
+  newItemName.value = ''
+}
+
+function confirmCreateFile() {
+  if (!newItemName.value.trim() || !currentFolderId.value) return
+  
+  const newFile: FileItem = {
+    id: Date.now(),
+    name: newItemName.value.trim(),
+    type: 'file',
+    icon: '/images/xp/icons/file-text.png',
+    size: '0 KB',
+    modified: new Date().toLocaleDateString('pt-BR'),
+    content: ''
+  }
+  
+  folders.value.push(newFile)
+  saveFolders()
+  
+  isCreatingFile.value = false
+  newItemName.value = ''
+}
+
+function cancelCreate() {
+  isCreatingFolder.value = false
+  isCreatingFile.value = false
+  newItemName.value = ''
+}
+
+onMounted(() => {
+  loadFolders()
+  if (isTrashMode.value) {
+    loadTrashItems()
+  }
+})
+
+const items = computed(() => {
+  if (isTrashMode.value) {
+    return trashItems.value
+  }
+  if (currentFolderId.value === null) {
+    return drives
+  }
+  return folders.value
+})
+
+const canGoBack = computed(() => historyIndex.value > 0 && !isTrashMode.value)
+const canGoUp = computed(() => currentFolderId.value !== null && !isTrashMode.value)
+
+function selectItem(id: number) {
+  selectedItem.value = id
+}
+
+function showTrashMenu(e: MouseEvent, id: number) {
+  selectedItem.value = id
 }
 
 function openItem(item: FileItem) {
   if (item.type === 'folder') {
+    if (historyIndex.value < history.value.length - 1) {
+      history.value = history.value.slice(0, historyIndex.value + 1)
+    }
+    history.value.push(item.name)
+    historyIndex.value++
+    
+    currentFolderId.value = item.id
     currentPath.value = item.name
     selectedItem.value = null
   }
 }
 
 function goBack() {
-  currentPath.value = 'My Computer'
-  selectedItem.value = null
+  if (historyIndex.value > 0) {
+    historyIndex.value--
+    currentPath.value = history.value[historyIndex.value]
+    selectedItem.value = null
+  }
 }
 
-const canGoBack = computed(() => currentPath.value !== 'My Computer')
+function goUp() {
+  if (currentFolderId.value !== null) {
+    currentFolderId.value = null
+    currentPath.value = 'Meu computador'
+    selectedItem.value = null
+  }
+}
+
+function startRename(id: number, name: string) {
+  renamingItem.value = id
+  renameInput.value = name
+  nextTick(() => {
+    const input = document.querySelector('.explorer__icon--renaming input') as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function saveRename() {
+  if (renamingItem.value !== null) {
+    const item = folders.value.find(f => f.id === renamingItem.value)
+    if (item && renameInput.value.trim()) {
+      item.name = renameInput.value.trim()
+      saveFolders()
+    }
+    renamingItem.value = null
+  }
+}
+
+function cancelRename() {
+  renamingItem.value = null
+}
 </script>
 
 <template>
   <div class="explorer">
     <div class="explorer__menubar">
       <div>
-        <span class="explorer__menu-item">Arquivo</span>
+        <div class="explorer__menu-wrapper">
+          <span class="explorer__menu-item">Arquivo</span>
+          <div class="explorer__menu-dropdown">
+            <button 
+              v-if="currentFolderId !== null && !isTrashMode"
+              class="explorer__menu-dropdown-item" 
+              @click="startCreateFolder"
+            >
+              <img src="/images/xp/icons/folder.png" alt=""> Nova Pasta
+            </button>
+            <button 
+              v-if="currentFolderId !== null && !isTrashMode"
+              class="explorer__menu-dropdown-item" 
+              @click="startCreateFile"
+            >
+              <img src="/images/xp/icons/file-text.png" alt=""> Novo Documento de Texto
+            </button>
+            <div v-if="currentFolderId !== null && !isTrashMode" class="explorer__menu-divider"></div>
+            <button class="explorer__menu-dropdown-item" @click="$emit('close')"> Fechar</button>
+          </div>
+        </div>
         <span class="explorer__menu-item">Editar</span>
         <span class="explorer__menu-item">Exibir</span>
         <span class="explorer__menu-item">Favoritos</span>
@@ -68,16 +362,16 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
     <div class="explorer__toolbar">
       <button
         class="explorer__btn"
-        :disabled="!canGoBack"
+        :disabled="!canGoBack || isTrashMode"
         @click="goBack"
       >
         <img src="/images/xp/icons/back.png" alt=""> Voltar
       </button>
       <button class="explorer__btn" disabled>Avançar <img src="/images/xp/icons/forward.png" alt=""></button>
-      <button class="explorer__btn" @click="goBack"><img src="/images/xp/icons/folder-up.png" alt=""></button>
+      <button class="explorer__btn" :disabled="!canGoUp || isTrashMode" @click="goUp"><img src="/images/xp/icons/folder-up.png" alt=""></button>
       <div class="explorer__separator" />
-      <button class="explorer__btn"><img src="/images/xp/icons/search.png" alt="">Search</button>
-      <button class="explorer__btn"><img src="/images/xp/icons/folders.png" alt="">Folders</button>
+      <button class="explorer__btn"><img src="/images/xp/icons/search.png" alt="">Pesquisar</button>
+      <button class="explorer__btn"><img src="/images/xp/icons/folders.png" alt="">Pastas</button>
       <div class="explorer__separator" />
       <button
         class="explorer__btn"
@@ -92,40 +386,40 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
     </div>
 
     <div class="explorer__addressbar">
-      <span class="explorer__address-label">Address</span>
+      <span class="explorer__address-label">Endereço</span>
       <div class="explorer__address-input">
         <img src="/images/xp/icons/mycomputer.png" class="explorer__address-icon" />
         <span>{{ currentPath }}</span>
       </div>
-      <button class="explorer__go-btn">Go</button>
+      <button class="explorer__go-btn">Ir</button>
     </div>
 
     <div class="explorer__body">
       <div class="explorer__sidebar">
         <div class="explorer__sidebar-section">
-          <div class="explorer__sidebar-title">System Tasks</div>
+          <div class="explorer__sidebar-title">Tarefas do Sistema</div>
           <div class="explorer__sidebar-content">
-            <a class="explorer__sidebar-link">View system information</a>
-            <a class="explorer__sidebar-link">Add or remove programs</a>
-            <a class="explorer__sidebar-link">Change a setting</a>
+            <a class="explorer__sidebar-link">Exibir informações do sistema</a>
+            <a class="explorer__sidebar-link">Adicionar ou remover programas</a>
+            <a class="explorer__sidebar-link">Alterar uma configuração</a>
           </div>
         </div>
 
         <div class="explorer__sidebar-section">
-          <div class="explorer__sidebar-title">Other Places</div>
+          <div class="explorer__sidebar-title">Outros Locais</div>
           <div class="explorer__sidebar-content">
-            <a class="explorer__sidebar-link">My Network Places</a>
-            <a class="explorer__sidebar-link">My Documents</a>
-            <a class="explorer__sidebar-link">Shared Documents</a>
-            <a class="explorer__sidebar-link">Control Panel</a>
+            <a class="explorer__sidebar-link">Meus Locais de Rede</a>
+            <a class="explorer__sidebar-link">Meus Documentos</a>
+            <a class="explorer__sidebar-link">Documentos Compartilhados</a>
+            <a class="explorer__sidebar-link">Painel de Controle</a>
           </div>
         </div>
 
         <div class="explorer__sidebar-section">
-          <div class="explorer__sidebar-title">Details</div>
+          <div class="explorer__sidebar-title">Detalhes</div>
           <div class="explorer__sidebar-detail">
-            <strong>My Computer</strong>
-            <span>System Folder</span>
+            <strong>Meu Computador</strong>
+            <span>Pasta do Sistema</span>
           </div>
         </div>
       </div>
@@ -135,15 +429,64 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
         class="explorer__content explorer__content--icons"
       >
         <div
-          v-for="item in items"
-          :key="item.name"
-          class="explorer__icon"
-          :class="{ 'explorer__icon--selected': selectedItem === item.name }"
-          @click="selectItem(item.name)"
-          @dblclick="openItem(item)"
+          v-if="isCreatingFolder"
+          class="explorer__icon explorer__icon--creating"
         >
-          <img :src="item.icon" class="explorer__icon-img" />
-          <span class="explorer__icon-label">{{ item.name }}</span>
+          <div class="explorer__icon-wrapper">
+            <img src="/images/xp/icons/folder.png" class="explorer__icon-img" />
+            <input
+              v-model="newItemName"
+              class="explorer__new-item-input"
+              @blur="confirmCreateFolder"
+              @keyup.enter="confirmCreateFolder"
+              @keyup.escape="cancelCreate"
+            />
+          </div>
+        </div>
+        <div
+          v-else-if="isCreatingFile"
+          class="explorer__icon explorer__icon--creating"
+        >
+          <div class="explorer__icon-wrapper">
+            <img src="/images/xp/icons/file-text.png" class="explorer__icon-img" />
+            <input
+              v-model="newItemName"
+              class="explorer__new-item-input"
+              @blur="confirmCreateFile"
+              @keyup.enter="confirmCreateFile"
+              @keyup.escape="cancelCreate"
+            />
+          </div>
+        </div>
+        <div
+          v-for="item in items"
+          :key="item.id"
+          class="explorer__icon"
+          :class="{ 
+            'explorer__icon--selected': selectedItem === item.id,
+            'explorer__icon--renaming': renamingItem === item.id,
+            'explorer__icon--trash': isTrashMode
+          }"
+          @click="selectItem(item.id)"
+          @dblclick="isTrashMode ? restoreItem(item.id) : openItem(item)"
+          @contextmenu.prevent="isTrashMode && showTrashMenu($event, item.id)"
+        >
+          <div class="explorer__icon-wrapper">
+            <img :src="item.icon" class="explorer__icon-img" />
+            <input
+              v-if="renamingItem === item.id"
+              v-model="renameInput"
+              class="explorer__icon-input"
+              @blur="saveRename"
+              @keyup.enter="saveRename"
+              @keyup.escape="cancelRename"
+            />
+            <span v-else class="explorer__icon-label">{{ item.name }}</span>
+          </div>
+          <div v-if="isTrashMode" class="explorer__trash-actions">
+            <button class="explorer__trash-btn" @click.stop="restoreItem(item.id)" title="Restaurar">↩</button>
+            <button class="explorer__trash-btn explorer__trash-btn--delete" @click.stop="deletePermanently(item.id)" title="Excluir permanentemente">✕</button>
+          </div>
         </div>
       </div>
 
@@ -151,28 +494,33 @@ const canGoBack = computed(() => currentPath.value !== 'My Computer')
         <table class="explorer__table">
           <thead>
             <tr>
-              <th class="explorer__th">Name</th>
-              <th class="explorer__th">Size</th>
-              <th class="explorer__th">Type</th>
-              <th class="explorer__th">Date Modified</th>
+              <th class="explorer__th">Nome</th>
+              <th class="explorer__th">Tamanho</th>
+              <th class="explorer__th">Tipo</th>
+              <th class="explorer__th">Data de Modificação</th>
+              <th v-if="isTrashMode" class="explorer__th">Ações</th>
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="item in items"
-              :key="item.name"
+              :key="item.id"
               class="explorer__tr"
-              :class="{ 'explorer__tr--selected': selectedItem === item.name }"
-              @click="selectItem(item.name)"
-              @dblclick="openItem(item)"
+              :class="{ 'explorer__tr--selected': selectedItem === item.id }"
+              @click="selectItem(item.id)"
+              @dblclick="isTrashMode ? restoreItem(item.id) : openItem(item)"
             >
               <td class="explorer__td">
                 <img :src="item.icon" class="explorer__list-icon" />
                 {{ item.name }}
               </td>
               <td class="explorer__td">{{ item.size }}</td>
-              <td class="explorer__td">{{ item.type === 'folder' ? 'File Folder' : 'File' }}</td>
+              <td class="explorer__td">{{ item.type === 'folder' ? 'Pasta de Arquivos' : 'Arquivo' }}</td>
               <td class="explorer__td">{{ item.modified }}</td>
+              <td v-if="isTrashMode" class="explorer__td explorer__td--actions">
+                <button class="explorer__trash-btn" @click.stop="restoreItem(item.id)" title="Restaurar">↩ Restaurar</button>
+                <button class="explorer__trash-btn explorer__trash-btn--delete" @click.stop="deletePermanently(item.id)" title="Excluir permanentemente">✕ Excluir</button>
+              </td>
             </tr>
           </tbody>
         </table>

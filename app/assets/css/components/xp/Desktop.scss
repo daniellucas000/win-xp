@@ -41,10 +41,21 @@
       background: rgba(49, 106, 197, 0.3);
     }
 
-    &:focus {
+    &--renaming {
       background: rgba(49, 106, 197, 0.5);
       outline: 1px dotted white;
     }
+  }
+
+  &__icon-input {
+    background: white;
+    border: 1px solid #000080;
+    font-size: 11px;
+    text-align: center;
+    padding: 1px 2px;
+    width: 100%;
+    max-width: 76px;
+    margin-top: 4px;
   }
 
   &__icon-img {
