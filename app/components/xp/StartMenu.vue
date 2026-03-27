@@ -1,35 +1,35 @@
 <script setup lang="ts">
 import type { AppName } from '~/stores/windows'
 
-const emit = defineEmits<{ close: [] }>()
+const open = defineModel<boolean>()
 const store = useWindowsStore()
 
 const pinnedApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
   { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer',  app: 'ie',          bold: true },
-  { icon: '/images/xp/icons/media-player.png',               label: 'Media Player Classic', app: 'mediaplayer' },
-  { icon: '/images/xp/icons/paint.png',             label: 'Paint',                app: 'paint' },
-  { icon: '/images/xp/icons/xptour.png',            label: 'Tour Windows XP',      app: 'ie' },
+  { icon: '/images/xp/icons/media-player.png', label: 'Windows Media Player', app: 'mediaplayer' },
+  { icon: '/images/xp/icons/paint.png', label: 'Paint', app: 'paint' },
+  { icon: '/images/xp/icons/xptour.png', label: 'Passeio pelo Windows XP', app: 'ie' },
 ]
 
 const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
-  { icon: '/images/xp/icons/my-pictures.png',      label: 'My Pictures',       app: 'explorer',     bold: true },
-  { icon: '/images/xp/icons/my-musics.png',         label: 'My Music',          app: 'mediaplayer',  bold: true },
-  { icon: '/images/xp/icons/mycomputer.png',      label: 'Meu computador',       app: 'explorer',     bold: true },
+  { icon: '/images/xp/icons/my-pictures.png', label: 'Minhas imagens', app: 'explorer', bold: true },
+  { icon: '/images/xp/icons/my-musics.png', label: 'Minhas músicas', app: 'mediaplayer', bold: true },
+  { icon: '/images/xp/icons/mycomputer.png', label: 'Meu computador', app: 'explorer', bold: true },
 ]
 
 const allPrograms: { icon: string; label: string; app: AppName }[] = [
-  { icon: '/images/xp/icons/minesweeper.png', label: 'Minesweeper',   app: 'minesweeper' },
-  { icon: '/images/xp/icons/paint.png',       label: 'Paint',         app: 'paint' },
-  { icon: '/images/xp/icons/notepad.png',     label: 'Notepad',       app: 'notepad' },
-  { icon: '/images/xp/icons/media-player.png',         label: 'Media Player',  app: 'mediaplayer' },
-  { icon: '/images/xp/icons/msn.png',         label: 'MSN Messenger', app: 'msn' },
+  { icon: '/images/xp/icons/minesweeper.png', label: 'Campo minado', app: 'minesweeper' },
+  { icon: '/images/xp/icons/paint.png', label: 'Paint', app: 'paint' },
+  { icon: '/images/xp/icons/notepad.png', label: 'Bloco de notas', app: 'notepad' },
+  { icon: '/images/xp/icons/media-player.png', label: 'Windows Media Player', app: 'mediaplayer' },
+  { icon: '/images/xp/icons/msn.png', label: 'MSN Messenger', app: 'msn' },
 ]
 
 const showAllPrograms = ref(false)
 
 function launch(app: AppName) {
   store.open(app)
-  emit('close')
+  open.value = false
 }
 </script>
 
@@ -99,7 +99,6 @@ function launch(app: AppName) {
       </div>
     </div>
 
-    <!-- Rodapé -->
     <div class="start-menu__footer">
       <button class="start-menu__footer-btn">
         <img src="/images/xp/icons/log-off.png" class="start-menu__item-icon" />
@@ -113,197 +112,6 @@ function launch(app: AppName) {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.start-menu {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  width: 380px;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  background: #4282d6;
-  border-radius: 6px 6px 0px 0px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), inset -4px 0px 4px -1px rgba(0, 46, 137, 0.25);
-  z-index: 9999;
-  border: 1px solid #215CC5;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 4px;
-  }
-
-  &__avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 5px;
-  }
-
-  &__username {
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 22px;
-    letter-spacing: 0.02em;
-    color: #FFFFFF;
-    text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
-  }
-
-  &__header-divider {
-    height: 3px;
-    flex-shrink: 0;
-    background: linear-gradient(to right, transparent, #FF813B, transparent);
-  }
-
-  &__body {
-    flex: 1;
-    display: flex;
-    background: #ffffff;
-    margin: 0 2px;
-    overflow: hidden;
-  }
-
-  &__left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    padding: 6px;
-    gap: 4px;
-  }
-
-  &__right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #D3E5FA;
-    overflow: hidden;
-    padding: 6px;
-    gap: 4px;
-  }
-
-  &__col-divider {
-    width: 1px;
-    background: #95BDEE;
-    flex-shrink: 0;
-  }
-
-  &__divider {
-    height: 1px;
-    background: #c0c0c0;
-    margin: 2px 8px;
-    flex-shrink: 0;
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px;
-    cursor: default;
-    font-size: 11px;
-    color: black;
-    background: none;
-    border: none;
-    text-align: left;
-    width: 100%;
-    flex-shrink: 0;
-
-    &:hover {
-      background: #316AC5;
-      color: white;
-    }
-
-    &--bold span {
-      font-weight: bold;
-    }
-
-    &--all-programs {
-      position: relative;
-      margin: auto 0 2px;
-
-      &:hover {
-        background: #316ac5;
-        
-        span {
-          color: white;
-        }
-      }
-    }
-
-    &--active {
-      background: #316ac5;
-      color: white;
-    }
-  }
-
-  &__item-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-
-    &--lg {
-      width: 32px;
-      height: 32px;
-    }
-  }
-
-  &__arrow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-    font-size: 9px;
-
-    span {
-      font-weight: 700;
-      font-size: 11px;
-      line-height: 13px;
-      text-align: right;
-      letter-spacing: 0.02em;
-      color: #000000;
-    }
-  }
-
-  &__all-programs {
-    position: absolute;
-    left: 100%;
-    bottom: 0;
-    width: 200px;
-    background: #f8f8f0;
-    border: 1px solid #316ac5;
-    border-left-width: 3px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
-  }
-
-  &__footer {
-    height: 40px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 8px;
-    gap: 8px;
-    background: linear-gradient(to bottom, #4282d6, #0f61cb);
-  }
-
-  &__footer-btn {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 8px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 11px;
-    cursor: default;
-    border-radius: 3px;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-  }
-}
+<style lang="scss">
+@import '~/assets/css/components/xp/StartMenu.scss';
 </style>

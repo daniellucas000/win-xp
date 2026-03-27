@@ -1,0 +1,65 @@
+@import '~/assets/css/_variables.scss';
+
+.desktop {
+  position: absolute;
+  inset: 0;
+  bottom: 30px;
+  overflow: hidden;
+
+  &__wallpaper {
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/wallpapers/Bliss.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  &__icons {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 8px;
+    gap: 4px;
+  }
+
+  &__icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    padding: 4px;
+    cursor: default;
+    border-radius: 4px;
+    background: none;
+    border: none;
+
+    &:hover {
+      background: rgba(49, 106, 197, 0.3);
+    }
+
+    &:focus {
+      background: rgba(49, 106, 197, 0.5);
+      outline: 1px dotted white;
+    }
+  }
+
+  &__icon-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  &__icon-label {
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    text-shadow: 1px 1px 2px black;
+    line-height: 1.2;
+    margin-top: 4px;
+    word-break: break-word;
+    max-width: 100%;
+  }
+}

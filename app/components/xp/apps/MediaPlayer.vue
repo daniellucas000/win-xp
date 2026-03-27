@@ -26,10 +26,6 @@ onMounted(async () => {
   <div ref="containerRef" class="mediaplayer" />
 </template>
 
-<style lang="scss" scoped>
-.mediaplayer {
-  width: 100%;
-  height: 100%;
-  background: #000;
-}
+<style lang="scss">
+@import '~/assets/css/components/xp/apps/MediaPlayer.scss';
 </style>

@@ -1,15 +1,13 @@
+<script setup lang="ts">
+</script>
+
+<style lang="scss">
+@import '~/assets/css/components/xp/pages.scss';
+</style>
+
 <template>
   <div class="os">
     <XpDesktop />
     <XpTaskBar />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.os {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-}
-</style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ contactId: number }>()
-const emit = defineEmits<{ close: [] }>()
+const open = defineModel<boolean>()
 
 const store = useMsnStore()
 const { sendMessage } = useAiAgent()
@@ -44,7 +44,7 @@ async function handleSend() {
   <div class="chat">
     <div class="chat__header">
       <span class="chat__title">{{ contact?.name }}</span>
-      <button class="chat__close" @click="emit('close')">✕</button>
+      <button class="chat__close" @click="open.value = false">✕</button>
     </div>
 
     <div class="chat__messages">
@@ -68,69 +68,6 @@ async function handleSend() {
   </div>
 </template>
 
-<style scoped>
-.chat {
-  position: absolute;
-  right: 10px;
-  bottom: 0;
-  width: 250px;
-  height: 300px;
-  background: #fff;
-  border: 1px solid #000;
-  display: flex;
-  flex-direction: column;
-}
-
-.chat__header {
-  background: #0a246a;
-  color: white;
-  padding: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat__title {
-  font-size: 11px;
-}
-
-.chat__close {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  padding: 0 2px;
-}
-
-.chat__close:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.chat__messages {
-  flex: 1;
-  padding: 4px;
-  overflow-y: auto;
-}
-
-.msg.user {
-  text-align: right;
-}
-
-.msg.bot {
-  text-align: left;
-}
-
-.typing {
-  font-style: italic;
-  font-size: 11px;
-}
-
-.chat__input {
-  display: flex;
-}
-
-.chat__input input {
-  flex: 1;
-}
+<style>
+@import '~/assets/css/components/xp/apps/msn/ChatWindow.css';
 </style>

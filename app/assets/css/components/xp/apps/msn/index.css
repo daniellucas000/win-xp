@@ -1,0 +1,12 @@
+.msn {
+  height: 100%;
+  background: white linear-gradient(to bottom, white, #EEF2F6, #DFE7EF, #CADAEB, #DFE7EF, #EEF2F6, white);
+}
+
+.msn__header {
+  background: #0a246a;
+}
+
+.msn__contacts {
+  padding: 4px;
+}

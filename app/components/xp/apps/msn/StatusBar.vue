@@ -4,10 +4,6 @@
   </div>
 </template>
 
-<style scoped>
-.statusbar {
-  background: #d4d0c8;
-  font-size: 11px;
-  padding: 2px;
-}
+<style>
+@import '~/assets/css/components/xp/apps/msn/StatusBar.css';
 </style>
