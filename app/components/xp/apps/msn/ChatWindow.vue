@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ contactId: number }>()
+const emit = defineEmits<{ close: [] }>()
 
 const store = useMsnStore()
 const { sendMessage } = useAiAgent()
@@ -42,7 +43,8 @@ async function handleSend() {
 <template>
   <div class="chat">
     <div class="chat__header">
-      {{ contact?.name }}
+      <span class="chat__title">{{ contact?.name }}</span>
+      <button class="chat__close" @click="emit('close')">✕</button>
     </div>
 
     <div class="chat__messages">
@@ -83,6 +85,26 @@ async function handleSend() {
   background: #0a246a;
   color: white;
   padding: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat__title {
+  font-size: 11px;
+}
+
+.chat__close {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+}
+
+.chat__close:hover {
+  background: rgba(255,255,255,0.2);
 }
 
 .chat__messages {

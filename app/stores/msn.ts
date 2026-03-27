@@ -1,4 +1,53 @@
 export const useMsnStore = defineStore('msn', () => {
+  const currentUser = ref<{
+    name: string
+    status: 'online' | 'away' | 'busy' | 'invisible'
+  } | null>(null)
+
+  const statusOptions = [
+    { value: 'online', label: 'Online', color: '#00ff00' },
+    { value: 'away', label: 'Ausente', color: '#ffff00' },
+    { value: 'busy', label: 'Ocupado', color: '#ff0000' },
+    { value: 'invisible', label: 'Invisível', color: '#808080' }
+  ] as const
+
+  const isLoggedIn = computed(() => currentUser.value !== null)
+
+  function login(name: string, status: 'online' | 'away' | 'busy' | 'invisible', remember: boolean) {
+    currentUser.value = { name, status }
+
+    if (remember) {
+      localStorage.setItem('msn_user', JSON.stringify({ name, status }))
+    }
+  }
+
+  function logout() {
+    currentUser.value = null
+    localStorage.removeItem('msn_user')
+  }
+
+  function updateStatus(status: 'online' | 'away' | 'busy' | 'invisible') {
+    if (currentUser.value) {
+      currentUser.value.status = status
+      const saved = localStorage.getItem('msn_user')
+      if (saved) {
+        const user = JSON.parse(saved)
+        user.status = status
+        localStorage.setItem('msn_user', JSON.stringify(user))
+      }
+    }
+  }
+
+  function initFromStorage() {
+    const saved = localStorage.getItem('msn_user')
+    if (saved) {
+      const user = JSON.parse(saved)
+      currentUser.value = user
+    }
+  }
+
+  initFromStorage()
+
   const contacts = ref([
     {
       id: 1,
@@ -52,8 +101,7 @@ export const useMsnStore = defineStore('msn', () => {
 
     Agora responda como Ednaldo Pereira.
     `
-  }
-
+    }
   ])
 
   const conversations = ref<Record<number, any[]>>({})
@@ -61,12 +109,17 @@ export const useMsnStore = defineStore('msn', () => {
   function addMessage(contactId: number, message: any) {
     if (!conversations.value[contactId]) {
       conversations.value[contactId] = []
-
     }
     conversations.value[contactId].push(message)
   }
 
   return {
+    currentUser,
+    statusOptions,
+    isLoggedIn,
+    login,
+    logout,
+    updateStatus,
     contacts,
     conversations,
     addMessage
