@@ -26,24 +26,25 @@ function toggleStart() {
 <template>
   <div class="taskbar" @click.stop>
 
-    <button class="taskbar__start" @click="toggleStart" />
+    <button class="taskbar__start" aria-label="Menu Iniciar" @click="toggleStart" />
 
-    <div class="taskbar__windows">
+    <div class="taskbar__windows" role="toolbar" aria-label="Janelas abertas">
       <button
         v-for="win in store.taskbarWindows"
         :key="win.id"
         class="taskbar__window-btn"
         :class="{ 'taskbar__window-btn--active': win.focused && !win.minimized }"
+        :aria-label="`${win.title}, clique para minimizar`"
         @click="store.minimize(win.id)"
       >
         <span class="taskbar__window-title">{{ win.title }}</span>
       </button>
     </div>
 
-    <div class="taskbar__tray">
-      <img src="/images/xp/icons/tour-xp-small.png" class="taskbar__tray-icon" />
-      <img src="/images/xp/icons/sound-small.png" class="taskbar__tray-icon" />
-      <span class="taskbar__time">{{ currentTime }}</span>
+    <div class="taskbar__tray" aria-label="Área de notificação">
+      <img src="/images/xp/icons/tour-xp-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/sound-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
+      <time class="taskbar__time" :aria-label="`Hora atual: ${currentTime}`">{{ currentTime }}</time>
     </div>
   </div>
 

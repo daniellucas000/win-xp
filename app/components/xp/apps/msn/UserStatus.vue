@@ -25,33 +25,42 @@ function selectStatus(status: string) {
 
 <template>
   <div class="user-status">
-    <div class="user-status__avatar" @click="showStatusMenu = !showStatusMenu">
+    <button 
+      class="user-status__avatar" 
+      :aria-label="`Status: ${statusLabels[store.currentUser?.status || 'online']}, clique para alterar`"
+      @click="showStatusMenu = !showStatusMenu"
+    >
       <div
         class="user-status__indicator"
         :style="{ backgroundColor: statusColors[store.currentUser?.status || 'online'] }"
+        aria-hidden="true"
       />
-    </div>
+    </button>
 
     <div class="user-status__info">
       <span class="user-status__name">{{ store.currentUser?.name }}</span>
-      <span class="user-status__status">{{ statusLabels[store.currentUser?.status || 'online'] }}</span>
+      <span class="user-status__status" :aria-label="`Status: ${statusLabels[store.currentUser?.status || 'online']}`">
+        {{ statusLabels[store.currentUser?.status || 'online'] }}
+      </span>
     </div>
 
-    <button class="user-status__logout" @click="store.logout()" title="Sair">
+    <button class="user-status__logout" aria-label="Sair" @click="store.logout()">
       ✕
     </button>
 
-    <div v-if="showStatusMenu" class="user-status__menu">
-      <div
+    <div v-if="showStatusMenu" class="user-status__menu" role="menu" aria-label="Alterar status">
+      <button
         v-for="opt in store.statusOptions"
         :key="opt.value"
         class="user-status__menu-item"
         :class="{ active: store.currentUser?.status === opt.value }"
+        role="menuitem"
+        :aria-label="opt.label"
         @click="selectStatus(opt.value)"
       >
-        <span class="dot" :style="{ backgroundColor: opt.color }">●</span>
+        <span class="dot" :style="{ backgroundColor: opt.color }" aria-hidden="true">●</span>
         {{ opt.label }}
-      </div>
+      </button>
     </div>
   </div>
 </template>

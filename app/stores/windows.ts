@@ -33,6 +33,10 @@ export const useWindowsStore = defineStore('windows', () => {
   const windows = ref<WindowState[]>([])
 
   function open(app: AppName, options?: { folderId?: number; title?: string }) {
+    if (app === 'mediaplayer') {
+      return
+    }
+
     const id = `${app}-${Date.now()}`
     const offset = windows.value.length * 24
 

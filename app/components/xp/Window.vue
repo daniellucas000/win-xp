@@ -26,6 +26,8 @@ function onTitlebarMousedown(e: MouseEvent) {
     v-if="!win.minimized"
     class="window"
     :class="{ 'window--maximized': win.maximized, 'window--focused': win.focused }"
+    role="dialog"
+    :aria-label="win.title"
     :style="{
       left:   win.maximized ? '0'                    : `${win.x}px`,
       top:    win.maximized ? '0'                    : `${win.y}px`,
@@ -41,17 +43,17 @@ function onTitlebarMousedown(e: MouseEvent) {
       @mousedown="onTitlebarMousedown"
       @dblclick="store.maximize(win.id)"
     >
-      <h4 class="window__title"><img src="/images/xp/icons/mycomputer-small.png" alt="">{{ win.title }}</h4>
+      <h4 class="window__title"><img src="/images/xp/icons/mycomputer-small.png" alt="" aria-hidden="true">{{ win.title }}</h4>
 
       <div class="window__controls">
-        <button class="window__btn window__btn--minimize" @click.stop="store.minimize(win.id)">
-          <img src="/images/xp/icons/minimize.png" alt="">
+        <button class="window__btn window__btn--minimize" aria-label="Minimizar" @click.stop="store.minimize(win.id)">
+          <img src="/images/xp/icons/minimize.png" alt="" aria-hidden="true">
         </button>
-        <button class="window__btn window__btn--maximize" @click.stop="store.maximize(win.id)">
-            <img :src="maximizeIcon" alt="">
+        <button class="window__btn window__btn--maximize" :aria-label="win.maximized ? 'Restaurar' : 'Maximizar'" @click.stop="store.maximize(win.id)">
+            <img :src="maximizeIcon" alt="" aria-hidden="true">
         </button>
-        <button class="window__btn window__btn--close" @click.stop="store.close(win.id)">
-          <span><img src="/images/xp/icons/close.png" alt=""></span>
+        <button class="window__btn window__btn--close" aria-label="Fechar" @click.stop="store.close(win.id)">
+          <span><img src="/images/xp/icons/close.png" alt="" aria-hidden="true"></span>
         </button>
       </div>
     </div>

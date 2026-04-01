@@ -119,62 +119,6 @@ function deletePermanently(id: number) {
   saveTrashItems()
 }
 
-function createNewFolder() {
-  if (!currentFolderId.value) return
-  
-  const newFolder: FileItem = {
-    id: Date.now(),
-    name: 'Nova Pasta',
-    type: 'folder',
-    icon: '/images/xp/icons/folder.png',
-    modified: new Date().toLocaleDateString('pt-BR')
-  }
-  
-  folders.value.push(newFolder)
-  saveFolders()
-  
-  isCreatingFolder.value = false
-  newItemName.value = ''
-  
-  const newIndex = folders.value.length - 1
-  renamingItem.value = folders.value[newIndex].id
-  renameInput.value = folders.value[newIndex].name
-  nextTick(() => {
-    const input = document.querySelector('.explorer__icon-input') as HTMLInputElement
-    input?.focus()
-    input?.select()
-  })
-}
-
-function createNewFile() {
-  if (!currentFolderId.value) return
-  
-  const newFile: FileItem = {
-    id: Date.now(),
-    name: 'Novo Documento de Texto.txt',
-    type: 'file',
-    icon: '/images/xp/icons/file-text.png',
-    size: '0 KB',
-    modified: new Date().toLocaleDateString('pt-BR'),
-    content: ''
-  }
-  
-  folders.value.push(newFile)
-  saveFolders()
-  
-  isCreatingFile.value = false
-  newItemName.value = ''
-  
-  const newIndex = folders.value.length - 1
-  renamingItem.value = folders.value[newIndex].id
-  renameInput.value = folders.value[newIndex].name
-  nextTick(() => {
-    const input = document.querySelector('.explorer__icon-input') as HTMLInputElement
-    input?.focus()
-    input?.select()
-  })
-}
-
 function startCreateFolder() {
   isCreatingFolder.value = true
   newItemName.value = 'Nova Pasta'
@@ -284,7 +228,7 @@ function openItem(item: FileItem) {
 function goBack() {
   if (historyIndex.value > 0) {
     historyIndex.value--
-    currentPath.value = history.value[historyIndex.value]
+    currentPath.value = history.value[historyIndex.value] ?? 'Meu computador'
     selectedItem.value = null
   }
 }
@@ -295,16 +239,6 @@ function goUp() {
     currentPath.value = 'Meu computador'
     selectedItem.value = null
   }
-}
-
-function startRename(id: number, name: string) {
-  renamingItem.value = id
-  renameInput.value = name
-  nextTick(() => {
-    const input = document.querySelector('.explorer__icon--renaming input') as HTMLInputElement
-    input?.focus()
-    input?.select()
-  })
 }
 
 function saveRename() {
@@ -324,94 +258,99 @@ function cancelRename() {
 </script>
 
 <template>
-  <div class="explorer">
-    <div class="explorer__menubar">
+  <div class="explorer" role="application" aria-label="Explorador de arquivos">
+    <div class="explorer__menubar" role="menubar" aria-label="Menu">
       <div>
         <div class="explorer__menu-wrapper">
-          <span class="explorer__menu-item">Arquivo</span>
-          <div class="explorer__menu-dropdown">
+          <button class="explorer__menu-item" role="menuitem">Arquivo</button>
+          <div class="explorer__menu-dropdown" role="menu">
             <button 
               v-if="currentFolderId !== null && !isTrashMode"
               class="explorer__menu-dropdown-item" 
+              role="menuitem"
               @click="startCreateFolder"
             >
-              <img src="/images/xp/icons/folder.png" alt=""> Nova Pasta
+              <img src="/images/xp/icons/folder.png" alt="" aria-hidden="true"> Nova Pasta
             </button>
             <button 
               v-if="currentFolderId !== null && !isTrashMode"
               class="explorer__menu-dropdown-item" 
+              role="menuitem"
               @click="startCreateFile"
             >
-              <img src="/images/xp/icons/file-text.png" alt=""> Novo Documento de Texto
+              <img src="/images/xp/icons/file-text.png" alt="" aria-hidden="true"> Novo Documento de Texto
             </button>
-            <div v-if="currentFolderId !== null && !isTrashMode" class="explorer__menu-divider"></div>
-            <button class="explorer__menu-dropdown-item" @click="$emit('close')"> Fechar</button>
+            <div v-if="currentFolderId !== null && !isTrashMode" class="explorer__menu-divider" role="separator"></div>
+            <button class="explorer__menu-dropdown-item" role="menuitem" @click="$emit('close')"> Fechar</button>
           </div>
         </div>
-        <span class="explorer__menu-item">Editar</span>
-        <span class="explorer__menu-item">Exibir</span>
-        <span class="explorer__menu-item">Favoritos</span>
-        <span class="explorer__menu-item">Ferramentas</span>
-        <span class="explorer__menu-item">Ajuda</span>
+        <button class="explorer__menu-item" role="menuitem">Editar</button>
+        <button class="explorer__menu-item" role="menuitem">Exibir</button>
+        <button class="explorer__menu-item" role="menuitem">Favoritos</button>
+        <button class="explorer__menu-item" role="menuitem">Ferramentas</button>
+        <button class="explorer__menu-item" role="menuitem">Ajuda</button>
       </div>
-      <span class="explorer__menu-item--flag">
+      <span class="explorer__menu-item--flag" aria-hidden="true">
         <img src="/images/xp/icons/browserflag.png" alt="">
       </span>
     </div>
 
-    <div class="explorer__toolbar">
+    <div class="explorer__toolbar" role="toolbar" aria-label="Barra de ferramentas">
       <button
         class="explorer__btn"
         :disabled="!canGoBack || isTrashMode"
+        aria-label="Voltar"
         @click="goBack"
       >
-        <img src="/images/xp/icons/back.png" alt=""> Voltar
+        <img src="/images/xp/icons/back.png" alt="" aria-hidden="true"> Voltar
       </button>
-      <button class="explorer__btn" disabled>Avançar <img src="/images/xp/icons/forward.png" alt=""></button>
-      <button class="explorer__btn" :disabled="!canGoUp || isTrashMode" @click="goUp"><img src="/images/xp/icons/folder-up.png" alt=""></button>
-      <div class="explorer__separator" />
-      <button class="explorer__btn"><img src="/images/xp/icons/search.png" alt="">Pesquisar</button>
-      <button class="explorer__btn"><img src="/images/xp/icons/folder.png" alt="">Pastas</button>
-      <div class="explorer__separator" />
+      <button class="explorer__btn" disabled aria-label="Avançar">Avançar <img src="/images/xp/icons/forward.png" alt="" aria-hidden="true"></button>
+      <button class="explorer__btn" :disabled="!canGoUp || isTrashMode" aria-label="Pasta acima" @click="goUp"><img src="/images/xp/icons/folder-up.png" alt="" aria-hidden="true"></button>
+      <div class="explorer__separator" aria-hidden="true" />
+      <button class="explorer__btn" aria-label="Pesquisar"><img src="/images/xp/icons/search.png" alt="" aria-hidden="true">Pesquisar</button>
+      <button class="explorer__btn" aria-label="Pastas"><img src="/images/xp/icons/folder.png" alt="" aria-hidden="true">Pastas</button>
+      <div class="explorer__separator" aria-hidden="true" />
       <button
         class="explorer__btn"
         :class="{ 'explorer__btn--active': view === 'icons' }"
+        aria-label="Visualização em ícones"
         @click="view = 'icons'"
-      ><img src="/images/xp/icons/views.png" alt=""></button>
+      ><img src="/images/xp/icons/views.png" alt="" aria-hidden="true"></button>
       <button
         class="explorer__btn"
         :class="{ 'explorer__btn--active': view === 'list' }"
+        aria-label="Visualização em lista"
         @click="view = 'list'"
       >☰</button>
     </div>
 
     <div class="explorer__addressbar">
-      <span class="explorer__address-label">Endereço</span>
-      <div class="explorer__address-input">
-        <img src="/images/xp/icons/mycomputer.png" class="explorer__address-icon" />
+      <span class="explorer__address-label" id="address-label">Endereço</span>
+      <div class="explorer__address-input" aria-labelledby="address-label">
+        <img src="/images/xp/icons/mycomputer.png" class="explorer__address-icon" alt="" aria-hidden="true" />
         <span>{{ currentPath }}</span>
       </div>
-      <button class="explorer__go-btn">Ir</button>
+      <button class="explorer__go-btn" aria-label="Ir para endereço">Ir</button>
     </div>
 
     <div class="explorer__body">
-      <div class="explorer__sidebar">
+      <div class="explorer__sidebar" aria-label="Painel lateral">
         <div class="explorer__sidebar-section">
           <div class="explorer__sidebar-title">Tarefas do Sistema</div>
           <div class="explorer__sidebar-content">
-            <a class="explorer__sidebar-link">Exibir informações do sistema</a>
-            <a class="explorer__sidebar-link">Adicionar ou remover programas</a>
-            <a class="explorer__sidebar-link">Alterar uma configuração</a>
+            <button class="explorer__sidebar-link">Exibir informações do sistema</button>
+            <button class="explorer__sidebar-link">Adicionar ou remover programas</button>
+            <button class="explorer__sidebar-link">Alterar uma configuração</button>
           </div>
         </div>
 
         <div class="explorer__sidebar-section">
           <div class="explorer__sidebar-title">Outros Locais</div>
           <div class="explorer__sidebar-content">
-            <a class="explorer__sidebar-link">Meus Locais de Rede</a>
-            <a class="explorer__sidebar-link">Meus Documentos</a>
-            <a class="explorer__sidebar-link">Documentos Compartilhados</a>
-            <a class="explorer__sidebar-link">Painel de Controle</a>
+            <button class="explorer__sidebar-link">Meus Locais de Rede</button>
+            <button class="explorer__sidebar-link">Meus Documentos</button>
+            <button class="explorer__sidebar-link">Documentos Compartilhados</button>
+            <button class="explorer__sidebar-link">Painel de Controle</button>
           </div>
         </div>
 
@@ -427,16 +366,21 @@ function cancelRename() {
       <div
         v-if="view === 'icons'"
         class="explorer__content explorer__content--icons"
+        role="grid"
+        aria-label="Arquivos e pastas"
       >
         <div
           v-if="isCreatingFolder"
           class="explorer__icon explorer__icon--creating"
         >
           <div class="explorer__icon-wrapper">
-            <img src="/images/xp/icons/folder.png" class="explorer__icon-img" />
+            <img src="/images/xp/icons/folder.png" class="explorer__icon-img" alt="" aria-hidden="true" />
+            <label for="new-folder-name" class="visually-hidden">Nome da nova pasta</label>
             <input
+              id="new-folder-name"
               v-model="newItemName"
               class="explorer__new-item-input"
+              aria-label="Nome da nova pasta"
               @blur="confirmCreateFolder"
               @keyup.enter="confirmCreateFolder"
               @keyup.escape="cancelCreate"
@@ -448,33 +392,41 @@ function cancelRename() {
           class="explorer__icon explorer__icon--creating"
         >
           <div class="explorer__icon-wrapper">
-            <img src="/images/xp/icons/file-text.png" class="explorer__icon-img" />
+            <img src="/images/xp/icons/file-text.png" class="explorer__icon-img" alt="" aria-hidden="true" />
+            <label for="new-file-name" class="visually-hidden">Nome do novo documento</label>
             <input
+              id="new-file-name"
               v-model="newItemName"
               class="explorer__new-item-input"
+              aria-label="Nome do novo documento"
               @blur="confirmCreateFile"
               @keyup.enter="confirmCreateFile"
               @keyup.escape="cancelCreate"
             />
           </div>
         </div>
-        <div
+        <button
           v-for="item in items"
           :key="item.id"
           class="explorer__icon"
+          role="gridcell"
           :class="{ 
             'explorer__icon--selected': selectedItem === item.id,
             'explorer__icon--renaming': renamingItem === item.id,
             'explorer__icon--trash': isTrashMode
           }"
+          :aria-selected="selectedItem === item.id"
+          :aria-label="`${item.name}, ${item.type === 'folder' ? 'pasta' : 'arquivo'}`"
           @click="selectItem(item.id)"
           @dblclick="isTrashMode ? restoreItem(item.id) : openItem(item)"
           @contextmenu.prevent="isTrashMode && showTrashMenu($event, item.id)"
         >
           <div class="explorer__icon-wrapper">
-            <img :src="item.icon" class="explorer__icon-img" />
+            <img :src="item.icon" class="explorer__icon-img" alt="" aria-hidden="true" />
+            <label v-if="renamingItem === item.id" :for="`rename-${item.id}`" class="visually-hidden">Renomear {{ item.name }}</label>
             <input
               v-if="renamingItem === item.id"
+              :id="`rename-${item.id}`"
               v-model="renameInput"
               class="explorer__icon-input"
               @blur="saveRename"
@@ -484,21 +436,21 @@ function cancelRename() {
             <span v-else class="explorer__icon-label">{{ item.name }}</span>
           </div>
           <div v-if="isTrashMode" class="explorer__trash-actions">
-            <button class="explorer__trash-btn" @click.stop="restoreItem(item.id)" title="Restaurar">↩</button>
-            <button class="explorer__trash-btn explorer__trash-btn--delete" @click.stop="deletePermanently(item.id)" title="Excluir permanentemente">✕</button>
+            <button class="explorer__trash-btn" aria-label="Restaurar" @click.stop="restoreItem(item.id)">↩</button>
+            <button class="explorer__trash-btn explorer__trash-btn--delete" aria-label="Excluir permanentemente" @click.stop="deletePermanently(item.id)">✕</button>
           </div>
-        </div>
+        </button>
       </div>
 
-      <div v-else class="explorer__content explorer__content--list">
+      <div v-else class="explorer__content explorer__content--list" role="grid" aria-label="Lista de arquivos">
         <table class="explorer__table">
           <thead>
             <tr>
-              <th class="explorer__th">Nome</th>
-              <th class="explorer__th">Tamanho</th>
-              <th class="explorer__th">Tipo</th>
-              <th class="explorer__th">Data de Modificação</th>
-              <th v-if="isTrashMode" class="explorer__th">Ações</th>
+              <th class="explorer__th" scope="col">Nome</th>
+              <th class="explorer__th" scope="col">Tamanho</th>
+              <th class="explorer__th" scope="col">Tipo</th>
+              <th class="explorer__th" scope="col">Data de Modificação</th>
+              <th v-if="isTrashMode" class="explorer__th" scope="col">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -506,20 +458,22 @@ function cancelRename() {
               v-for="item in items"
               :key="item.id"
               class="explorer__tr"
+              role="row"
               :class="{ 'explorer__tr--selected': selectedItem === item.id }"
+              :aria-selected="selectedItem === item.id"
               @click="selectItem(item.id)"
               @dblclick="isTrashMode ? restoreItem(item.id) : openItem(item)"
             >
-              <td class="explorer__td">
-                <img :src="item.icon" class="explorer__list-icon" />
+              <td class="explorer__td" role="gridcell">
+                <img :src="item.icon" class="explorer__list-icon" alt="" aria-hidden="true" />
                 {{ item.name }}
               </td>
-              <td class="explorer__td">{{ item.size }}</td>
-              <td class="explorer__td">{{ item.type === 'folder' ? 'Pasta de Arquivos' : 'Arquivo' }}</td>
-              <td class="explorer__td">{{ item.modified }}</td>
-              <td v-if="isTrashMode" class="explorer__td explorer__td--actions">
-                <button class="explorer__trash-btn" @click.stop="restoreItem(item.id)" title="Restaurar">↩ Restaurar</button>
-                <button class="explorer__trash-btn explorer__trash-btn--delete" @click.stop="deletePermanently(item.id)" title="Excluir permanentemente">✕ Excluir</button>
+              <td class="explorer__td" role="gridcell">{{ item.size }}</td>
+              <td class="explorer__td" role="gridcell">{{ item.type === 'folder' ? 'Pasta de Arquivos' : 'Arquivo' }}</td>
+              <td class="explorer__td" role="gridcell">{{ item.modified }}</td>
+              <td v-if="isTrashMode" class="explorer__td explorer__td--actions" role="gridcell">
+                <button class="explorer__trash-btn" aria-label="Restaurar" @click.stop="restoreItem(item.id)">↩ Restaurar</button>
+                <button class="explorer__trash-btn explorer__trash-btn--delete" aria-label="Excluir permanentemente" @click.stop="deletePermanently(item.id)">✕ Excluir</button>
               </td>
             </tr>
           </tbody>
@@ -529,6 +483,20 @@ function cancelRename() {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/apps/Explorer.scss';
 </style>

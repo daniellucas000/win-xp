@@ -34,11 +34,12 @@ watch(loginData, (data) => {
         <UserStatus />
       </div>
 
-      <div class="msn__contacts">
+      <div class="msn__contacts" role="listbox" aria-label="Lista de contatos">
         <ContactItem
           v-for="c in store.contacts"
           :key="c.id"
           :contact="c"
+          role="option"
           @click="openChat(c.id)"
         />
       </div>

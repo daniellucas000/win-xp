@@ -19,6 +19,9 @@ interface Props {
 const props = defineProps<Props>()
 const open = defineModel<boolean>('modelValue')  
 
+const menuRef = ref<HTMLElement | null>(null)
+const focusedIndex = ref(0)
+
 const baseSections: MenuItem[][] = contextMenuSections.base.map(section =>
   section.map(item => {
     if (item.label === 'Organizar ícones por' && item.submenu) {
@@ -98,38 +101,90 @@ const sections = computed(() => {
   return result
 })
 
+const flatItems = computed(() => {
+  return sections.value.flat()
+})
+
+function handleKeydown(e: KeyboardEvent) {
+  const items = flatItems.value
+  
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    open.value = false
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault()
+    focusedIndex.value = (focusedIndex.value + 1) % items.length
+    nextTick(() => {
+      const buttons = menuRef.value?.querySelectorAll('button[role="menuitem"]')
+      buttons?.[focusedIndex.value]?.focus()
+    })
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault()
+    focusedIndex.value = (focusedIndex.value - 1 + items.length) % items.length
+    nextTick(() => {
+      const buttons = menuRef.value?.querySelectorAll('button[role="menuitem"]')
+      buttons?.[focusedIndex.value]?.focus()
+    })
+  } else if (e.key === 'Enter') {
+    e.preventDefault()
+    const item = items[focusedIndex.value]
+    if (item && !item.disabled) {
+      item.action?.()
+      open.value = false
+    }
+  }
+}
+
+onMounted(() => {
+  nextTick(() => {
+    const buttons = menuRef.value?.querySelectorAll('button[role="menuitem"]')
+    buttons?.[0]?.focus()
+  })
+})
+
 </script>
 
 <template>
   <div
+    ref="menuRef"
     class="context-menu"
+    role="menu"
+    aria-label="Menu de contexto"
     :style="{ top: `${y}px`, left: `${x}px` }"
+    tabindex="-1"
     @click.stop
+    @keydown="handleKeydown"
   >
-    <template v-for="(section, index) in sections" :key="index">
-      <div v-if="index > 0" class="context-menu__divider" />
+    <template v-for="(section, sectionIndex) in sections" :key="sectionIndex">
+      <div v-if="sectionIndex > 0" class="context-menu__divider" role="separator" />
 
-      <div
-        v-for="item in section"
+      <button
+        v-for="(item, itemIndex) in section"
         :key="item.label"
         class="context-menu__item"
-        :class="{ 'context-menu__item--disabled': item.disabled }"
-        @click="!item.disabled && (item.action?.(), open = false)"  
+        role="menuitem"
+        :class="{ 'context-menu__item--disabled': item.disabled, 'context-menu__item--focused': flatItems.indexOf(item) === focusedIndex }"
+        :disabled="item.disabled"
+        :aria-disabled="item.disabled"
+        :tabindex="flatItems.indexOf(item) === focusedIndex ? 0 : -1"
+        @click="!item.disabled && (item.action?.(), open = false)"
+        @focus="focusedIndex = flatItems.indexOf(item)"
       >
         <span class="context-menu__item-label">{{ item.label }}</span>
-        <span v-if="item.hasSubmenu" class="context-menu__arrow">▶</span>
+        <span v-if="item.hasSubmenu" class="context-menu__arrow" aria-hidden="true">▶</span>
 
-        <div v-if="item.submenu" class="context-menu__submenu">
-          <div
+        <div v-if="item.submenu" class="context-menu__submenu" role="menu">
+          <button
             v-for="sub in item.submenu"
             :key="sub.label"
             class="context-menu__item"
+            role="menuitem"
             @click.stop="sub.action?.(); open = false"
           >
             <span class="context-menu__item-label">{{ sub.label }}</span>
-          </div>
+          </button>
         </div>
-      </div>
+      </button>
     </template>
   </div>
 </template>

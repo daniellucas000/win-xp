@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { pinnedApps, rightApps, allPrograms } from '~/data/startMenu'
 import type { AppName } from '~/stores/windows'
+import { useWindowlessApps } from '~/composables/useWindowlessApps'
 
 const open = defineModel<boolean>()
 const store = useWindowsStore()
+const { openWindowlessApp } = useWindowlessApps()
 
 const showAllPrograms = ref(false)
 
 function launch(app: AppName) {
-  store.open(app)
+  if (app === 'mediaplayer') {
+    openWindowlessApp(app)
+  } else {
+    store.open(app)
+  }
   open.value = false
 }
 </script>

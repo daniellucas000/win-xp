@@ -41,6 +41,15 @@
       background: rgba(49, 106, 197, 0.3);
     }
 
+    &:focus {
+      outline: none;
+    }
+
+    &--focused {
+      background: rgba(49, 106, 197, 0.3);
+      outline: 1px dotted white;
+    }
+
     &--renaming {
       background: rgba(49, 106, 197, 0.5);
       outline: 1px dotted white;

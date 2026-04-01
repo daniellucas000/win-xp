@@ -3,10 +3,10 @@ defineProps<{ contact: any }>()
 </script>
 
 <template>
-  <div class="contact">
-    <span class="status" :class="contact.status" />
+  <button class="contact" :aria-label="`${contact.name}, ${contact.status === 'online' ? 'online' : 'offline'}`">
+    <span class="status" :class="contact.status" :aria-hidden="true" />
     <span>{{ contact.name }}</span>
-  </div>
+  </button>
 </template>
 
 <style>

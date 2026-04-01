@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { systemIcons, type DesktopIcon } from '~/data/desktop'
+import { useWindowlessApps } from '~/composables/useWindowlessApps'
 
 const store = useWindowsStore()
+const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps()
 
 const contextMenu = ref({ open: false, x: 0, y: 0, selectedIcon: null as DesktopIcon | null })
 
 const renamingItem = ref<number | null>(null)
 const renameInput = ref('')
+const focusedIconIndex = ref<number | null>(null)
+const desktopRef = ref<HTMLElement | null>(null)
 
 const STORAGE_KEY = 'xp-desktop-icons'
 const TRASH_KEY = 'xp-desktop-trash'
@@ -100,6 +104,8 @@ function openItem(item: DesktopIcon) {
     store.open('explorer', { folderId: item.id, title: item.label })
   } else if (item.type === 'trash') {
     store.open('explorer', { folderId: 0, title: 'Lixeira' })
+  } else if (item.app === 'mediaplayer') {
+    openWindowlessApp(item.app)
   } else {
     store.open(item.app)
   }
@@ -162,70 +168,112 @@ function saveRename(id: number) {
 
 function cancelRename() {
   renamingItem.value = null
+  focusedIconIndex.value = null
+}
+
+function handleDesktopKeydown(e: KeyboardEvent) {
+  if (renamingItem.value !== null) return
+  if (contextMenu.value.open) return
+  
+  const icons = visibleIcons.value
+  if (icons.length === 0) return
+
+  const currentIndex = focusedIconIndex.value
+  
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault()
+    const nextIndex = currentIndex === null ? 0 : (currentIndex + 1) % icons.length
+    focusedIconIndex.value = nextIndex
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault()
+    const prevIndex = currentIndex === null ? icons.length - 1 : (currentIndex - 1 + icons.length) % icons.length
+    focusedIconIndex.value = prevIndex
+  } else if (e.key === 'Enter' && currentIndex !== null) {
+    e.preventDefault()
+    openItem(icons[currentIndex])
+  } else if (e.key === 'F2' && currentIndex !== null) {
+    e.preventDefault()
+    const item = icons[currentIndex]
+    if (!item.isSystem && !item.isProtected) {
+      startRename(item.id, item.label)
+    }
+  }
 }
 
 function sortByName() {
-  desktopIcons.value.sort((a, b) => {
-    if (a.isSystem && !b.isSystem) return -1
-    if (!a.isSystem && b.isSystem) return 1
-    return a.label.localeCompare(b.label)
+  desktopIcons.value.sort((iconA, iconB) => {
+    if (iconA.isSystem && !iconB.isSystem) return -1
+    if (!iconA.isSystem && iconB.isSystem) return 1
+    return iconA.label.localeCompare(iconB.label)
   })
 }
 
 function sortBySize() {
-  desktopIcons.value.sort((a, b) => {
-    if (a.isSystem && !b.isSystem) return -1
-    if (!a.isSystem && b.isSystem) return 1
-    return a.size - b.size
+  desktopIcons.value.sort((iconA, iconB) => {
+    if (iconA.isSystem && !iconB.isSystem) return -1
+    if (!iconA.isSystem && iconB.isSystem) return 1
+    return iconA.size - iconB.size
   })
 }
 
 function sortByType() {
   const typeOrder: Record<string, number> = { folder: 0, app: 1, txt: 2 }
-  desktopIcons.value.sort((a, b) => {
-    if (a.isSystem && !b.isSystem) return -1
-    if (!a.isSystem && b.isSystem) return 1
-    const aOrder = typeOrder[a.type] ?? 3
-    const bOrder = typeOrder[b.type] ?? 3
-    return aOrder - bOrder
+  desktopIcons.value.sort((iconA, iconB) => {
+    if (iconA.isSystem && !iconB.isSystem) return -1
+    if (!iconA.isSystem && iconB.isSystem) return 1
+    const orderA = typeOrder[iconA.type] ?? 3
+    const orderB = typeOrder[iconB.type] ?? 3
+    return orderA - orderB
   })
 }
 
 function sortByModified() {
-  desktopIcons.value.sort((a, b) => {
-    if (a.isSystem && !b.isSystem) return -1
-    if (!a.isSystem && b.isSystem) return 1
-    return b.modifiedAt.getTime() - a.modifiedAt.getTime()
+  desktopIcons.value.sort((iconA, iconB) => {
+    if (iconA.isSystem && !iconB.isSystem) return -1
+    if (!iconA.isSystem && iconB.isSystem) return 1
+    return iconB.modifiedAt.getTime() - iconA.modifiedAt.getTime()
   })
 }
-
 
 </script>
 
 <template>
   <div
+    ref="desktopRef"
     class="desktop"
+    role="application"
+    aria-label="Área de trabalho"
+    tabindex="-1"
     @contextmenu="onRightClick"
     @click="contextMenu.open = false"
+    @keydown="handleDesktopKeydown"
   >
     <div class="desktop__wallpaper" />
 
-    <div class="desktop__icons">
+    <div class="desktop__icons" role="toolbar" aria-label="Ícones da área de trabalho">
       <button
-        v-for="item in visibleIcons"
+        v-for="(item, index) in visibleIcons"
         :key="item.id"
         class="desktop__icon"
+        role="button"
+        :aria-label="`${item.label}, clique duas vezes para abrir`"
         :class="{ 
-          'desktop__icon--renaming': renamingItem === item.id
+          'desktop__icon--renaming': renamingItem === item.id,
+          'desktop__icon--focused': focusedIconIndex === index
         }"
+        :tabindex="focusedIconIndex === index || (focusedIconIndex === null && index === 0) ? 0 : -1"
         @dblclick="openItem(item)"
         @contextmenu="onIconRightClick($event, item)"
+        @focus="focusedIconIndex = index"
       >
-        <img :src="item.icon" class="desktop__icon-img" />
+        <img :src="item.icon" class="desktop__icon-img" :alt="item.label" />
+        <label v-if="renamingItem === item.id" :for="`desktop-rename-${item.id}`" class="visually-hidden">Renomear {{ item.label }}</label>
         <input
           v-if="renamingItem === item.id"
+          :id="`desktop-rename-${item.id}`"
           v-model="renameInput"
           class="desktop__icon-input"
+          :aria-label="`Renomear para ${item.label}`"
           @blur="saveRename(item.id)"
           @keyup.enter="saveRename(item.id)"
           @keyup.escape="cancelRename"
@@ -243,10 +291,11 @@ function sortByModified() {
       <XpAppsMinesweeper  :win="win" v-if="win.app === 'minesweeper'" />
       <XpAppsPaint        :win="win" v-if="win.app === 'paint'" />
       <XpAppsIe           :win="win" v-if="win.app === 'ie'" />
-      <XpAppsMediaPlayer  :win="win" v-if="win.app === 'mediaplayer'" />
       <XpAppsExplorer     :win="win" v-if="win.app === 'explorer'" />
       <XpAppsMsn          :win="win" v-if="win.app === 'msn'" />
     </XpWindow>
+
+    <XpAppsMediaPlayer v-if="isWindowlessAppOpen('mediaplayer')" />
 
     <XpContextMenu
       v-if="contextMenu.open"
@@ -269,4 +318,16 @@ function sortByModified() {
 
 <style lang="scss" scoped>
 @import '~/assets/css/components/xp/Desktop.scss';
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>
