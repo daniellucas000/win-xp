@@ -1,13 +1,9 @@
 <script setup lang="ts">
+import { favorites } from '~/data/ie'
+
 const url = ref('http://www.msn.com')
 const inputUrl = ref(url.value)
 const loading = ref(false)
-
-const favorites = [
-  { label: 'MSN', url: 'https://www.msn.com' },
-  { label: 'Google', url: 'https://www.google.com' },
-  { label: 'Yahoo!', url: 'https://www.yahoo.com' },
-]
 
 function navigate() {
   url.value = inputUrl.value
@@ -82,6 +78,6 @@ function goTo(target: string) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/apps/Ie.scss';
 </style>

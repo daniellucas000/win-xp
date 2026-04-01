@@ -1,14 +1,5 @@
 <script setup lang="ts">
-type CellState = {
-  mine: boolean
-  revealed: boolean
-  flagged: boolean
-  adjacentMines: number
-}
-
-const ROWS = 9
-const COLS = 9
-const MINES = 10
+import { ROWS, COLS, MINES, numberColors, type CellState } from '~/data/minesweeper'
 
 const board = ref<CellState[][]>([])
 const gameOver = ref(false)
@@ -17,17 +8,6 @@ const started = ref(false)
 const minesLeft = ref(MINES)
 const seconds = ref(0)
 let timer: ReturnType<typeof setInterval> | null = null
-
-const numberColors: Record<number, string> = {
-  1: '#0000ff',
-  2: '#008000',
-  3: '#ff0000',
-  4: '#000080',
-  5: '#800000',
-  6: '#008080',
-  7: '#000000',
-  8: '#808080',
-}
 
 function createBoard() {
   board.value = Array.from({ length: ROWS }, () =>
@@ -195,6 +175,6 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/apps/Minesweeper.scss';
 </style>

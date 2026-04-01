@@ -1,29 +1,9 @@
 <script setup lang="ts">
+import { pinnedApps, rightApps, allPrograms } from '~/data/startMenu'
 import type { AppName } from '~/stores/windows'
 
 const open = defineModel<boolean>()
 const store = useWindowsStore()
-
-const pinnedApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
-  { icon: '/images/xp/icons/iexplorer.png', label: 'Internet Explorer',  app: 'ie',          bold: true },
-  { icon: '/images/xp/icons/media-player.png', label: 'Windows Media Player', app: 'mediaplayer' },
-  { icon: '/images/xp/icons/paint.png', label: 'Paint', app: 'paint' },
-  { icon: '/images/xp/icons/xptour.png', label: 'Passeio pelo Windows XP', app: 'ie' },
-]
-
-const rightApps: { icon: string; label: string; app: AppName; bold?: boolean }[] = [
-  { icon: '/images/xp/icons/my-pictures.png', label: 'Minhas imagens', app: 'explorer', bold: true },
-  { icon: '/images/xp/icons/my-musics.png', label: 'Minhas músicas', app: 'mediaplayer', bold: true },
-  { icon: '/images/xp/icons/mycomputer.png', label: 'Meu computador', app: 'explorer', bold: true },
-]
-
-const allPrograms: { icon: string; label: string; app: AppName }[] = [
-  { icon: '/images/xp/icons/minesweeper.png', label: 'Campo minado', app: 'minesweeper' },
-  { icon: '/images/xp/icons/paint.png', label: 'Paint', app: 'paint' },
-  { icon: '/images/xp/icons/notepad.png', label: 'Bloco de notas', app: 'notepad' },
-  { icon: '/images/xp/icons/media-player.png', label: 'Windows Media Player', app: 'mediaplayer' },
-  { icon: '/images/xp/icons/msn.png', label: 'MSN Messenger', app: 'msn' },
-]
 
 const showAllPrograms = ref(false)
 
@@ -112,6 +92,6 @@ function launch(app: AppName) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/StartMenu.scss';
 </style>

@@ -62,6 +62,6 @@ function onTitlebarMousedown(e: MouseEvent) {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/Window.scss';
 </style>

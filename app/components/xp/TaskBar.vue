@@ -62,6 +62,6 @@ function toggleStart() {
   </Teleport>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/TaskBar.scss';
 </style>

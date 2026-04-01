@@ -14,7 +14,7 @@ export interface WindowState {
   maximized: boolean
   focused: boolean
   zIndex: number
-  folderId?: number | string
+  folderId?: number
 }
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {

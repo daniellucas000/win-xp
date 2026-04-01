@@ -20,7 +20,7 @@ const props = defineProps<Props>()
 const TRASH_KEY = 'xp-desktop-trash'
 const FOLDERS_KEY = 'xp-desktop-folders'
 
-const isTrashMode = computed(() => props.win?.folderId === 'trash')
+const isTrashMode = computed(() => props.win?.folderId === 0)
 
 const currentFolderId = ref<number | null>(isTrashMode.value ? null : (props.win?.folderId || null))
 const currentPath = ref(props.win?.title || 'Meu computador')
@@ -371,7 +371,7 @@ function cancelRename() {
       <button class="explorer__btn" :disabled="!canGoUp || isTrashMode" @click="goUp"><img src="/images/xp/icons/folder-up.png" alt=""></button>
       <div class="explorer__separator" />
       <button class="explorer__btn"><img src="/images/xp/icons/search.png" alt="">Pesquisar</button>
-      <button class="explorer__btn"><img src="/images/xp/icons/folders.png" alt="">Pastas</button>
+      <button class="explorer__btn"><img src="/images/xp/icons/folder.png" alt="">Pastas</button>
       <div class="explorer__separator" />
       <button
         class="explorer__btn"

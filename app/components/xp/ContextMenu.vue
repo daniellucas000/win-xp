@@ -1,22 +1,5 @@
 <script setup lang="ts">
-interface DesktopIcon {
-  id: number
-  isSystem: boolean
-  isProtected?: boolean
-  isDeleted?: boolean
-}
-
-interface SubmenuItem {
-  label: string
-  action?: () => void
-}
-
-interface MenuItem {
-  label: string
-  disabled?: boolean
-  hasSubmenu?: boolean
-  submenu?: SubmenuItem[]
-}
+import { contextMenuSections, type DesktopIconInfo as DesktopIcon, type MenuItem } from '~/data/contextMenu'
 
 interface Props {
   x: number
@@ -36,39 +19,29 @@ interface Props {
 const props = defineProps<Props>()
 const open = defineModel<boolean>('modelValue')  
 
-const baseSections: MenuItem[][] = [
-  [
-    { 
-      label: 'Organizar ícones por', 
-      hasSubmenu: true,
-      submenu: [
-        { label: 'Nome', action: props.onSortByName },
-        { label: 'Tamanho', action: props.onSortBySize },
-        { label: 'Tipo', action: props.onSortByType },
-        { label: 'Modificado', action: props.onSortByModified },
-      ],
-    },
-    { label: 'Atualizar' },
-  ],
-  [
-    { label: 'Colar', disabled: true },
-    { label: 'Colar atalho', disabled: true },
-    { label: 'Desfazer exclusão', disabled: true },
-  ],
-  [
-    {
-      label: 'Novo',
-      hasSubmenu: true,
-      submenu: [
-        { label: 'Documento de texto', action: props.onCreateTextDocument },
-        { label: 'Pasta', action: props.onCreateFolder },
-      ],
-    },
-  ],
-  [
-    { label: 'Propriedades' },
-  ],
-]
+const baseSections: MenuItem[][] = contextMenuSections.base.map(section =>
+  section.map(item => {
+    if (item.label === 'Organizar ícones por' && item.submenu) {
+      return {
+        ...item,
+        submenu: item.submenu.map((sub, idx) => ({
+          ...sub,
+          action: [props.onSortByName, props.onSortBySize, props.onSortByType, props.onSortByModified][idx],
+        })),
+      }
+    }
+    if (item.label === 'Novo' && item.submenu) {
+      return {
+        ...item,
+        submenu: item.submenu.map((sub, idx) => ({
+          ...sub,
+          action: [props.onCreateTextDocument, props.onCreateFolder][idx],
+        })),
+      }
+    }
+    return item
+  })
+)
 
 const sections = computed(() => {
   const icon = props.selectedIcon
@@ -161,6 +134,6 @@ const sections = computed(() => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/css/components/xp/ContextMenu.scss';
 </style>
