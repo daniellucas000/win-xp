@@ -207,6 +207,18 @@ function selectItem(id: number) {
   selectedItem.value = id
 }
 
+const selectedItemDetails = computed(() => {
+  if (selectedItem.value === null) return null
+  
+  if (isTrashMode.value) {
+    return trashItems.value.find(i => i.id === selectedItem.value)
+  }
+  if (currentFolderId.value === null) {
+    return drives.find(i => i.id === selectedItem.value)
+  }
+  return folders.value.find(i => i.id === selectedItem.value)
+})
+
 function showTrashMenu(e: MouseEvent, id: number) {
   selectedItem.value = id
 }
@@ -308,7 +320,7 @@ function cancelRename() {
       <button class="explorer__btn" :disabled="!canGoUp || isTrashMode" aria-label="Pasta acima" @click="goUp"><img src="/images/xp/icons/folder-up.png" alt="" aria-hidden="true"></button>
       <div class="explorer__separator" aria-hidden="true" />
       <button class="explorer__btn" aria-label="Pesquisar"><img src="/images/xp/icons/search.png" alt="" aria-hidden="true">Pesquisar</button>
-      <button class="explorer__btn" aria-label="Pastas"><img src="/images/xp/icons/folder.png" alt="" aria-hidden="true">Pastas</button>
+      <button class="explorer__btn" aria-label="Pastas"><img src="/images/xp/icons/folders.png" alt="" aria-hidden="true">Pastas</button>
       <div class="explorer__separator" aria-hidden="true" />
       <button
         class="explorer__btn"
@@ -356,9 +368,15 @@ function cancelRename() {
 
         <div class="explorer__sidebar-section">
           <div class="explorer__sidebar-title">Detalhes</div>
-          <div class="explorer__sidebar-detail">
-            <strong>Meu Computador</strong>
-            <span>Pasta do Sistema</span>
+          <div v-if="selectedItemDetails" class="explorer__sidebar-detail" :aria-label="`Detalhes de ${selectedItemDetails.name}`">
+            <strong>{{ selectedItemDetails.name }}</strong>
+            <span>{{ selectedItemDetails.type === 'folder' ? 'Pasta de arquivos' : 'Arquivo' }}</span>
+            <span v-if="selectedItemDetails.size">{{ selectedItemDetails.size }}</span>
+            <span v-if="selectedItemDetails.modified">Modificado: {{ selectedItemDetails.modified }}</span>
+          </div>
+          <div v-else class="explorer__sidebar-detail" :aria-label="`Detalhes de ${currentPath}`">
+            <strong>{{ currentPath }}</strong>
+            <span>{{ currentFolderId === null ? 'Pasta do Sistema' : 'Pasta de arquivos' }}</span>
           </div>
         </div>
       </div>
