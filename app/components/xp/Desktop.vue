@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { systemIcons, type DesktopIcon } from '~/data/desktop'
 import { useWindowlessApps } from '~/composables/useWindowlessApps'
+import { useSounds } from '~/composables/useSounds'
 
 const store = useWindowsStore()
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps()
+const { playOpen } = useSounds()
 
 const contextMenu = ref({ open: false, x: 0, y: 0, selectedIcon: null as DesktopIcon | null })
 
@@ -100,6 +102,7 @@ function onIconRightClick(e: MouseEvent, icon: DesktopIcon) {
 }
 
 function openItem(item: DesktopIcon) {
+  playOpen()
   if (item.type === 'folder') {
     store.open('explorer', { folderId: item.id, title: item.label })
   } else if (item.type === 'trash') {

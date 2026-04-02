@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 
 export type AppName = 'notepad' | 'minesweeper' | 'paint' | 'ie' | 'mediaplayer' | 'explorer' | 'msn'
-
 export interface WindowState {
   id: string
   app: AppName
@@ -23,7 +22,7 @@ const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   paint:       { title: 'Untitled - Paint',             width: 700, height: 500 },
   ie:          { title: 'Microsoft Internet Explorer',  width: 800, height: 560 },
   mediaplayer: { title: 'Windows Media Player',         width: 520, height: 400 },
-  explorer:    { title: 'Meu computador',                  width: 600, height: 420 },
+  explorer:    { title: 'Meu computador',               width: 600, height: 420 },
   msn:         { title: 'MSN Messenger',                width: 280, height: 450 },
 }
 
@@ -33,9 +32,7 @@ export const useWindowsStore = defineStore('windows', () => {
   const windows = ref<WindowState[]>([])
 
   function open(app: AppName, options?: { folderId?: number; title?: string }) {
-    if (app === 'mediaplayer') {
-      return
-    }
+    if (app === 'mediaplayer') return
 
     const id = `${app}-${Date.now()}`
     const offset = windows.value.length * 24
@@ -51,6 +48,7 @@ export const useWindowsStore = defineStore('windows', () => {
       zIndex: ++zCounter,
       folderId: options?.folderId,
       title: options?.title || APP_DEFAULTS[app]?.title || '',
+      ...APP_DEFAULTS[app],
     } as WindowState)
 
     focusWindow(id)
@@ -89,6 +87,15 @@ export const useWindowsStore = defineStore('windows', () => {
     if (w) { w.width = width; w.height = height }
   }
 
+  function updatePositionAndSize(id: string, x: number, y: number, width: number, height: number) {
+    const w = windows.value.find(w => w.id === id)
+    if (!w) return
+    w.x = x
+    w.y = y
+    w.width = width
+    w.height = height
+  }
+
   const openWindows = computed(() =>
     windows.value.filter(w => !w.minimized)
   )
@@ -104,6 +111,7 @@ export const useWindowsStore = defineStore('windows', () => {
     maximize,
     updatePosition,
     updateSize,
+    updatePositionAndSize,
     openWindows,
     taskbarWindows,
   }

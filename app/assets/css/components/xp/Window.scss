@@ -1,5 +1,8 @@
 @import '~/assets/css/_variables.scss';
 
+$handle-edge: 6px;
+$handle-corner: 12px;
+
 .window {
   position: absolute;
   display: flex;
@@ -15,6 +18,75 @@
     box-shadow: -1px 0 2px 0 #5d8aee, 1px 0 2px 1px #003ddc, 0 1px 2px 1px #003ddc;
   }
 
+  &__resize {
+    position: absolute;
+    z-index: 10;
+
+    &--n {
+      top: 0;
+      left: $handle-corner;
+      right: $handle-corner;
+      height: $handle-edge;
+      cursor: n-resize;
+    }
+
+    &--s {
+      bottom: 0;
+      left: $handle-corner;
+      right: $handle-corner;
+      height: $handle-edge;
+      cursor: s-resize;
+    }
+
+    &--e {
+      right: 0;
+      top: $handle-corner;
+      bottom: $handle-corner;
+      width: $handle-edge;
+      cursor: e-resize;
+    }
+
+    &--w {
+      left: 0;
+      top: $handle-corner;
+      bottom: $handle-corner;
+      width: $handle-edge;
+      cursor: w-resize;
+    }
+
+    &--ne {
+      top: 0;
+      right: 0;
+      width: $handle-corner;
+      height: $handle-corner;
+      cursor: ne-resize;
+    }
+
+    &--nw {
+      top: 0;
+      left: 0;
+      width: $handle-corner;
+      height: $handle-corner;
+      cursor: nw-resize;
+    }
+
+    &--se {
+      bottom: 0;
+      right: 0;
+      width: $handle-corner;
+      height: $handle-corner;
+      cursor: se-resize;
+    }
+
+    &--sw {
+      bottom: 0;
+      left: 0;
+      width: $handle-corner;
+      height: $handle-corner;
+      cursor: sw-resize;
+    }
+  }
+
   &__titlebar {
     display: flex;
     align-items: center;
@@ -24,7 +96,7 @@
     cursor: default;
     flex-shrink: 0;
     border-radius: 8px 8px 0px 0px;
-    
+
     &--active {
       background: linear-gradient(180deg, #3D95FF 6.7%, #0372FF 10.36%, #0365F1 13.89%, #0053E1 25.84%, #0058EE 56.29%, #026AFE 74.1%, #026AFE 84.7%, #0060FC 90.79%, #0043CF 96.43%);
       box-shadow: inset 8px 0px 5px -5px rgba(34, 37, 46, 0.54), inset -8px 0px 5px -5px rgba(0, 15, 102, 0.66);

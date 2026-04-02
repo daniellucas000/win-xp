@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { WindowState } from '~/stores/windows'
+import { useSounds } from '~/composables/useSounds'
+
+const { playOpen } = useSounds()
 
 interface FileItem {
   id: number
@@ -219,11 +222,8 @@ const selectedItemDetails = computed(() => {
   return folders.value.find(i => i.id === selectedItem.value)
 })
 
-function showTrashMenu(e: MouseEvent, id: number) {
-  selectedItem.value = id
-}
-
 function openItem(item: FileItem) {
+  playOpen()
   if (item.type === 'folder') {
     if (historyIndex.value < history.value.length - 1) {
       history.value = history.value.slice(0, historyIndex.value + 1)
@@ -437,9 +437,12 @@ function cancelRename() {
           :aria-label="`${item.name}, ${item.type === 'folder' ? 'pasta' : 'arquivo'}`"
           @click="selectItem(item.id)"
           @dblclick="isTrashMode ? restoreItem(item.id) : openItem(item)"
-          @contextmenu.prevent="isTrashMode && showTrashMenu($event, item.id)"
         >
           <div class="explorer__icon-wrapper">
+            <div v-if="isTrashMode" class="explorer__trash-actions">
+              <button class="explorer__trash-btn" aria-label="Restaurar" @click.stop="restoreItem(item.id)">↩</button>
+              <button class="explorer__trash-btn explorer__trash-btn--delete" aria-label="Excluir permanentemente" @click.stop="deletePermanently(item.id)">✕</button>
+            </div>
             <img :src="item.icon" class="explorer__icon-img" alt="" aria-hidden="true" />
             <label v-if="renamingItem === item.id" :for="`rename-${item.id}`" class="visually-hidden">Renomear {{ item.name }}</label>
             <input
@@ -452,10 +455,6 @@ function cancelRename() {
               @keyup.escape="cancelRename"
             />
             <span v-else class="explorer__icon-label">{{ item.name }}</span>
-          </div>
-          <div v-if="isTrashMode" class="explorer__trash-actions">
-            <button class="explorer__trash-btn" aria-label="Restaurar" @click.stop="restoreItem(item.id)">↩</button>
-            <button class="explorer__trash-btn explorer__trash-btn--delete" aria-label="Excluir permanentemente" @click.stop="deletePermanently(item.id)">✕</button>
           </div>
         </button>
       </div>

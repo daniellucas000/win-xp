@@ -6,7 +6,7 @@ const props = defineProps<{ win: WindowState }>()
 
 const store = useWindowsStore()
 
-const { start } = useDrag(
+const { start: startDrag } = useDrag(
   (x, y) => store.updatePosition(props.win.id, x, y)
 )
 
@@ -17,7 +17,7 @@ const maximizeIcon = computed(() =>
 function onTitlebarMousedown(e: MouseEvent) {
   if (props.win.maximized) return
   store.focusWindow(props.win.id)
-  start(e, props.win.x, props.win.y)
+  startDrag(e, props.win.x, props.win.y)
 }
 </script>
 
@@ -43,14 +43,17 @@ function onTitlebarMousedown(e: MouseEvent) {
       @mousedown="onTitlebarMousedown"
       @dblclick="store.maximize(win.id)"
     >
-      <h4 class="window__title"><img src="/images/xp/icons/mycomputer-small.png" alt="" aria-hidden="true">{{ win.title }}</h4>
+      <h4 class="window__title">
+        <img src="/images/xp/icons/mycomputer-small.png" alt="" aria-hidden="true">
+        {{ win.title }}
+      </h4>
 
       <div class="window__controls">
         <button class="window__btn window__btn--minimize" aria-label="Minimizar" @click.stop="store.minimize(win.id)">
           <img src="/images/xp/icons/minimize.png" alt="" aria-hidden="true">
         </button>
         <button class="window__btn window__btn--maximize" :aria-label="win.maximized ? 'Restaurar' : 'Maximizar'" @click.stop="store.maximize(win.id)">
-            <img :src="maximizeIcon" alt="" aria-hidden="true">
+          <img :src="maximizeIcon" alt="" aria-hidden="true">
         </button>
         <button class="window__btn window__btn--close" aria-label="Fechar" @click.stop="store.close(win.id)">
           <span><img src="/images/xp/icons/close.png" alt="" aria-hidden="true"></span>
