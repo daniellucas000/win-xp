@@ -101,6 +101,49 @@
     white-space: nowrap;
     padding: 0 4px;
   }
+
+  &__show-desktop {
+    width: 28px;
+    height: 22px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 4px;
+    padding: 2px;
+
+    img {
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    &:hover {
+      border: 1px solid white;
+    }
+  }
+
+  &__window-btn {
+    position: relative;
+  }
+
+  &__window-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  &__window-progress-bar {
+    height: 100%;
+    background: linear-gradient(180deg, #7ec050 0%, #5a9e2f 100%);
+    transition: width 0.2s ease;
+  }
 }
 
 .start-overlay {
@@ -113,6 +156,7 @@
 .start-menu-leave-active {
   transition: opacity 0.1s, transform 0.1s;
 }
+
 .start-menu-enter-from,
 .start-menu-leave-to {
   opacity: 0;

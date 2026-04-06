@@ -5,7 +5,8 @@ import { useSounds } from '~/composables/useSounds'
 
 const store = useWindowsStore()
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps()
-const { playOpen } = useSounds()
+const { playOpen, playClose, playNotification } = useSounds()
+const notifStore = useNotificationsStore()
 
 const contextMenu = ref({ open: false, x: 0, y: 0, selectedIcon: null as DesktopIcon | null })
 
@@ -16,6 +17,13 @@ const desktopRef = ref<HTMLElement | null>(null)
 
 const STORAGE_KEY = 'xp-desktop-icons'
 const TRASH_KEY = 'xp-desktop-trash'
+
+const selectedIcons = ref<Set<number>>(new Set())
+const selectionBox = ref<{ x: number; y: number; width: number; height: number } | null>(null)
+let selectionStart = { x: 0, y: 0 }
+let isSelecting = false
+
+const showAltTab = ref(false)
 
 function loadFromStorage() {
   if (typeof window === 'undefined') return
@@ -65,7 +73,19 @@ function deleteIcon(id: number) {
   
   item.isDeleted = true
   item.modifiedAt = new Date()
+  selectedIcons.value.delete(id)
   saveToStorage()
+}
+
+function deleteSelectedIcons() {
+  const toDelete = [...selectedIcons.value]
+  for (const id of toDelete) {
+    deleteIcon(id)
+  }
+  if (toDelete.length > 0) {
+    playNotification()
+    notifStore.show('Lixeira', `${toDelete.length} item(ns) movido(s) para a Lixeira.`, { icon: 'info' })
+  }
 }
 
 function restoreFromTrash(id: number) {
@@ -84,6 +104,13 @@ function emptyTrash() {
 
 onMounted(() => {
   loadFromStorage()
+  window.addEventListener('keydown', handleGlobalKeydown)
+  window.addEventListener('keyup', handleGlobalKeyup)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGlobalKeydown)
+  window.removeEventListener('keyup', handleGlobalKeyup)
 })
 
 const desktopIcons = ref<DesktopIcon[]>([...systemIcons])
@@ -203,6 +230,41 @@ function handleDesktopKeydown(e: KeyboardEvent) {
   }
 }
 
+function handleGlobalKeydown(e: KeyboardEvent) {
+  if ((e.key === 'Tab') && e.altKey) {
+    e.preventDefault()
+    if (store.windows.length > 0) {
+      showAltTab.value = true
+    }
+  }
+  
+  if (e.key === 'Delete') {
+    if (selectedIcons.value.size > 0) {
+      deleteSelectedIcons()
+    } else if (focusedIconIndex.value !== null) {
+      const icon = visibleIcons.value[focusedIconIndex.value]
+      if (icon && !icon.isSystem && !icon.isProtected) {
+        deleteIcon(icon.id)
+        playNotification()
+        notifStore.show('Lixeira', `Item movido para a Lixeira.`, { icon: 'info' })
+      }
+    }
+  }
+
+  if ((e.key === 'r' || e.key === 'R') && e.metaKey) {
+    e.preventDefault()
+    notifStore.show('Executar', 'Digite o nome de um programa para abrir.', { icon: 'info', appIcon: '/images/xp/icons/mycomputer-small.png' })
+  }
+}
+
+function handleGlobalKeyup(e: KeyboardEvent) {
+  if (e.key === 'Alt' || e.key === 'Tab') {
+    if (showAltTab.value) {
+      showAltTab.value = false
+    }
+  }
+}
+
 function sortByName() {
   desktopIcons.value.sort((iconA, iconB) => {
     if (iconA.isSystem && !iconB.isSystem) return -1
@@ -238,6 +300,93 @@ function sortByModified() {
   })
 }
 
+function onDesktopMouseDown(e: MouseEvent) {
+  if (e.button !== 0) return
+  const target = e.target as HTMLElement
+  if (target.closest('.desktop__icon')) return
+
+  isSelecting = true
+  const desktopRect = desktopRef.value?.getBoundingClientRect()
+  if (!desktopRect) return
+
+  selectionStart = { x: e.clientX - desktopRect.left, y: e.clientY - desktopRect.top }
+  selectionBox.value = { x: selectionStart.x, y: selectionStart.y, width: 0, height: 0 }
+
+  if (!e.ctrlKey) {
+    selectedIcons.value.clear()
+  }
+}
+
+function onDesktopMouseMove(e: MouseEvent) {
+  if (!isSelecting) return
+  const desktopRect = desktopRef.value?.getBoundingClientRect()
+  if (!desktopRect) return
+
+  const currentX = e.clientX - desktopRect.left
+  const currentY = e.clientY - desktopRect.top
+
+  const x = Math.min(selectionStart.x, currentX)
+  const y = Math.min(selectionStart.y, currentY)
+  const width = Math.abs(currentX - selectionStart.x)
+  const height = Math.abs(currentY - selectionStart.y)
+
+  selectionBox.value = { x, y, width, height }
+}
+
+function onDesktopMouseUp() {
+  if (!isSelecting || !selectionBox.value) {
+    isSelecting = false
+    return
+  }
+
+  const box = selectionBox.value
+  const icons = document.querySelectorAll('.desktop__icon')
+  
+  icons.forEach((iconEl, index) => {
+    const rect = iconEl.getBoundingClientRect()
+    const desktopRect = desktopRef.value?.getBoundingClientRect()
+    if (!desktopRect) return
+
+    const iconX = rect.left - desktopRect.left
+    const iconY = rect.top - desktopRect.top
+    const iconW = rect.width
+    const iconH = rect.height
+
+    const intersects = !(
+      iconX + iconW < box.x ||
+      iconX > box.x + box.width ||
+      iconY + iconH < box.y ||
+      iconY > box.y + box.height
+    )
+
+    const icon = visibleIcons.value[index]
+    if (icon) {
+      if (intersects) {
+        selectedIcons.value.add(icon.id)
+      } else if (box.width > 5 || box.height > 5) {
+        selectedIcons.value.delete(icon.id)
+      }
+    }
+  })
+
+  isSelecting = false
+  selectionBox.value = null
+}
+
+function toggleIconSelection(id: number, e: MouseEvent) {
+  if (selectedIcons.value.has(id)) {
+    selectedIcons.value.delete(id)
+  } else {
+    if (!e.ctrlKey) {
+      selectedIcons.value.clear()
+    }
+    selectedIcons.value.add(id)
+  }
+}
+
+function closeAltTab() {
+  showAltTab.value = false
+}
 </script>
 
 <template>
@@ -250,6 +399,9 @@ function sortByModified() {
     @contextmenu="onRightClick"
     @click="contextMenu.open = false"
     @keydown="handleDesktopKeydown"
+    @mousedown="onDesktopMouseDown"
+    @mousemove="onDesktopMouseMove"
+    @mouseup="onDesktopMouseUp"
   >
     <div class="desktop__wallpaper" />
 
@@ -258,15 +410,17 @@ function sortByModified() {
         v-for="(item, index) in visibleIcons"
         :key="item.id"
         class="desktop__icon"
-        role="button"
-        :aria-label="`${item.label}, clique duas vezes para abrir`"
         :class="{ 
           'desktop__icon--renaming': renamingItem === item.id,
-          'desktop__icon--focused': focusedIconIndex === index
+          'desktop__icon--focused': focusedIconIndex === index,
+          'desktop__icon--selected': selectedIcons.has(item.id)
         }"
+        role="button"
+        :aria-label="`${item.label}, clique duas vezes para abrir`"
         :tabindex="focusedIconIndex === index || (focusedIconIndex === null && index === 0) ? 0 : -1"
         @dblclick="openItem(item)"
         @contextmenu="onIconRightClick($event, item)"
+        @click="toggleIconSelection(item.id, $event)"
         @focus="focusedIconIndex = index"
       >
         <img :src="item.icon" class="desktop__icon-img" :alt="item.label" />
@@ -284,6 +438,17 @@ function sortByModified() {
         <span v-else class="desktop__icon-label">{{ item.label }}</span>
       </button>
     </div>
+
+    <div
+      v-if="selectionBox && (selectionBox.width > 2 || selectionBox.height > 2)"
+      class="selection-box"
+      :style="{
+        left: `${selectionBox.x}px`,
+        top: `${selectionBox.y}px`,
+        width: `${selectionBox.width}px`,
+        height: `${selectionBox.height}px`,
+      }"
+    />
 
     <XpWindow
       v-for="win in store.openWindows"
@@ -316,6 +481,8 @@ function sortByModified() {
       :on-restore="restoreFromTrash"
       :on-empty-trash="emptyTrash"
     />
+
+    <XpAltTabOverlay v-if="showAltTab" @close="closeAltTab" />
   </div>
 </template>
 
@@ -332,5 +499,18 @@ function sortByModified() {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.selection-box {
+  position: absolute;
+  border: 1px solid rgba(49, 106, 197, 0.8);
+  background: rgba(49, 106, 197, 0.15);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.desktop__icon--selected {
+  background: rgba(49, 106, 197, 0.5);
+  outline: 1px dotted rgba(255, 255, 255, 0.8);
 }
 </style>

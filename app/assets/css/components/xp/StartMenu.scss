@@ -8,11 +8,11 @@
   height: 500px;
   display: flex;
   flex-direction: column;
-  background: #4282d6;
+  background: radial-gradient(circle at 100% 0, #0849a977 0, #0849a900 6%, #0849a900 100%), linear-gradient(to bottom, #66a2e7 0, #74abe8 1.5%, #0c5fcb 5%, #1061cc 10%, #4792ec 100%);
+  box-shadow: inset -2px 0 3px #1455b7, inset 2px 0 3px #7190d9;
+  border-bottom: 1px solid #1b6bd1;
   border-radius: 6px 6px 0px 0px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), inset -4px 0px 4px -1px rgba(0, 46, 137, 0.25);
   z-index: 9999;
-  border: 1px solid #215CC5;
 
   &__header {
     display: flex;
@@ -111,7 +111,7 @@
 
       &:hover {
         background: #316ac5;
-        
+
         span {
           color: white;
         }

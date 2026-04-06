@@ -14,6 +14,8 @@ export interface WindowState {
   focused: boolean
   zIndex: number
   folderId?: number
+  progress?: number
+  closing?: boolean
 }
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
@@ -30,6 +32,8 @@ let zCounter = 100
 
 export const useWindowsStore = defineStore('windows', () => {
   const windows = ref<WindowState[]>([])
+  const showDesktopActive = ref(false)
+  const preMinimizeState = ref<WindowState[]>([])
 
   function open(app: AppName, options?: { folderId?: number; title?: string }) {
     if (app === 'mediaplayer') return
@@ -48,6 +52,8 @@ export const useWindowsStore = defineStore('windows', () => {
       zIndex: ++zCounter,
       folderId: options?.folderId,
       title: options?.title || APP_DEFAULTS[app]?.title || '',
+      progress: undefined,
+      closing: false,
       ...APP_DEFAULTS[app],
     } as WindowState)
 
@@ -96,11 +102,43 @@ export const useWindowsStore = defineStore('windows', () => {
     w.height = height
   }
 
+  function setProgress(id: string, progress: number | undefined) {
+    const w = windows.value.find(w => w.id === id)
+    if (w) w.progress = progress
+  }
+
+  function toggleShowDesktop() {
+    if (!showDesktopActive.value) {
+      preMinimizeState.value = windows.value.map(w => ({ ...w }))
+      windows.value.forEach(w => { w.minimized = true })
+      showDesktopActive.value = true
+    } else {
+      preMinimizeState.value.forEach(saved => {
+        const w = windows.value.find(win => win.id === saved.id)
+        if (w) {
+          w.minimized = false
+          w.focused = saved.focused
+          w.zIndex = saved.zIndex
+        }
+      })
+      if (windows.value.length > 0) {
+        const last = windows.value[windows.value.length - 1]
+        if (last) focusWindow(last.id)
+      }
+      showDesktopActive.value = false
+      preMinimizeState.value = []
+    }
+  }
+
   const openWindows = computed(() =>
     windows.value.filter(w => !w.minimized)
   )
 
   const taskbarWindows = computed(() => windows.value)
+
+  const focusedWindow = computed(() =>
+    windows.value.find(w => w.focused)
+  )
 
   return {
     windows,
@@ -112,7 +150,11 @@ export const useWindowsStore = defineStore('windows', () => {
     updatePosition,
     updateSize,
     updatePositionAndSize,
+    setProgress,
+    toggleShowDesktop,
+    showDesktopActive,
     openWindows,
     taskbarWindows,
+    focusedWindow,
   }
 })

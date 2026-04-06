@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const store = useWindowsStore()
+const winStore = useWindowsStore()
 const startMenuOpen = ref(false)
 const currentTime = ref('')
 
@@ -20,7 +20,9 @@ function toggleStart() {
   startMenuOpen.value = !startMenuOpen.value
 }
 
-
+function handleShowDesktop() {
+  winStore.toggleShowDesktop()
+}
 </script>
 
 <template>
@@ -28,16 +30,28 @@ function toggleStart() {
 
     <button class="taskbar__start" aria-label="Menu Iniciar" @click="toggleStart" />
 
+    <button
+      class="taskbar__show-desktop"
+      aria-label="Mostrar desktop"
+      title="Mostrar desktop"
+      @click="handleShowDesktop"
+    >
+      <img src="/images/xp/icons/desktop.png" alt="" />
+    </button>
+
     <div class="taskbar__windows" role="toolbar" aria-label="Janelas abertas">
       <button
-        v-for="win in store.taskbarWindows"
+        v-for="win in winStore.taskbarWindows"
         :key="win.id"
         class="taskbar__window-btn"
         :class="{ 'taskbar__window-btn--active': win.focused && !win.minimized }"
         :aria-label="`${win.title}, clique para minimizar`"
-        @click="store.minimize(win.id)"
+        @click="winStore.minimize(win.id)"
       >
         <span class="taskbar__window-title">{{ win.title }}</span>
+        <div v-if="win.progress !== undefined" class="taskbar__window-progress">
+          <div class="taskbar__window-progress-bar" :style="{ width: `${win.progress}%` }" />
+        </div>
       </button>
     </div>
 
@@ -61,6 +75,8 @@ function toggleStart() {
       @click="startMenuOpen = false"
     />
   </Teleport>
+
+  <XpNotificationBalloon />
 </template>
 
 <style lang="scss" scoped>
