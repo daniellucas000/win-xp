@@ -2,11 +2,13 @@
 import { systemIcons, type DesktopIcon } from '~/data/desktop'
 import { useWindowlessApps } from '~/composables/useWindowlessApps'
 import { useSounds } from '~/composables/useSounds'
+import { useFileSystem } from '~/composables/useFileSystem'
 
 const store = useWindowsStore()
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps()
-const { playOpen, playClose, playNotification } = useSounds()
+const { playOpen, playNotification } = useSounds()
 const notifStore = useNotificationsStore()
+const fileSystem = useFileSystem()
 
 const contextMenu = ref({ open: false, x: 0, y: 0, selectedIcon: null as DesktopIcon | null })
 
@@ -73,6 +75,7 @@ function deleteIcon(id: number) {
   
   item.isDeleted = true
   item.modifiedAt = new Date()
+  fileSystem.deleteItem(id)
   selectedIcons.value.delete(id)
   saveToStorage()
 }
@@ -130,24 +133,26 @@ function onIconRightClick(e: MouseEvent, icon: DesktopIcon) {
 
 function openItem(item: DesktopIcon) {
   playOpen()
-  if (item.type === 'folder') {
-    store.open('explorer', { folderId: item.id, title: item.label })
-  } else if (item.type === 'trash') {
-    store.open('explorer', { folderId: 0, title: 'Lixeira' })
-  } else if (item.app === 'mediaplayer') {
-    openWindowlessApp(item.app)
-  } else {
-    store.open(item.app)
+
+  if (item.app === 'mediaplayer') {
+    return openWindowlessApp(item.app)
   }
+
+  const folderId = item.type === 'trash' ? -1 : item.type === 'folder' ? item.id : undefined
+  const title = item.type === 'trash' ? 'Lixeira' : item.label
+
+  store.open(item.app, { folderId, title, icon: item.icon })
 }
 
 function createFolder() {
   const name = 'Nova Pasta'
-  const id = Date.now()
+  
+  const fsItem = fileSystem.createFolder(0, name)
+  
   desktopIcons.value.push({ 
-    id, 
-    icon: '/images/xp/icons/folder.png', 
-    label: name, 
+    id: fsItem.id, 
+    icon: fsItem.icon, 
+    label: fsItem.name, 
     app: 'explorer',
     size: 0,
     type: 'folder',
@@ -155,16 +160,18 @@ function createFolder() {
     isSystem: false
   })
   saveToStorage()
-  startRename(id, name)
+  startRename(fsItem.id, name)
 }
 
 function createTextDocument() {
   const name = 'Novo Documento de Texto'
-  const id = Date.now()
+  
+  const fsItem = fileSystem.createFile(0, name, '')
+  
   desktopIcons.value.push({ 
-    id, 
-    icon: '/images/xp/icons/file-text.png', 
-    label: name, 
+    id: fsItem.id, 
+    icon: fsItem.icon, 
+    label: fsItem.name, 
     app: 'notepad',
     size: 0,
     type: 'txt',
@@ -172,7 +179,7 @@ function createTextDocument() {
     isSystem: false
   })
   saveToStorage()
-  startRename(id, name)
+  startRename(fsItem.id, name)
   store.open('notepad')
 }
 
@@ -191,6 +198,7 @@ function saveRename(id: number) {
   if (item && renameInput.value.trim()) {
     item.label = renameInput.value.trim()
     item.modifiedAt = new Date()
+    fileSystem.renameItem(id, renameInput.value.trim())
     saveToStorage()
   }
   renamingItem.value = null
@@ -209,24 +217,21 @@ function handleDesktopKeydown(e: KeyboardEvent) {
   if (icons.length === 0) return
 
   const currentIndex = focusedIconIndex.value
-  
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+  const item = currentIndex !== null ? icons[currentIndex] : null
+
+  const actions: Record<string, () => void> = {
+    ArrowRight: () => { focusedIconIndex.value = (currentIndex === null ? 0 : (currentIndex + 1) % icons.length) },
+    ArrowDown:  () => { focusedIconIndex.value = (currentIndex === null ? 0 : (currentIndex + 1) % icons.length) },
+    ArrowLeft:  () => { focusedIconIndex.value = (currentIndex === null ? icons.length - 1 : (currentIndex - 1 + icons.length) % icons.length) },
+    ArrowUp:    () => { focusedIconIndex.value = (currentIndex === null ? icons.length - 1 : (currentIndex - 1 + icons.length) % icons.length) },
+    Enter:      () => { item && openItem(item) },
+    F2:         () => { item && !item.isSystem && !item.isProtected && startRename(item.id, item.label) },
+  }
+
+  const action = actions[e.key]
+  if (action) {
     e.preventDefault()
-    const nextIndex = currentIndex === null ? 0 : (currentIndex + 1) % icons.length
-    focusedIconIndex.value = nextIndex
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    e.preventDefault()
-    const prevIndex = currentIndex === null ? icons.length - 1 : (currentIndex - 1 + icons.length) % icons.length
-    focusedIconIndex.value = prevIndex
-  } else if (e.key === 'Enter' && currentIndex !== null) {
-    e.preventDefault()
-    openItem(icons[currentIndex])
-  } else if (e.key === 'F2' && currentIndex !== null) {
-    e.preventDefault()
-    const item = icons[currentIndex]
-    if (!item.isSystem && !item.isProtected) {
-      startRename(item.id, item.label)
-    }
+    action()
   }
 }
 
@@ -453,7 +458,7 @@ function closeAltTab() {
     <XpWindow
       v-for="win in store.openWindows"
       :key="win.id"
-      :win="win"
+      :window-id="win.id"
     >
       <XpAppsNotepad      :win="win" v-if="win.app === 'notepad'" />
       <XpAppsMinesweeper  :win="win" v-if="win.app === 'minesweeper'" />

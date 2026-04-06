@@ -5,6 +5,7 @@ export interface WindowState {
   id: string
   app: AppName
   title: string
+  icon?: string
   x: number
   y: number
   width: number
@@ -35,7 +36,7 @@ export const useWindowsStore = defineStore('windows', () => {
   const showDesktopActive = ref(false)
   const preMinimizeState = ref<WindowState[]>([])
 
-  function open(app: AppName, options?: { folderId?: number; title?: string }) {
+  function open(app: AppName, options?: { folderId?: number; title?: string; icon?: string }) {
     if (app === 'mediaplayer') return
 
     const id = `${app}-${Date.now()}`
@@ -51,10 +52,11 @@ export const useWindowsStore = defineStore('windows', () => {
       focused: true,
       zIndex: ++zCounter,
       folderId: options?.folderId,
-      title: options?.title || APP_DEFAULTS[app]?.title || '',
       progress: undefined,
       closing: false,
       ...APP_DEFAULTS[app],
+      title: options?.title || APP_DEFAULTS[app]?.title || '',
+      icon: options?.icon ?? APP_DEFAULTS[app]?.icon,
     } as WindowState)
 
     focusWindow(id)
@@ -107,6 +109,14 @@ export const useWindowsStore = defineStore('windows', () => {
     if (w) w.progress = progress
   }
 
+  function updateWindowTitle(windowId: string, title: string, icon?: string) {
+    const window = windows.value.find(w => w.id === windowId)
+    if (window) {
+      window.title = title
+      if (icon !== undefined) window.icon = icon
+    }
+  }
+
   function toggleShowDesktop() {
     if (!showDesktopActive.value) {
       preMinimizeState.value = windows.value.map(w => ({ ...w }))
@@ -151,6 +161,7 @@ export const useWindowsStore = defineStore('windows', () => {
     updateSize,
     updatePositionAndSize,
     setProgress,
+    updateWindowTitle,
     toggleShowDesktop,
     showDesktopActive,
     openWindows,

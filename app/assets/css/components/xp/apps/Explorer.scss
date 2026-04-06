@@ -426,4 +426,24 @@
     display: flex;
     gap: 8px;
   }
+
+  &__statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 8px;
+    border-top: 1px solid $xp-border-dark;
+    background: $xp-bg;
+    font-size: 11px;
+    color: #444;
+    flex-shrink: 0;
+  }
+
+  &__statusbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #444;
+  }
 }
