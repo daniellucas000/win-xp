@@ -16,6 +16,8 @@ const renamingItem = ref<number | null>(null)
 const renameInput = ref('')
 const focusedIconIndex = ref<number | null>(null)
 const desktopRef = ref<HTMLElement | null>(null)
+const iconElements = ref<Map<number, HTMLElement>>(new Map())
+const renameInputs = ref<Map<number, HTMLInputElement>>(new Map())
 
 const STORAGE_KEY = 'xp-desktop-icons'
 const TRASH_KEY = 'xp-desktop-trash'
@@ -187,7 +189,7 @@ function startRename(id: number, name: string) {
   renamingItem.value = id
   renameInput.value = name
   nextTick(() => {
-    const input = document.querySelector('.desktop__icon--renaming input') as HTMLInputElement
+    const input = renameInputs.value.get(id)
     input?.focus()
     input?.select()
   })
@@ -345,13 +347,11 @@ function onDesktopMouseUp() {
   }
 
   const box = selectionBox.value
-  const icons = document.querySelectorAll('.desktop__icon')
-  
-  icons.forEach((iconEl, index) => {
-    const rect = iconEl.getBoundingClientRect()
-    const desktopRect = desktopRef.value?.getBoundingClientRect()
-    if (!desktopRect) return
+  const desktopRect = desktopRef.value?.getBoundingClientRect()
+  if (!desktopRect) return
 
+  iconElements.value.forEach((iconEl, id) => {
+    const rect = iconEl.getBoundingClientRect()
     const iconX = rect.left - desktopRect.left
     const iconY = rect.top - desktopRect.top
     const iconW = rect.width
@@ -364,13 +364,10 @@ function onDesktopMouseUp() {
       iconY > box.y + box.height
     )
 
-    const icon = visibleIcons.value[index]
-    if (icon) {
-      if (intersects) {
-        selectedIcons.value.add(icon.id)
-      } else if (box.width > 5 || box.height > 5) {
-        selectedIcons.value.delete(icon.id)
-      }
+    if (intersects) {
+      selectedIcons.value.add(id)
+    } else if (box.width > 5 || box.height > 5) {
+      selectedIcons.value.delete(id)
     }
   })
 
@@ -415,6 +412,7 @@ function closeAltTab() {
         v-for="(item, index) in visibleIcons"
         :key="item.id"
         class="desktop__icon"
+        :ref="el => { if (el) iconElements.set(item.id, el as HTMLElement) }"
         :class="{ 
           'desktop__icon--renaming': renamingItem === item.id,
           'desktop__icon--focused': focusedIconIndex === index,
@@ -433,6 +431,7 @@ function closeAltTab() {
         <input
           v-if="renamingItem === item.id"
           :id="`desktop-rename-${item.id}`"
+          :ref="el => { if (el) renameInputs.set(item.id, el as HTMLInputElement) }"
           v-model="renameInput"
           class="desktop__icon-input"
           :aria-label="`Renomear para ${item.label}`"
@@ -493,29 +492,4 @@ function closeAltTab() {
 
 <style lang="scss" scoped>
 @import '~/assets/css/components/xp/Desktop.scss';
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.selection-box {
-  position: absolute;
-  border: 1px solid rgba(49, 106, 197, 0.8);
-  background: rgba(49, 106, 197, 0.15);
-  z-index: 50;
-  pointer-events: none;
-}
-
-.desktop__icon--selected {
-  background: rgba(49, 106, 197, 0.5);
-  outline: 1px dotted rgba(255, 255, 255, 0.8);
-}
 </style>
