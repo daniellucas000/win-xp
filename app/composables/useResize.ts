@@ -1,3 +1,5 @@
+import { onUnmounted } from 'vue'
+
 export type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
 interface ResizeState {
@@ -13,6 +15,10 @@ interface ResizeState {
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 120
 
+function hasEdge(dir: ResizeDirection, edge: string): boolean {
+  return dir.includes(edge)
+}
+
 export function useResize(
   onUpdate: (x: number, y: number, width: number, height: number) => void
 ) {
@@ -27,7 +33,6 @@ export function useResize(
     currentH: number
   ) {
     e.preventDefault()
-    e.stopPropagation()
 
     state = {
       startX: e.clientX,
@@ -48,36 +53,45 @@ export function useResize(
 
     const dx = e.clientX - state.startX
     const dy = e.clientY - state.startY
-
-    let { startLeft: x, startTop: y, startW: w, startH: h } = state
     const dir = state.direction
 
-    if (dir.includes('e')) {
+    let x = state.startLeft
+    let y = state.startTop
+    let w = state.startW
+    let h = state.startH
+
+    if (hasEdge(dir, 'e')) {
       w = Math.max(MIN_WIDTH, state.startW + dx)
     }
-    if (dir.includes('w')) {
-      const newW = Math.max(MIN_WIDTH, state.startW - dx)
-      x = state.startLeft + (state.startW - newW)
-      w = newW
+
+    if (hasEdge(dir, 'w')) {
+      w = Math.max(MIN_WIDTH, state.startW - dx)
+      x = state.startLeft + (state.startW - w)
     }
 
-    if (dir.includes('s')) {
+    if (hasEdge(dir, 's')) {
       h = Math.max(MIN_HEIGHT, state.startH + dy)
     }
-    if (dir.includes('n')) {
-      const newH = Math.max(MIN_HEIGHT, state.startH - dy)
-      y = state.startTop + (state.startH - newH)
-      h = newH
+
+    if (hasEdge(dir, 'n')) {
+      h = Math.max(MIN_HEIGHT, state.startH - dy)
+      y = state.startTop + (state.startH - h)
     }
 
     onUpdate(x, y, w, h)
   }
 
   function onMouseUp() {
+    cleanup()
+  }
+
+  function cleanup() {
     state = null
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mouseup', onMouseUp)
   }
+
+  onUnmounted(cleanup)
 
   return { start }
 }

@@ -5,7 +5,7 @@ export interface FileSystemItem {
   parentId: number | null
   name: string
   type: FileType
-  icon: string
+  icon?: string
   size?: string
   modified: string
   content?: string

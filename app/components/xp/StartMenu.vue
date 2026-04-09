@@ -22,14 +22,17 @@ function launch(app: AppName) {
 <template>
   <div class="start-menu">
     <div class="start-menu__header">
-      <img src="https://preview.redd.it/windows-xp-account-picture-in-full-resolution-the-original-v0-tbzkv5zf8oc51.jpg?width=2800&format=pjpg&auto=webp&s=eedf636413fc123036e992d628678562a379ecb7" class="start-menu__avatar" />
+      <img
+        src="/images/xp/avatar.jpg"
+        class="start-menu__avatar"
+        alt="Foto do usuário"
+      />
       <span class="start-menu__username">Daniel</span>
     </div>
 
     <div class="start-menu__header-divider" />
 
     <div class="start-menu__body">
-
       <div class="start-menu__left">
         <button
           v-for="app in pinnedApps"
@@ -38,11 +41,11 @@ function launch(app: AppName) {
           :class="{ 'start-menu__item--bold': app.bold }"
           @click="launch(app.app)"
         >
-          <img :src="app.icon" class="start-menu__item-icon start-menu__item-icon--lg" />
+          <img :src="app.icon" class="start-menu__item-icon start-menu__item-icon--lg" :alt="app.label" />
           <span>{{ app.label }}</span>
         </button>
 
-        <div class="start-menu__divider" />
+        <div class="start-menu__divider" role="separator" />
 
         <div
           class="start-menu__item start-menu__item--all-programs"
@@ -50,26 +53,35 @@ function launch(app: AppName) {
           @mouseenter="showAllPrograms = true"
           @mouseleave="showAllPrograms = false"
         >
-          <span class="start-menu__arrow">
+          <button
+            class="start-menu__all-programs-trigger"
+            :aria-expanded="showAllPrograms"
+            aria-haspopup="true"
+          >
             <span class="start-menu__item--bold">All Programs</span>
-            <img src="/images/xp/icons/program-arrow.png" alt="">
-          </span>
+            <img src="/images/xp/icons/program-arrow.png" alt="" aria-hidden="true" />
+          </button>
 
-          <div v-if="showAllPrograms" class="start-menu__all-programs">
+          <div
+            v-if="showAllPrograms"
+            class="start-menu__all-programs"
+            role="menu"
+          >
             <button
               v-for="prog in allPrograms"
               :key="prog.label"
               class="start-menu__item"
+              role="menuitem"
               @click="launch(prog.app)"
             >
-              <img :src="prog.icon" class="start-menu__item-icon" />
+              <img :src="prog.icon" class="start-menu__item-icon" :alt="prog.label" />
               <span>{{ prog.label }}</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div class="start-menu__col-divider" />
+      <div class="start-menu__col-divider" role="separator" />
 
       <div class="start-menu__right">
         <button
@@ -79,7 +91,7 @@ function launch(app: AppName) {
           :class="{ 'start-menu__item--bold': app.bold }"
           @click="launch(app.app)"
         >
-          <img :src="app.icon" class="start-menu__item-icon" />
+          <img :src="app.icon" class="start-menu__item-icon" :alt="app.label" />
           <span>{{ app.label }}</span>
         </button>
       </div>
@@ -87,11 +99,11 @@ function launch(app: AppName) {
 
     <div class="start-menu__footer">
       <button class="start-menu__footer-btn">
-        <img src="/images/xp/icons/log-off.png" class="start-menu__item-icon" />
+        <img src="/images/xp/icons/log-off.png" class="start-menu__item-icon" alt="" aria-hidden="true" />
         <span>Log Off</span>
       </button>
       <button class="start-menu__footer-btn">
-        <img src="/images/xp/icons/power-off.png" class="start-menu__item-icon" />
+        <img src="/images/xp/icons/power-off.png" class="start-menu__item-icon" alt="" aria-hidden="true" />
         <span>Turn Off Computer</span>
       </button>
     </div>

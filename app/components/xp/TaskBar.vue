@@ -3,9 +3,11 @@ const winStore = useWindowsStore()
 const startMenuOpen = ref(false)
 const currentTime = ref('')
 
+let clockInterval: ReturnType<typeof setInterval> | null = null
+
 function updateTime() {
   const now = new Date()
-  currentTime.value = now.toLocaleTimeString('en-US', {
+  currentTime.value = now.toLocaleTimeString('pt-BR', {
     hour: '2-digit',
     minute: '2-digit',
   })
@@ -13,30 +15,32 @@ function updateTime() {
 
 onMounted(() => {
   updateTime()
-  setInterval(updateTime, 1000)
+  clockInterval = setInterval(updateTime, 1000)
 })
 
-function toggleStart() {
-  startMenuOpen.value = !startMenuOpen.value
-}
-
-function handleShowDesktop() {
-  winStore.toggleShowDesktop()
-}
+onUnmounted(() => {
+  if (clockInterval !== null) {
+    clearInterval(clockInterval)
+  }
+})
 </script>
 
 <template>
   <div class="taskbar" @click.stop>
-
-    <button class="taskbar__start" aria-label="Menu Iniciar" @click="toggleStart" />
+    <button
+      class="taskbar__start"
+      aria-label="Menu Iniciar"
+      :aria-expanded="startMenuOpen"
+      @click="startMenuOpen = !startMenuOpen"
+    />
 
     <button
       class="taskbar__show-desktop"
       aria-label="Mostrar desktop"
       title="Mostrar desktop"
-      @click="handleShowDesktop"
+      @click="winStore.toggleShowDesktop"
     >
-      <img src="/images/xp/icons/desktop.png" alt="" />
+      <img src="/images/xp/icons/desktop.png" alt="" aria-hidden="true" />
     </button>
 
     <div class="taskbar__windows" role="toolbar" aria-label="Janelas abertas">
@@ -58,7 +62,9 @@ function handleShowDesktop() {
     <div class="taskbar__tray" aria-label="Área de notificação">
       <img src="/images/xp/icons/tour-xp-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
       <img src="/images/xp/icons/sound-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
-      <time class="taskbar__time" :aria-label="`Hora atual: ${currentTime}`">{{ currentTime }}</time>
+      <time class="taskbar__time" :datetime="currentTime" :aria-label="`Hora atual: ${currentTime}`">
+        {{ currentTime }}
+      </time>
     </div>
   </div>
 
@@ -66,12 +72,10 @@ function handleShowDesktop() {
     <Transition name="start-menu">
       <XpStartMenu v-if="startMenuOpen" v-model="startMenuOpen" />
     </Transition>
-  </Teleport>
-
-  <Teleport to="body">
     <div
       v-if="startMenuOpen"
       class="start-overlay"
+      aria-hidden="true"
       @click="startMenuOpen = false"
     />
   </Teleport>

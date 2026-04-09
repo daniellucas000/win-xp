@@ -1,24 +1,21 @@
-type SoundName = 'open' | 'close' | 'error' | 'notification' | 'startup' | 'shutdown' | 'click' | 'menuPopup'
+const SOUND_NAMES = ['open', 'close', 'error', 'notification', 'startup', 'shutdown', 'click', 'menuPopup'] as const
+
+type SoundName = typeof SOUND_NAMES[number]
+
+const DEFAULT_VOLUME = 0.3
 
 const sounds: Partial<Record<SoundName, HTMLAudioElement>> = {}
 
-function initSounds() {
-  if (typeof window === 'undefined') return
-
-  const soundFiles: SoundName[] = ['open', 'close', 'error', 'notification', 'startup', 'shutdown', 'click', 'menuPopup']
-  for (const name of soundFiles) {
+if (typeof window !== 'undefined') {
+  for (const name of SOUND_NAMES) {
     const audio = new Audio(`/sounds/${name}.wav`)
     audio.preload = 'auto'
     sounds[name] = audio
   }
 }
 
-if (typeof window !== 'undefined') {
-  initSounds()
-}
-
 export function useSounds() {
-  const play = (name: SoundName, volume = 0.3) => {
+  function play(name: SoundName, volume = DEFAULT_VOLUME) {
     const audio = sounds[name]
     if (!audio) return
     const clone = audio.cloneNode() as HTMLAudioElement
@@ -27,13 +24,13 @@ export function useSounds() {
   }
 
   return {
-    playOpen: () => play('open'),
-    playClose: () => play('close'),
-    playError: () => play('error'),
+    playOpen:         () => play('open'),
+    playClose:        () => play('close'),
+    playError:        () => play('error'),
     playNotification: () => play('notification'),
-    playStartup: () => play('startup'),
-    playShutdown: () => play('shutdown'),
-    playClick: () => play('click'),
-    playMenuPopup: () => play('menuPopup'),
+    playStartup:      () => play('startup'),
+    playShutdown:     () => play('shutdown'),
+    playClick:        () => play('click'),
+    playMenuPopup:    () => play('menuPopup'),
   }
 }
