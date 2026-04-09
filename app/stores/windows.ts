@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export type AppName = 'notepad' | 'minesweeper' | 'paint' | 'ie' | 'mediaplayer' | 'explorer' | 'msn'
+export type AppName = 'notepad' | 'paint' | 'ie' | 'mediaplayer' | 'explorer' | 'msn'
 export interface WindowState {
   id: string
   app: AppName
@@ -21,7 +21,6 @@ export interface WindowState {
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   notepad:     { title: 'Untitled - Notepad',          width: 500, height: 380 },
-  minesweeper: { title: 'Minesweeper',                  width: 200, height: 260 },
   paint:       { title: 'Untitled - Paint',             width: 700, height: 500 },
   ie:          { title: 'Microsoft Internet Explorer',  width: 800, height: 560 },
   mediaplayer: { title: 'Windows Media Player',         width: 520, height: 400 },

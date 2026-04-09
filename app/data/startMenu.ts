@@ -21,7 +21,6 @@ export const rightApps: StartMenuApp[] = [
 ]
 
 export const allPrograms: StartMenuApp[] = [
-  { icon: '/images/xp/icons/minesweeper.png', label: 'Campo minado', app: 'minesweeper' },
   { icon: '/images/xp/icons/paint.png', label: 'Paint', app: 'paint' },
   { icon: '/images/xp/icons/notepad.png', label: 'Bloco de notas', app: 'notepad' },
   { icon: '/images/xp/icons/media-player.png', label: 'Windows Media Player', app: 'mediaplayer' },

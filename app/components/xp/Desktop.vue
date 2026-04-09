@@ -170,7 +170,6 @@ function handleDesktopClick() {
 
     <XpWindow v-for="win in store.openWindows" :key="win.id" :window-id="win.id">
       <XpAppsNotepad     :win="win" v-if="win.app === 'notepad'" />
-      <XpAppsMinesweeper :win="win" v-if="win.app === 'minesweeper'" />
       <XpAppsPaint       :win="win" v-if="win.app === 'paint'" />
       <XpAppsIe          :win="win" v-if="win.app === 'ie'" />
       <XpAppsExplorer    :win="win" v-if="win.app === 'explorer'" />
