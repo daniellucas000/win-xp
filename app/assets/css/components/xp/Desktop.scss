@@ -45,25 +45,33 @@
     &--selected,
     &--focused,
     &--renaming {
-      &::after {
-        content: '';
+      .desktop__icon-img-wrapper::after {
+        display: block;
+        z-index: 1;
         position: absolute;
-        top: 4px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40px;
-        height: 40px;
+        inset: 0;
+        content: " ";
         background: #316ac5;
         opacity: 0.5;
-        pointer-events: none;
+        -webkit-mask-image: var(--icon-mask);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
       }
 
       .desktop__icon-label {
         background: #316ac5;
         color: #fff;
         outline: 1px dotted #fff;
+        text-shadow: none;
       }
     }
+  }
+
+  &__icon-img-wrapper {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: block;
   }
 
   &__icon-input {
@@ -94,6 +102,5 @@
     word-break: break-word;
     max-width: 100%;
     padding: 2px 4px;
-
   }
 }

@@ -4,7 +4,7 @@ export interface Favorite {
 }
 
 export const favorites: Favorite[] = [
-  { label: 'MSN', url: 'https://www.msn.com' },
+  { label: 'GitHub', url: 'https://github.com' },
+  { label: 'LinkedIn', url: 'https://linkedin.com' },
   { label: 'Google', url: 'https://www.google.com' },
-  { label: 'Yahoo!', url: 'https://www.yahoo.com' },
 ]

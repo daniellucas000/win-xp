@@ -1,5 +1,6 @@
 export interface DesktopIconInfo {
   id: number
+  type: string
   isSystem: boolean
   isProtected?: boolean
   isDeleted?: boolean

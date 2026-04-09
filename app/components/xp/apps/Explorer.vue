@@ -2,6 +2,7 @@
 import type { WindowState } from '~/stores/windows'
 import { useSounds } from '~/composables/useSounds'
 import { useFileSystem } from '~/composables/useFileSystem'
+import { STORAGE_KEYS } from '~/constants/storage'
 import type { FileSystemItem } from '~/data/fileSystem'
 
 const { playOpen, playClick } = useSounds()
@@ -56,8 +57,6 @@ const sortAsc = ref(true)
 const contextMenu = ref({ open: false, x: 0, y: 0, itemId: null as number | null })
 const clipboard = ref<{ mode: 'cut' | 'copy'; ids: number[] } | null>(null)
 
-const TRASH_KEY = 'xp-desktop-trash'
-
 watch(() => props.win?.folderId, () => {
   currentFolderId.value = isTrashMode.value ? null : (props.win?.folderId ?? null)
   history.value = [currentFolderId.value]
@@ -91,7 +90,7 @@ function updateWindowTitle() {
 
 function loadTrashItems() {
   if (typeof window === 'undefined') return
-  const saved = localStorage.getItem(TRASH_KEY)
+  const saved = localStorage.getItem(STORAGE_KEYS.TRASH)
   if (saved) {
     try {
       trashItems.value = JSON.parse(saved).map((item: any) => ({
@@ -111,7 +110,7 @@ function loadTrashItems() {
 }
 
 function onStorageChange(e: StorageEvent) {
-  if (e.key === TRASH_KEY && isTrashMode.value) loadTrashItems()
+  if (e.key === STORAGE_KEYS.TRASH && isTrashMode.value) loadTrashItems()
 }
 
 const breadcrumbs = computed(() => {
@@ -235,13 +234,7 @@ function openItem(item: FileSystemItem) {
 }
 
 function openInNotepad(item: FileSystemItem) {
-  winStore.open('notepad', { title: item.name + ' - Notepad' })
-  nextTick(() => {
-    const notepadWin = winStore.windows.find(w => w.app === 'notepad' && !w.closing)
-    if (!notepadWin) return
-    const textarea = document.querySelector(`[data-window-id="${notepadWin.id}"] textarea`) as HTMLTextAreaElement
-    if (textarea) textarea.value = item.content || ''
-  })
+  winStore.open('notepad', { folderId: item.id, title: item.name + ' - Notepad' })
 }
 
 function resolveExeAssociation(name: string) {
