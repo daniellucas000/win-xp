@@ -1,32 +1,21 @@
-import type { AppName } from '~/stores/windows'
+import type { AppName } from '~/stores/windows';
 
 export interface DesktopIcon {
-  id: number
-  icon: string
-  label: string
-  app: AppName
-  size: number
-  type: string
-  modifiedAt: Date
-  isSystem: boolean
-  isProtected?: boolean
-  isDeleted?: boolean
+  id: number;
+  icon: string;
+  label: string;
+  app: AppName;
+  size: number;
+  type: string;
+  modifiedAt: Date;
+  isSystem: boolean;
+  isProtected?: boolean;
+  isDeleted?: boolean;
 }
 
-const DEFAULT_DATE = new Date('2000-01-01')
+const DEFAULT_DATE = new Date('2000-01-01');
 
 export const systemIcons: DesktopIcon[] = [
-  {
-    id: 0,
-    icon: '/images/xp/icons/folder.png',
-    label: 'Meus Projetos',
-    app: 'explorer',
-    size: 0,
-    type: 'folder',
-    modifiedAt: DEFAULT_DATE,
-    isSystem: true,
-    isProtected: true,
-  },
   {
     id: -1,
     icon: '/images/xp/icons/recycle-bin-empty.png',
@@ -98,4 +87,4 @@ export const systemIcons: DesktopIcon[] = [
     modifiedAt: DEFAULT_DATE,
     isSystem: true,
   },
-]
+];

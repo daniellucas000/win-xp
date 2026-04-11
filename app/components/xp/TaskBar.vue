@@ -60,7 +60,6 @@ onUnmounted(() => {
     </div>
 
     <div class="taskbar__tray" aria-label="Área de notificação">
-      <img src="/images/xp/icons/tour-xp-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
       <img src="/images/xp/icons/sound-small.png" class="taskbar__tray-icon" alt="" aria-hidden="true" />
       <time class="taskbar__time" :datetime="currentTime" :aria-label="`Hora atual: ${currentTime}`">
         {{ currentTime }}
