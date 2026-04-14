@@ -305,24 +305,13 @@ onUnmounted(() => {
           <div class="explorer__sidebar-title">Tarefas de Arquivo e Pasta</div>
           <div class="explorer__sidebar-content">
             <button
-              v-if="nav.currentFolderId.value !== null && !isTrashMode"
               class="explorer__sidebar-link"
               @click="startCreate('folder')"
             >
               Criar nova pasta
             </button>
-            <button
-              v-if="nav.currentFolderId.value !== null && !isTrashMode"
-              class="explorer__sidebar-link"
-              @click="startCreate('file')"
-            >
+            <button class="explorer__sidebar-link" @click="startCreate('file')">
               Criar novo arquivo
-            </button>
-            <button class="explorer__sidebar-link">
-              Publicar esta pasta na Web
-            </button>
-            <button class="explorer__sidebar-link">
-              Compartilhar esta pasta
             </button>
           </div>
         </div>
@@ -477,28 +466,6 @@ onUnmounted(() => {
         aria-label="Lista de arquivos"
       >
         <table class="explorer__table">
-          <thead>
-            <tr>
-              <th
-                class="explorer__th"
-                scope="col"
-                @click="items.handleSort('name')"
-              >
-                Nome<span class="explorer__sort-arrow">{{
-                  items.sortIcon('name')
-                }}</span>
-              </th>
-              <th
-                class="explorer__th"
-                scope="col"
-                @click="items.handleSort('type')"
-              >
-                Tipo<span class="explorer__sort-arrow">{{
-                  items.sortIcon('type')
-                }}</span>
-              </th>
-            </tr>
-          </thead>
           <tbody>
             <tr
               v-for="item in items.sortedItems.value"
@@ -526,7 +493,6 @@ onUnmounted(() => {
                 />
                 {{ item.name }}
               </td>
-              <td class="explorer__td">{{ items.fileTypeLabel(item.type) }}</td>
             </tr>
           </tbody>
         </table>

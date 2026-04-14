@@ -150,42 +150,9 @@ onBeforeUnmount(() => {
       </span>
     </div>
 
-    <button class="explorer__go-btn" aria-label="Ir para endereço">Ir</button>
+    <button class="explorer__go-btn" aria-label="Ir para endereço">
+      <img src="/images/xp/icons/go.png" />
+      Ir
+    </button>
   </div>
 </template>
-
-<style scoped lang="scss">
-.explorer__dropdown {
-  position: relative;
-}
-
-.explorer__dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 120px;
-  background: #fff;
-  border: 1px solid #999;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-}
-
-.explorer__dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 4px 8px;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    background: #316ac5;
-    color: #fff;
-  }
-
-  &.is-active {
-    font-weight: bold;
-  }
-}
-</style>
