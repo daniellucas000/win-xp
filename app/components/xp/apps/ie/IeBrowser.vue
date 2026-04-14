@@ -52,35 +52,73 @@ provide("ieCurrentUrl", readonly(toRef(ie, "url")));
 
 <template>
     <div class="ie">
-        <div class="ie__menubar">
-            <button class="ie__menu-item">File</button>
-            <button class="ie__menu-item">Edit</button>
-            <button class="ie__menu-item">View</button>
-            <button class="ie__menu-item">Favorites</button>
-            <button class="ie__menu-item">Tools</button>
-            <button class="ie__menu-item">Help</button>
+        <div class="explorer__menubar" role="menubar" aria-label="Menu">
+            <div class="explorer__menu-left">
+                <div class="explorer__menu-wrapper">
+                    <button class="explorer__menu-item" role="menuitem">Arquivo</button>
+                    <div class="explorer__menu-dropdown" role="menu">
+                        <button class="explorer__menu-dropdown-item" role="menuitem">Abrir...</button>
+                        <div class="explorer__menu-divider" role="separator"></div>
+                        <button class="explorer__menu-dropdown-item" role="menuitem">Fechar</button>
+                    </div>
+                </div>
+                <button class="explorer__menu-item" role="menuitem">Editar</button>
+                <button class="explorer__menu-item" role="menuitem">Exibir</button>
+                <button class="explorer__menu-item" role="menuitem">Favoritos</button>
+                <button class="explorer__menu-item" role="menuitem">Ferramentas</button>
+                <button class="explorer__menu-item" role="menuitem">Ajuda</button>
+            </div>
+            <span class="explorer__menu-item--flag" aria-hidden="true">
+                <img src="/images/xp/icons/browserflag.png" alt="">
+            </span>
         </div>
 
-        <div class="ie__toolbar">
-            <button class="ie__btn" :disabled="!ie.canBack" @click="ie.back()">
-                ◀
+        <div class="explorer__toolbar" role="toolbar" aria-label="Barra de ferramentas">
+            <button
+                class="explorer__btn explorer__btn--nav"
+                :disabled="!ie.canBack"
+                :tabindex="!ie.canBack ? -1 : 0"
+                aria-label="Voltar"
+                @click="ie.back()"
+            >
+                <img src="/images/xp/icons/back.png" alt="" aria-hidden="true"> Voltar
             </button>
             <button
-                class="ie__btn"
+                class="explorer__btn explorer__btn--nav"
                 :disabled="!ie.canForward"
+                :tabindex="!ie.canForward ? -1 : 0"
+                aria-label="Avançar"
                 @click="ie.forward()"
             >
-                ▶
+                Avançar <img src="/images/xp/icons/forward.png" alt="" aria-hidden="true">
             </button>
-            <button class="ie__btn" @click="triggerLoading">↻</button>
-            <button class="ie__btn" @click="ie.navigateTo(HOME_URL)">🏠</button>
-            <div class="ie__separator" />
-            <input
-                v-model="inputUrl"
-                class="ie__address"
-                @keyup.enter="navigate"
-            />
-            <button class="ie__go-btn" @click="navigate">Go</button>
+            <button
+                class="explorer__btn"
+                aria-label="Atualizar"
+                @click="triggerLoading"
+            >
+                <img src="/images/xp/icons/views.png" alt="" aria-hidden="true">
+            </button>
+            <button
+                class="explorer__btn"
+                aria-label="Início"
+                @click="ie.navigateTo(HOME_URL)"
+            >
+                <img src="/images/xp/icons/iexplorer.png" alt="" aria-hidden="true">
+            </button>
+        </div>
+
+        <div class="explorer__addressbar">
+            <span class="explorer__address-label" id="address-label">Endereço</span>
+            <div class="explorer__address-input" role="combobox" aria-labelledby="address-label">
+                <img src="/images/xp/icons/world.png" class="explorer__address-icon" alt="" aria-hidden="true" />
+                <input
+                    v-model="inputUrl"
+                    class="ie__address"
+                    @keyup.enter="navigate"
+                />
+            </div>
+            <button class="explorer__go-btn" aria-label="Ir para endereço" @click="navigate">Ir</button>
         </div>
 
         <div class="ie__favbar">

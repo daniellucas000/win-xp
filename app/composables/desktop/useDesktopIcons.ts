@@ -60,7 +60,6 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
       return JSON.parse(raw).map((icon: DesktopIcon) => ({
         ...icon,
         ...extra,
-        modifiedAt: new Date(icon.modifiedAt)
       }))
     } catch {
       console.warn(`[Desktop] Falha ao ler "${key}" do localStorage`)
@@ -129,8 +128,6 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
 
   function createDesktopIcon(data: Partial<DesktopIcon>): DesktopIcon {
     return {
-      size: 0,
-      modifiedAt: new Date(),
       isSystem: false,
       ...data,
     } as DesktopIcon
@@ -191,17 +188,9 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
     sortIcons((a, b) => a.label.localeCompare(b.label))
   }
 
-  function sortBySize() {
-    sortIcons((a, b) => a.size - b.size)
-  }
-
   function sortByType() {
     const typeOrder: Record<string, number> = { folder: 0, app: 1, txt: 2, trash: 3 }
     sortIcons((a, b) => (typeOrder[a.type] ?? 99) - (typeOrder[b.type] ?? 99))
-  }
-
-  function sortByModified() {
-    sortIcons((a, b) => b.modifiedAt.getTime() - a.modifiedAt.getTime())
   }
 
   return {
@@ -216,8 +205,6 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
     createFolder,
     createTextDocument,
     sortByName,
-    sortBySize,
     sortByType,
-    sortByModified,
   }
 }

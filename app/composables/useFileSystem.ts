@@ -13,10 +13,6 @@ const FILE_ICONS: Record<string, string> = {
 
 const VALID_TYPES = new Set(['txt', 'jpg', 'mp3', 'exe', 'html', 'doc'])
 
-function today(): string {
-  return new Date().toISOString().split('T')[0]!
-}
-
 function generateId(): number {
   return Date.now() + Math.floor(Math.random() * 1000)
 }
@@ -82,7 +78,6 @@ export function useFileSystem() {
       name,
       type: 'folder',
       icon: '/images/xp/icons/folder.png',
-      modified: today(),
     }
     items.value = [...items.value, folder]
     persist()
@@ -98,8 +93,6 @@ export function useFileSystem() {
       name,
       type,
       icon: FILE_ICONS[type] ?? FILE_ICONS.txt,
-      size: `${new Blob([content]).size} B`,
-      modified: today(),
       content: type === 'txt' ? content : undefined,
     }
     items.value = [...items.value, file]
@@ -110,7 +103,7 @@ export function useFileSystem() {
   function renameItem(id: number, newName: string) {
     items.value = items.value.map(i =>
       i.id === id && !i.isSystem
-        ? { ...i, name: newName, modified: today() }
+        ? { ...i, name: newName }
         : i
     )
     persist()
@@ -147,7 +140,7 @@ export function useFileSystem() {
   function updateContent(id: number, content: string) {
     items.value = items.value.map(i =>
       i.id === id && i.type === 'txt'
-        ? { ...i, content, size: `${new Blob([content]).size} B`, modified: today() }
+        ? { ...i, content }
         : i
     )
     persist()
