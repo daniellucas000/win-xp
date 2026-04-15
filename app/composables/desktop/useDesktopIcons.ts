@@ -53,6 +53,9 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
     computedIcons.value.filter(icon => !icon.isDeleted)
   )
 
+  type SortMode = 'name' | 'size' | 'type' | 'modified' | null
+  const currentSort = ref<Exclude<SortMode, null>>('name')
+
   function parseStoredIcons(key: string, extra?: Partial<DesktopIcon>): DesktopIcon[] {
     try {
       const raw = localStorage.getItem(key)
@@ -191,6 +194,17 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
   function sortByType() {
     const typeOrder: Record<string, number> = { folder: 0, app: 1, txt: 2, trash: 3 }
     sortIcons((a, b) => (typeOrder[a.type] ?? 99) - (typeOrder[b.type] ?? 99))
+    currentSort.value = 'type'
+  }
+
+  function sortBySize() {
+    sortIcons((a, b) => a.label.localeCompare(b.label))
+    currentSort.value = 'size'
+  }
+
+  function sortByModified() {
+    sortIcons((a, b) => a.label.localeCompare(b.label))
+    currentSort.value = 'modified'
   }
 
   return {
@@ -206,5 +220,8 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
     createTextDocument,
     sortByName,
     sortByType,
+    sortBySize,
+    sortByModified,
+    currentSort,
   }
 }

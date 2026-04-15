@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref } from 'vue';
+
 import XpIeBrowser from '~/components/xp/apps/ie/IeBrowser.vue';
 import { useWindowlessApps } from '~/composables/useWindowlessApps';
 import { useSounds } from '~/composables/useSounds';
@@ -13,18 +15,15 @@ import {
 const store = useWindowsStore();
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps();
 const { playOpen, playNotification } = useSounds();
-const notifStore = useNotificationsStore();
 
 const desktopRef = ref<HTMLElement | null>(null);
 
-const currentRenameInput = computed(() => {
+const renameInputs = new Map<number, HTMLInputElement>();
+
+function getCurrentRenameInput() {
   if (!renamingItem.value) return null;
-  const iconEl = document.querySelector(
-    `[data-desktop-icon-id="${renamingItem.value}"]`
-  );
-  const input = iconEl?.querySelector('input');
-  return input as HTMLInputElement | null;
-});
+  return renameInputs.get(renamingItem.value) || null;
+}
 
 const {
   desktopIcons,
@@ -38,16 +37,17 @@ const {
   createFolder,
   createTextDocument,
   sortByName,
-  sortBySize,
   sortByType,
+  sortBySize,
   sortByModified,
+  currentSort,
 } = useDesktopIcons({ store, openWindowlessApp, playOpen });
 
 const { renamingItem, renameInput, startRename, saveRename, cancelRename } =
   useDesktopRename({
     desktopIcons,
     saveToStorage,
-    getInputElement: () => currentRenameInput.value,
+    getInputElement: getCurrentRenameInput,
     onCancel: () => {
       focusedIconIndex.value = null;
     },
@@ -76,7 +76,6 @@ const { deleteIcon, restoreFromTrash, emptyTrash } = useDesktopTrash({
   saveToStorage,
   selectedIcons,
   playNotification,
-  notifStore,
 });
 
 useDesktopShortcuts({
@@ -85,11 +84,14 @@ useDesktopShortcuts({
   visibleIcons,
   deleteIcon,
   playNotification,
-  notifStore,
 });
 
 onMounted(() => {
   loadFromStorage();
+});
+
+onBeforeUnmount(() => {
+  renameInputs.clear();
 });
 
 function handleDesktopClick() {
@@ -120,22 +122,22 @@ function handleDesktopClick() {
     >
       <button
         v-for="(item, index) in visibleIcons"
-        :key="item.id"
+        :key="item?.id"
         :ref="
           (el) => {
-            if (el) iconElements.set(item.id, el as HTMLElement);
+            if (el) iconElements.set(item?.id, el as HTMLElement);
           }
         "
-        :data-desktop-icon-id="item.id"
+        :data-desktop-icon-id="item?.id"
         :class="[
           'desktop__icon',
           {
-            'desktop__icon--renaming': renamingItem === item.id,
+            'desktop__icon--renaming': renamingItem === item?.id,
             'desktop__icon--focused': focusedIconIndex === index,
-            'desktop__icon--selected': selectedIcons.has(item.id),
+            'desktop__icon--selected': selectedIcons.has(item?.id),
           },
         ]"
-        :aria-label="`${item.label}, clique duas vezes para abrir`"
+        :aria-label="`${item?.label}, clique duas vezes para abrir`"
         :tabindex="
           focusedIconIndex === index ||
           (focusedIconIndex === null && index === 0)
@@ -144,31 +146,41 @@ function handleDesktopClick() {
         "
         @dblclick="openItem(item)"
         @contextmenu="onIconRightClick($event, item)"
-        @click="toggleIconSelection(item.id, $event)"
+        @click="toggleIconSelection(item?.id, $event)"
         @focus="focusedIconIndex = index"
       >
         <span
           class="desktop__icon-img-wrapper"
-          :style="{ '--icon-mask': `url(${item.icon})` }"
+          :style="{ '--icon-mask': `url(${item?.icon})` }"
         >
-          <img :src="item.icon" class="desktop__icon-img" :alt="item.label" />
+          <img :src="item?.icon" class="desktop__icon-img" :alt="item?.label" />
         </span>
 
-        <template v-if="renamingItem === item.id">
-          <label :for="`desktop-rename-${item.id}`" class="visually-hidden">
-            Renomear {{ item.label }}
+        <template v-if="renamingItem === item?.id">
+          <label :for="`desktop-rename-${item?.id}`" class="visually-hidden">
+            Renomear {{ item?.label }}
           </label>
+
           <input
-            :id="`desktop-rename-${item.id}`"
+            :ref="
+              (el) => {
+                if (el) renameInputs.set(item.id, el as HTMLInputElement);
+                else renameInputs.delete(item.id);
+              }
+            "
+            :id="`desktop-rename-${item?.id}`"
             v-model="renameInput"
             class="desktop__icon-input"
-            :aria-label="`Renomear para ${item.label}`"
-            @blur="saveRename(item.id)"
+            :aria-label="`Renomear para ${item?.label}`"
+            @blur="saveRename(item?.id)"
             @keyup.enter="saveRename(item.id)"
             @keyup.escape="cancelRename"
           />
         </template>
-        <span v-else class="desktop__icon-label">{{ item.label }}</span>
+
+        <span v-else class="desktop__icon-label">
+          {{ item?.label }}
+        </span>
       </button>
     </div>
 
@@ -185,14 +197,14 @@ function handleDesktopClick() {
 
     <XpWindow
       v-for="win in store.openWindows"
-      :key="win.id"
-      :window-id="win.id"
+      :key="win?.id"
+      :window-id="win?.id"
     >
-      <XpAppsNotepad :win="win" v-if="win.app === 'notepad'" />
-      <XpAppsPaint :win="win" v-if="win.app === 'paint'" />
-      <XpIeBrowser :win="win" v-if="win.app === 'ie'" />
-      <XpAppsExplorer :win="win" v-if="win.app === 'explorer'" />
-      <XpAppsMsn :win="win" v-if="win.app === 'msn'" />
+      <XpAppsNotepad v-if="win?.app === 'notepad'" :win="win" />
+      <XpAppsPaint v-if="win?.app === 'paint'" :win="win" />
+      <XpIeBrowser v-if="win?.app === 'ie'" :win="win" />
+      <XpAppsExplorer v-if="win?.app === 'explorer'" :win="win" />
+      <XpAppsMsn v-if="win?.app === 'msn'" :win="win" />
     </XpWindow>
 
     <XpAppsMediaPlayer v-if="isWindowlessAppOpen('mediaplayer')" />
@@ -209,6 +221,7 @@ function handleDesktopClick() {
       :on-sort-by-size="sortBySize"
       :on-sort-by-type="sortByType"
       :on-sort-by-modified="sortByModified"
+      :current-sort="currentSort"
       :on-delete="deleteIcon"
       :on-restore="restoreFromTrash"
       :on-empty-trash="emptyTrash"

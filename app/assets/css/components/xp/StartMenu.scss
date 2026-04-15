@@ -87,7 +87,6 @@
     align-items: center;
     gap: 4px;
     padding: 2px;
-    cursor: default;
     font-size: 11px;
     color: black;
     background: none;
@@ -111,10 +110,21 @@
 
       &:hover {
         background: #316ac5;
+        color: white;
 
-        span {
+        .start-menu__all-programs-trigger {
           color: white;
         }
+      }
+
+      .start-menu__all-programs-trigger {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 auto;
+        background: none;
+        border: none;
+        color: inherit;
       }
     }
 
@@ -132,23 +142,6 @@
     &--lg {
       width: 32px;
       height: 32px;
-    }
-  }
-
-  &__arrow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-    font-size: 9px;
-
-    span {
-      font-weight: 700;
-      font-size: 11px;
-      line-height: 13px;
-      text-align: right;
-      letter-spacing: 0.02em;
-      color: #000000;
     }
   }
 
@@ -184,7 +177,6 @@
     border: none;
     color: white;
     font-size: 11px;
-    cursor: default;
     border-radius: 3px;
 
     &:hover {

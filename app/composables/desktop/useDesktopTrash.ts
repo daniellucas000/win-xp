@@ -1,4 +1,3 @@
-import { useNotificationsStore } from '~/stores/notifications'
 import { useDesktopIcons } from './useDesktopIcons'
 import { useFileSystem } from '~/composables/useFileSystem'
 
@@ -7,11 +6,10 @@ interface UseDesktopTrashOptions {
   saveToStorage: () => void
   selectedIcons: Ref<Set<number>>
   playNotification: () => void
-  notifStore: ReturnType<typeof useNotificationsStore>
 }
 
 export function useDesktopTrash(options: UseDesktopTrashOptions) {
-  const { desktopIcons, saveToStorage, selectedIcons, playNotification, notifStore } = options
+  const { desktopIcons, saveToStorage, selectedIcons, playNotification } = options
   const fileSystem = useFileSystem()
 
   function deleteIcon(id: number) {
@@ -36,11 +34,6 @@ export function useDesktopTrash(options: UseDesktopTrashOptions) {
     }
 
     playNotification()
-    notifStore.show(
-      'Lixeira',
-      `${toDelete.length} item(ns) movido(s) para a Lixeira.`,
-      { icon: 'info' }
-    )
   }
 
   function restoreFromTrash(id: number) {

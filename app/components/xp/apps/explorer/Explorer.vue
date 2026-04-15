@@ -17,8 +17,6 @@ const props = defineProps<{ win?: WindowState }>();
 const { playOpen } = useSounds();
 const fileSystem = useFileSystem();
 const winStore = useWindowsStore();
-const notifStore = useNotificationsStore();
-
 const isTrashMode = computed(() => (props.win?.folderId ?? 0) < 0);
 const initialFolderId = computed(() =>
   isTrashMode.value ? null : (props.win?.folderId ?? null)
@@ -119,26 +117,11 @@ function openItem(item: FileSystemItem) {
         title: item.name + ' - Notepad',
       }),
     exe: () => resolveExeAssociation(item.name),
-    jpg: () =>
-      notifStore.show(
-        'Visualizador de Imagens',
-        'Visualizador de Imagens do Windows (em breve)',
-        { icon: 'info', appIcon: '/images/xp/icons/image-file.png' }
-      ),
-    mp3: () =>
-      notifStore.show('Windows Media Player', 'Reproduzindo: ' + item.name, {
-        icon: 'info',
-        appIcon: '/images/xp/icons/media-player.png',
-      }),
+    jpg: () => {},
+    mp3: () => {},
   };
   const handler = handlers[item.type];
-  handler
-    ? handler()
-    : notifStore.show(
-        'Abrir com',
-        'Nenhum programa associado a este tipo de arquivo.',
-        { icon: 'warning' }
-      );
+  if (handler) handler();
 }
 
 function resolveExeAssociation(name: string) {
@@ -149,11 +132,6 @@ function resolveExeAssociation(name: string) {
   };
   const handler = execMap[name];
   if (handler) return handler();
-  const message =
-    name === 'cmd.exe'
-      ? 'Comando não disponível nesta versão.'
-      : `Não foi possível abrir ${name}.`;
-  notifStore.show('Executar', message, { icon: 'warning' });
 }
 
 function startRename(id: number) {
@@ -308,9 +286,11 @@ onUnmounted(() => {
               class="explorer__sidebar-link"
               @click="startCreate('folder')"
             >
+              <img src="/images/xp/icons/new-folder.png" alt="" />
               Criar nova pasta
             </button>
             <button class="explorer__sidebar-link" @click="startCreate('file')">
+              <img src="/images/xp/icons/file-text.png" alt="" />
               Criar novo arquivo
             </button>
           </div>
@@ -320,18 +300,17 @@ onUnmounted(() => {
           <div class="explorer__sidebar-title">Outros Locais</div>
           <div class="explorer__sidebar-content">
             <button class="explorer__sidebar-link" @click="navigateTo(null)">
+              <img src="/images/xp/icons/mycomputer.png" alt="" />
               Meu Computador
             </button>
             <button class="explorer__sidebar-link" @click="navigateTo(1)">
+              <img src="/images/xp/icons/my-documents.png" alt="" />
               Meus Documentos
             </button>
-            <button class="explorer__sidebar-link" @click="navigateTo(2)">
-              Documentos Compartilhados
-            </button>
             <button class="explorer__sidebar-link" @click="navigateTo(0)">
+              <img src="/images/xp/icons/recycle-bin-full.png" alt="" />
               Lixeira
             </button>
-            <button class="explorer__sidebar-link">Painel de Controle</button>
           </div>
         </div>
 
@@ -428,12 +407,17 @@ onUnmounted(() => {
           @contextmenu="onRightClick($event, item)"
         >
           <div class="explorer__icon-wrapper">
-            <img
-              :src="item.icon"
-              class="explorer__icon-img"
-              alt=""
-              aria-hidden="true"
-            />
+            <span
+              class="explorer__icon-img-wrapper"
+              :style="{ '--icon-mask': `url(${item.icon})` }"
+            >
+              <img
+                :src="item.icon"
+                class="explorer__icon-img"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
             <input
               v-if="renamingItem === item.id"
               v-model="renameInput"

@@ -6,7 +6,6 @@ interface UseDesktopShortcutsOptions {
   visibleIcons: ComputedRef<DesktopIcon[]>
   deleteIcon: (id: number) => void
   playNotification: () => void
-  notifStore: ReturnType<typeof useNotificationsStore>
 }
 
 export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
@@ -16,7 +15,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
     visibleIcons,
     deleteIcon,
     playNotification,
-    notifStore,
   } = options
 
   function deleteSelected() {
@@ -25,7 +23,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
       deleteIcon(id)
     }
     playNotification()
-    notifStore.show('Lixeira', `${toDelete.length} item(ns) movido(s) para a Lixeira.`, { icon: 'info' })
   }
 
   function deleteFocused() {
@@ -37,7 +34,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
 
     deleteIcon(icon.id)
     playNotification()
-    notifStore.show('Lixeira', 'Item movido para a Lixeira.', { icon: 'info' })
   }
 
   function handleGlobalKeydown(e: KeyboardEvent) {

@@ -79,7 +79,6 @@ onUnmounted(() => {
     />
   </Teleport>
 
-  <XpNotificationBalloon />
 </template>
 
 <style lang="scss" scoped>

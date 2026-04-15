@@ -8,8 +8,6 @@ const props = defineProps<Props>()
 
 const fileSystem = useFileSystem()
 const winStore = useWindowsStore()
-const notifStore = useNotificationsStore()
-
 const text = ref('')
 const originalText = ref('')
 const isDirty = ref(false)
@@ -80,7 +78,6 @@ function saveFile() {
     fileSystem.updateContent(fileId.value, text.value)
     originalText.value = text.value
     isDirty.value = false
-    notifStore.show('Notepad', 'Arquivo salvo com sucesso.', { icon: 'info', appIcon: '/images/xp/icons/notepad.png' })
   } else {
     showSaveDialog.value = true
     saveFileName.value = 'Documento.txt'
@@ -100,13 +97,9 @@ function confirmSaveAs() {
   originalText.value = text.value
   isDirty.value = false
   showSaveDialog.value = false
-  notifStore.show('Notepad', `"${name}" criado com sucesso.`, { icon: 'info', appIcon: '/images/xp/icons/notepad.png' })
 }
 
 function newFile() {
-  if (isDirty.value) {
-    notifStore.show('Notepad', 'Deseja salvar as alterações?', { icon: 'warning', appIcon: '/images/xp/icons/notepad.png' })
-  }
   text.value = ''
   originalText.value = ''
   isDirty.value = false
@@ -115,9 +108,6 @@ function newFile() {
 }
 
 function closeWindow() {
-  if (isDirty.value) {
-    notifStore.show('Notepad', 'Existem alterações não salvas.', { icon: 'warning', appIcon: '/images/xp/icons/notepad.png' })
-  }
   activeMenu.value = null
 }
 

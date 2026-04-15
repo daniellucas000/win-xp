@@ -171,32 +171,6 @@ export const defaultFileSystem: readonly FileSystemItem[] = Object.freeze([
     type: FileType.Mp3,
     icon: ICONS.audioFile,
   },
-
-  {
-    id: 40,
-    parentId: 2,
-    name: 'Imagens Compartilhadas',
-    type: FileType.Folder,
-    icon: ICONS.sharedPictures,
-    isSystem: true,
-  },
-  {
-    id: 41,
-    parentId: 2,
-    name: 'Músicas Compartilhadas',
-    type: FileType.Folder,
-    icon: ICONS.sharedMusic,
-    isSystem: true,
-  },
-  {
-    id: 42,
-    parentId: 2,
-    name: 'notas.txt',
-    type: FileType.Txt,
-    icon: ICONS.fileText,
-    content: 'Notas compartilhadas entre usuários.',
-  },
-
   {
     id: 50,
     parentId: 3,

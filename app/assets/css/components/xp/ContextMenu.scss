@@ -6,7 +6,7 @@
   background: #ffffff;
   border: 1px solid $xp-border-dark;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  min-width: 180px;
+  min-width: 112px;
   padding: 2px 0;
 
   &__divider {
@@ -18,8 +18,9 @@
   &__item {
     display: flex;
     align-items: center;
-    padding: 3px 24px;
-    cursor: default;
+    justify-content: space-between;
+    width: 100%;
+    padding: 3px 15px;
     position: relative;
     font-size: 11px;
     color: black;
@@ -41,14 +42,19 @@
       color: $xp-border-dark;
       pointer-events: none;
     }
-  }
 
-  &__item-label {
-    flex: 1;
+    &--label {
+      position: relative;
+
+      .bullet {
+        position: absolute;
+        left: -10px;
+      }
+    }
   }
 
   &__arrow {
-    font-size: 9px;
+    font-size: 5px;
     color: black;
     margin-left: 8px;
   }
@@ -70,5 +76,14 @@
     min-width: 180px;
     padding: 2px 0;
     z-index: 100000;
+  }
+
+  &__bullet {
+    font-weight: 700;
+    color: #003399;
+    margin-right: 6px;
+    width: 10px;
+    display: inline-block;
+    text-align: center;
   }
 }
