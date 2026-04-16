@@ -8,7 +8,6 @@ import { useDebounceFn } from '@vueuse/core'
 interface UseDesktopIconsOptions {
   store: ReturnType<typeof useWindowsStore>
   openWindowlessApp: (app: AppName) => void
-  playOpen: () => void
 }
 
 interface ContextMenuState {
@@ -23,7 +22,7 @@ const TRASH_EMPTY_ICON = '/images/xp/icons/recycle-bin-empty.png'
 const TRASH_FOLDER_ID = -1
 
 export function useDesktopIcons(options: UseDesktopIconsOptions) {
-  const { store, openWindowlessApp, playOpen } = options
+  const { store, openWindowlessApp } = options
   const fileSystem = useFileSystem()
 
   const desktopIcons = ref<DesktopIcon[]>([...systemIcons])
@@ -117,8 +116,6 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
   }
 
   function openItem(item: DesktopIcon) {
-    playOpen()
-
     if (item.app === 'mediaplayer') {
       return openWindowlessApp(item.app)
     }

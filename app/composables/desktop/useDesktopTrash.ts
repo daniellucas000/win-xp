@@ -5,11 +5,10 @@ interface UseDesktopTrashOptions {
   desktopIcons: ReturnType<typeof useDesktopIcons>['desktopIcons']
   saveToStorage: () => void
   selectedIcons: Ref<Set<number>>
-  playNotification: () => void
 }
 
 export function useDesktopTrash(options: UseDesktopTrashOptions) {
-  const { desktopIcons, saveToStorage, selectedIcons, playNotification } = options
+  const { desktopIcons, saveToStorage, selectedIcons } = options
   const fileSystem = useFileSystem()
 
   function deleteIcon(id: number) {
@@ -32,8 +31,6 @@ export function useDesktopTrash(options: UseDesktopTrashOptions) {
     for (const id of toDelete) {
       deleteIcon(id)
     }
-
-    playNotification()
   }
 
   function restoreFromTrash(id: number) {

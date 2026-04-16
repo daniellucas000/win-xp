@@ -3,7 +3,6 @@ import { onMounted, onBeforeUnmount, ref } from 'vue';
 
 import XpIeBrowser from '~/components/xp/apps/ie/IeBrowser.vue';
 import { useWindowlessApps } from '~/composables/useWindowlessApps';
-import { useSounds } from '~/composables/useSounds';
 import {
   useDesktopIcons,
   useDesktopSelection,
@@ -14,7 +13,6 @@ import {
 
 const store = useWindowsStore();
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps();
-const { playOpen, playNotification } = useSounds();
 
 const desktopRef = ref<HTMLElement | null>(null);
 
@@ -41,7 +39,7 @@ const {
   sortBySize,
   sortByModified,
   currentSort,
-} = useDesktopIcons({ store, openWindowlessApp, playOpen });
+} = useDesktopIcons({ store, openWindowlessApp });
 
 const { renamingItem, renameInput, startRename, saveRename, cancelRename } =
   useDesktopRename({
@@ -75,7 +73,6 @@ const { deleteIcon, restoreFromTrash, emptyTrash } = useDesktopTrash({
   desktopIcons,
   saveToStorage,
   selectedIcons,
-  playNotification,
 });
 
 useDesktopShortcuts({
@@ -83,7 +80,6 @@ useDesktopShortcuts({
   focusedIconIndex,
   visibleIcons,
   deleteIcon,
-  playNotification,
 });
 
 onMounted(() => {

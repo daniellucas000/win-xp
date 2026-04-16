@@ -26,11 +26,11 @@ function closeAllPrograms() {
   }, 150);
 }
 
-function launch(app: AppName) {
-  if (WINDOWLESS_APPS.has(app)) {
-    openWindowlessApp(app);
+function launch(data: { app: AppName; icon: string }) {
+  if (WINDOWLESS_APPS.has(data.app)) {
+    openWindowlessApp(data.app);
   } else {
-    store.open(app);
+    store.open(data.app, { icon: data.icon });
   }
 
   open.value = false;

@@ -15,7 +15,7 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'open'): void;
   (e: 'close'): void;
-  (e: 'select', app: AppName): void;
+  (e: 'select', data: { app: AppName; icon: string }): void;
 }>();
 </script>
 
@@ -40,7 +40,7 @@ const emit = defineEmits<{
         v-for="item in items"
         :key="item.id"
         v-bind="item"
-        @click="emit('select', $event)"
+        @click="emit('select', { app: item.app, icon: item.icon })"
       />
     </div>
   </div>

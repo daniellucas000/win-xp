@@ -1,11 +1,7 @@
-import { useSounds } from '~/composables/useSounds';
-
 export function useExplorerNav(
   initialFolderId: Ref<number | null>,
   isTrashMode: ComputedRef<boolean>
 ) {
-  const { playOpen } = useSounds();
-
   const currentFolderId = ref<number | null>(initialFolderId.value);
   const history = ref<(number | null)[]>([initialFolderId.value]);
   const historyIndex = ref(0);
@@ -21,7 +17,6 @@ export function useExplorerNav(
   );
 
   function navigateTo(folderId: number | null) {
-    playOpen();
     if (historyIndex.value < history.value.length - 1) {
       history.value = history.value.slice(0, historyIndex.value + 1);
     }

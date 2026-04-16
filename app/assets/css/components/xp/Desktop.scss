@@ -103,3 +103,10 @@
     padding: 2px 4px;
   }
 }
+
+.selection-box {
+  position: absolute;
+  background: rgba(49, 106, 197, 0.2);
+  border: 1px solid #316ac5;
+  pointer-events: none;
+}

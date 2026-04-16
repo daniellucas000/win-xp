@@ -11,7 +11,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'click', app: AppName): void;
+  (e: 'click', data: { app: AppName; icon: string }): void;
 }>();
 </script>
 
@@ -19,7 +19,7 @@ const emit = defineEmits<{
   <button
     class="start-menu__item"
     :class="{ 'start-menu__item--bold': bold }"
-    @click="emit('click', app)"
+    @click="emit('click', { app, icon })"
   >
     <img
       :src="icon"

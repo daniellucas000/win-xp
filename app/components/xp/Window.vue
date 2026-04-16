@@ -5,7 +5,6 @@ import { useResize, type ResizeDirection } from '~/composables/useResize'
 const props = defineProps<{ windowId: string }>()
 
 const windowsStore = useWindowsStore()
-const { playClose } = useSounds()
 
 const win = computed(() => windowsStore.windows.find(w => w.id === props.windowId))
 
@@ -38,7 +37,6 @@ function onResizeMousedown(e: MouseEvent, dir: ResizeDirection) {
 }
 
 function onClose() {
-  playClose()
   windowsStore.close(props.windowId)
 }
 </script>

@@ -5,7 +5,6 @@ interface UseDesktopShortcutsOptions {
   focusedIconIndex: Ref<number | null>
   visibleIcons: ComputedRef<DesktopIcon[]>
   deleteIcon: (id: number) => void
-  playNotification: () => void
 }
 
 export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
@@ -14,7 +13,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
     focusedIconIndex,
     visibleIcons,
     deleteIcon,
-    playNotification,
   } = options
 
   function deleteSelected() {
@@ -22,7 +20,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
     for (const id of toDelete) {
       deleteIcon(id)
     }
-    playNotification()
   }
 
   function deleteFocused() {
@@ -33,7 +30,6 @@ export function useDesktopShortcuts(options: UseDesktopShortcutsOptions) {
     if (!icon || icon.isSystem || icon.isProtected) return
 
     deleteIcon(icon.id)
-    playNotification()
   }
 
   function handleGlobalKeydown(e: KeyboardEvent) {

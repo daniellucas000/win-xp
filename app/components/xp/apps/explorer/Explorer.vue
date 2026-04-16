@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { WindowState } from '~/stores/windows';
 import type { FileSystemItem } from '~/data/fileSystem';
-import { useSounds } from '~/composables/useSounds';
 import { useFileSystem } from '~/composables/useFileSystem';
 import { useExplorerNav } from '~/composables/explorer/useExplorerNav';
 import { useExplorerSelection } from '~/composables/explorer/useExplorerSelection';
@@ -14,7 +13,6 @@ import ExplorerContextMenu from './ExplorerContextMenu.vue';
 
 const props = defineProps<{ win?: WindowState }>();
 
-const { playOpen } = useSounds();
 const fileSystem = useFileSystem();
 const winStore = useWindowsStore();
 const isTrashMode = computed(() => (props.win?.folderId ?? 0) < 0);
@@ -108,7 +106,6 @@ function goUp() {
 }
 
 function openItem(item: FileSystemItem) {
-  playOpen();
   const handlers: Record<string, () => void> = {
     folder: () => navigateTo(item.id),
     txt: () =>

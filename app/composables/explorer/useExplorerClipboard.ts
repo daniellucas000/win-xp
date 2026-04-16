@@ -1,5 +1,4 @@
 import type { FileSystemItem } from '~/data/fileSystem';
-import { useSounds } from '~/composables/useSounds';
 
 interface ClipboardState {
   mode: 'cut' | 'copy';
@@ -10,19 +9,16 @@ export function useExplorerClipboard(
   fileSystem: ReturnType<typeof useFileSystem>,
   activeIds: ComputedRef<number[]>
 ) {
-  const { playClick } = useSounds();
   const clipboard = ref<ClipboardState | null>(null);
 
   function cutItems() {
     if (activeIds.value.length === 0) return;
     clipboard.value = { mode: 'cut', ids: [...activeIds.value] };
-    playClick();
   }
 
   function copyItems() {
     if (activeIds.value.length === 0) return;
     clipboard.value = { mode: 'copy', ids: [...activeIds.value] };
-    playClick();
   }
 
   function pasteItems(currentFolderId: number | null) {
@@ -44,7 +40,6 @@ export function useExplorerClipboard(
       }
     }
     if (clipboard.value.mode === 'cut') clipboard.value = null;
-    playClick();
   }
 
   return { clipboard, cutItems, copyItems, pasteItems };

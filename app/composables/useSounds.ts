@@ -1,4 +1,4 @@
-const SOUND_NAMES = ['open', 'close', 'error', 'notification', 'startup', 'shutdown', 'click', 'menuPopup'] as const
+const SOUND_NAMES = ['click'] as const
 
 type SoundName = typeof SOUND_NAMES[number]
 
@@ -24,13 +24,6 @@ export function useSounds() {
   }
 
   return {
-    playOpen:         () => play('open'),
-    playClose:        () => play('close'),
-    playError:        () => play('error'),
-    playNotification: () => play('notification'),
-    playStartup:      () => play('startup'),
-    playShutdown:     () => play('shutdown'),
-    playClick:        () => play('click'),
-    playMenuPopup:    () => play('menuPopup'),
+    playClick: () => play('click'),
   }
 }
