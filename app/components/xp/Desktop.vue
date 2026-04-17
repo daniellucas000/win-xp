@@ -2,6 +2,7 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 
 import XpIeBrowser from '~/components/xp/apps/ie/IeBrowser.vue';
+import XpMsnChatWindow from '~/components/xp/apps/msn/ChatWindow.vue';
 import { useWindowlessApps } from '~/composables/useWindowlessApps';
 import {
   useDesktopIcons,
@@ -201,6 +202,7 @@ function handleDesktopClick() {
       <XpIeBrowser v-if="win?.app === 'ie'" :win="win" />
       <XpAppsExplorer v-if="win?.app === 'explorer'" :win="win" />
       <XpAppsMsn v-if="win?.app === 'msn'" :win="win" />
+      <XpMsnChatWindow v-if="win?.app === 'msn-chat'" :win="win" />
     </XpWindow>
 
     <XpAppsMediaPlayer v-if="isWindowlessAppOpen('mediaplayer')" />

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export type AppName = 'notepad' | 'paint' | 'ie' | 'mediaplayer' | 'explorer' | 'msn'
+export type AppName = 'notepad' | 'paint' | 'ie' | 'mediaplayer' | 'explorer' | 'msn' | 'msn-chat'
 export interface WindowState {
   id: string
   app: AppName
@@ -26,6 +26,7 @@ const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   mediaplayer: { title: 'Windows Media Player',         width: 520, height: 400 },
   explorer:    { title: 'Meu computador',               width: 600, height: 420 },
   msn:         { title: 'MSN Messenger',                width: 280, height: 450 },
+  'msn-chat': { title: 'Conversation',                 width: 380, height: 450 },
 }
 
 let zCounter = 100

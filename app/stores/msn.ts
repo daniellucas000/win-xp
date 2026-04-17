@@ -1,4 +1,5 @@
 export const useMsnStore = defineStore('msn', () => {
+  const activeChatWindows = ref<Record<string, number>>({})
   const currentUser = ref<{
     name: string
     status: 'online' | 'away' | 'busy' | 'invisible'
@@ -113,6 +114,14 @@ export const useMsnStore = defineStore('msn', () => {
     conversations.value[contactId].push(message)
   }
 
+  function setActiveChat(windowId: string, contactId: number) {
+    activeChatWindows.value[windowId] = contactId
+  }
+
+  function getContactForWindow(windowId: string): number | undefined {
+    return activeChatWindows.value[windowId]
+  }
+
   return {
     currentUser,
     statusOptions,
@@ -122,6 +131,9 @@ export const useMsnStore = defineStore('msn', () => {
     updateStatus,
     contacts,
     conversations,
-    addMessage
+    addMessage,
+    activeChatWindows,
+    setActiveChat,
+    getContactForWindow
   }
 })

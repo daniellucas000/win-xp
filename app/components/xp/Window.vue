@@ -6,6 +6,8 @@ const props = defineProps<{ windowId: string }>()
 
 const windowsStore = useWindowsStore()
 
+provide('windowId', props.windowId)
+
 const win = computed(() => windowsStore.windows.find(w => w.id === props.windowId))
 
 const { start: startDrag } = useDrag(

@@ -1,13 +1,9 @@
 .chat {
-  position: absolute;
-  right: 10px;
-  bottom: 0;
-  width: 250px;
-  height: 300px;
-  background: #fff;
-  border: 1px solid #000;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  background: white linear-gradient(to bottom, white, #EEF2F6, #DFE7EF, #CADAEB, #DFE7EF, #EEF2F6, white);
+  height: 100%;
 }
 
 .chat__header {

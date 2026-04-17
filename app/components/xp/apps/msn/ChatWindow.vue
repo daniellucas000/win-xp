@@ -1,27 +1,33 @@
 <script setup lang="ts">
-const props = defineProps<{ contactId: number }>()
-const open = defineModel<boolean>()
+const props = defineProps<{ win: any }>()
 
 const store = useMsnStore()
+const windowsStore = useWindowsStore()
 const { sendMessage } = useAiAgent()
 
 const input = ref('')
 const isTyping = ref(false)
 
+const contactId = computed(() => store.getContactForWindow(props.win.id))
+
 const messages = computed(() =>
-  store.conversations[props.contactId] || []
+  store.conversations[contactId.value] || []
 )
 
 const contact = computed(() =>
-  store.contacts.find(c => c.id === props.contactId)
+  store.contacts.find(c => c.id === contactId.value)
 )
 
+function closeChat() {
+  windowsStore.close(props.win.id)
+}
+
 async function handleSend() {
-  if (!input.value) return
+  if (!input.value || !contactId.value) return
 
   const text = input.value
 
-  store.addMessage(props.contactId, {
+  store.addMessage(contactId.value, {
     from: 'user',
     text
   })
@@ -33,7 +39,7 @@ async function handleSend() {
 
   isTyping.value = false
 
-  store.addMessage(props.contactId, {
+  store.addMessage(contactId.value, {
     from: 'bot',
     text: reply
   })
@@ -44,7 +50,7 @@ async function handleSend() {
   <div class="chat" role="dialog" :aria-label="`Conversa com ${contact?.name}`">
     <div class="chat__header">
       <span class="chat__title">{{ contact?.name }}</span>
-      <button class="chat__close" aria-label="Fechar conversa" @click="open.value = false">✕</button>
+      <button class="chat__close" aria-label="Fechar conversa" @click="closeChat">✕</button>
     </div>
 
     <div class="chat__messages" role="log" aria-label="Mensagens" aria-live="polite">

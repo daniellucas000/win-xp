@@ -1,26 +1,32 @@
 <script setup lang="ts">
-import ChatWindow from './ChatWindow.vue';
 import ContactItem from './ContactItem.vue';
 import LoginScreen from './LoginScreen.vue';
 import UserStatus from './UserStatus.vue';
 
-const store = useMsnStore()
+const store = useMsnStore();
+const windowsStore = useWindowsStore();
+const windowId = inject<string>('windowId');
 
-const selectedContact = ref<number | null>(null)
-const chatOpen = ref(false)
-const loginData = ref<{ name: string; status: string; remember: boolean } | null>(null)
+const loginData = ref<{
+  name: string;
+  status: string;
+  remember: boolean;
+} | null>(null);
 
-const openChat = (id: number) => {
-  selectedContact.value = id
-  chatOpen.value = true
+function openChat(id: number) {
+  const chatWindowId = `msn-chat-${Date.now()}`;
+  const contact = store.contacts.find((c) => c.id === id);
+  windowsStore.open('msn-chat', {
+    title: `${contact?.name} - Conversation`,
+  });
+  store.setActiveChat(chatWindowId, id);
 }
 
 watch(loginData, (data) => {
-  if (data) {
-    store.login(data.name, data.status as any, data.remember)
-    showLoginScreen.value = false
+  if (data && windowId) {
+    store.login(data.name, data.status as any, data.remember);
   }
-})
+});
 </script>
 
 <template>
@@ -35,24 +41,23 @@ watch(loginData, (data) => {
       </div>
 
       <div class="msn__contacts" role="listbox" aria-label="Lista de contatos">
-        <ContactItem
-          v-for="c in store.contacts"
-          :key="c.id"
-          :contact="c"
-          role="option"
-          @click="openChat(c.id)"
-        />
+        <div class="msn__contacts--side-bar">
+          <img src="/images/xp/icons/contacts.jpg" alt="" />
+        </div>
+        <div class="msn__contacts--list">
+          <ContactItem
+            v-for="contact in store.contacts"
+            :key="contact.id"
+            :contact="contact"
+            role="option"
+            @click="openChat(contact.id)"
+          />
+        </div>
       </div>
-
-      <ChatWindow
-        v-if="chatOpen && selectedContact !== null"
-        v-model="chatOpen"
-        :contact-id="selectedContact"
-      />
     </template>
   </div>
 </template>
 
 <style>
-@import '~/assets/css/components/xp/apps/msn/index.css';
+@import '~/assets/css/components/xp/apps/msn/index.scss';
 </style>
