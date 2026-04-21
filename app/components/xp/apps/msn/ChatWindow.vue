@@ -1,82 +1,165 @@
 <script setup lang="ts">
-const props = defineProps<{ win: any }>()
+const props = defineProps<{ win: any }>();
 
-const store = useMsnStore()
-const windowsStore = useWindowsStore()
-const { sendMessage } = useAiAgent()
+const msnStore = useMsnStore();
+const { sendMessage } = useAiAgent();
 
-const input = ref('')
-const isTyping = ref(false)
+const input = ref('');
+const isTyping = ref(false);
 
-const contactId = computed(() => store.getContactForWindow(props.win.id))
+const contactId = computed(() => msnStore.getContactForWindow(props.win.id));
 
-const messages = computed(() =>
-  store.conversations[contactId.value] || []
-)
-
+const messages = computed(
+  () => (contactId.value ? msnStore.conversations[contactId.value] : null) ?? []
+);
 const contact = computed(() =>
-  store.contacts.find(c => c.id === contactId.value)
-)
+  msnStore.contacts.find((c) => c.id === contactId.value)
+);
 
-function closeChat() {
-  windowsStore.close(props.win.id)
-}
+const currentUser = computed(() => msnStore.currentUser);
 
 async function handleSend() {
-  if (!input.value || !contactId.value) return
+  if (!input.value || !contactId.value) return;
 
-  const text = input.value
+  const text = input.value;
 
-  store.addMessage(contactId.value, {
+  msnStore.addMessage(contactId.value, {
     from: 'user',
-    text
-  })
+    text,
+  });
 
-  input.value = ''
-  isTyping.value = true
+  input.value = '';
+  isTyping.value = true;
 
-  const reply = await sendMessage(text, contact.value?.prompt || '')
+  const reply = await sendMessage(text, contact.value?.prompt || '');
 
-  isTyping.value = false
+  isTyping.value = false;
 
-  store.addMessage(contactId.value, {
+  msnStore.addMessage(contactId.value, {
     from: 'bot',
-    text: reply
-  })
+    text: reply,
+  });
 }
 </script>
 
 <template>
   <div class="chat" role="dialog" :aria-label="`Conversa com ${contact?.name}`">
-    <div class="chat__header">
-      <span class="chat__title">{{ contact?.name }}</span>
-      <button class="chat__close" aria-label="Fechar conversa" @click="closeChat">✕</button>
-    </div>
+    <div class="chat__left">
+      <div class="chat__toolbar">
+        <div class="chat__toolbar-actions">
+          <button
+            class="chat__toolbar--btn"
+            aria-label="Convidar para conversa"
+          >
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/invite.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Convidar</span>
+          </button>
+          <button class="chat__toolbar--btn" aria-label="Enviar arquivos">
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/send.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Enviar arquivos</span>
+          </button>
+          <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/video.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Vídeo</span>
+          </button>
+          <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/voice.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Voz</span>
+          </button>
+          <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/activities.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Atividades</span>
+          </button>
+          <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
+            <span class="chat__toolbar-btn-icon">
+              <img src="/images/xp/icons/games.png" alt="" />
+            </span>
+            <span class="chat__toolbar-btn-text">Jogos</span>
+          </button>
+        </div>
+      </div>
 
-    <div class="chat__messages" role="log" aria-label="Mensagens" aria-live="polite">
       <div
-        v-for="(msg, i) in messages"
-        :key="i"
-        :class="['msg', msg.from]"
-        :aria-label="`${msg.from === 'user' ? 'Você' : contact?.name}: ${msg.text}`"
+        class="chat__messages"
+        role="log"
+        aria-label="Mensagens"
+        aria-live="polite"
       >
-        {{ msg.text }}
+        <div class="chat__messages--header">
+          <span>Para:</span>
+        </div>
+        <div class="chat__messages--content">
+          <div
+            v-for="(msg, i) in messages"
+            :key="i"
+            class="chat__message"
+            :class="
+              msg.from === 'user'
+                ? 'chat__message--sent'
+                : 'chat__message--received'
+            "
+            :aria-label="`${msg.from === 'user' ? 'Você' : contact?.name}: ${msg.text}`"
+          >
+            <div class="chat__message-name">
+              {{ msg.from === 'user' ? currentUser?.name : contact?.name }}
+            </div>
+            {{ msg.text }}
+          </div>
+        </div>
+        <div v-if="isTyping" class="chat__typing" aria-live="polite">
+          digitando...
+        </div>
       </div>
 
-      <div v-if="isTyping" class="typing" aria-live="polite">
-        digitando...
+      <div class="chat__input-area">
+        <label for="chat-message" class="visually-hidden"
+          >Digite sua mensagem</label
+        >
+        <input
+          id="chat-message"
+          v-model="input"
+          class="chat__input"
+          type="text"
+          placeholder="Digite uma mensagem..."
+          aria-label="Digite sua mensagem"
+          @keyup.enter="handleSend"
+        />
+        <button
+          class="chat__send-btn"
+          @click="handleSend"
+          aria-label="Enviar mensagem"
+        >
+          Enviar
+        </button>
       </div>
     </div>
 
-    <div class="chat__input">
-      <label for="chat-message" class="visually-hidden">Digite sua mensagem</label>
-      <input id="chat-message" v-model="input" aria-label="Digite sua mensagem" @keyup.enter="handleSend" />
-      <button @click="handleSend" aria-label="Enviar mensagem">Enviar</button>
+    <div class="chat__right">
+      <div class="chat__avatar chat__avatar--contact" :title="contact?.name">
+        <span class="chat__avatar-initials">{{
+          contact?.name?.charAt(0)
+        }}</span>
+      </div>
+      <div class="chat__avatar chat__avatar--user" :title="currentUser?.name">
+        <span class="chat__avatar-initials">{{
+          currentUser?.name?.charAt(0)
+        }}</span>
+      </div>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -88,8 +171,6 @@ async function handleSend() {
   white-space: nowrap;
   border: 0;
 }
-</style>
 
-<style>
-@import '~/assets/css/components/xp/apps/msn/ChatWindow.css';
+@import '~/assets/css/components/xp/apps/msn/ChatWindow.scss';
 </style>

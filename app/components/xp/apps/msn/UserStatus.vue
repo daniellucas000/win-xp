@@ -30,12 +30,7 @@ function selectStatus(status: string) {
       :aria-label="`Status: ${statusLabels[store.currentUser?.status || 'online']}, clique para alterar`"
       @click="showStatusMenu = !showStatusMenu"
     >
-      <img
-        v-if="store.currentUser?.avatar"
-        :src="store.currentUser.avatar"
-        :alt="store.currentUser?.name"
-      />
-      <span v-else class="user-status__avatar-initial">
+      <span class="user-status__avatar-initial">
         {{ store.currentUser?.name?.charAt(0) }}
       </span>
       <div
@@ -62,7 +57,7 @@ function selectStatus(status: string) {
       aria-label="Sair"
       @click="store.logout()"
     >
-      Sign Out
+      Sair
     </button>
 
     <div

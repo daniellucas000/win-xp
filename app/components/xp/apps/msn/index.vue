@@ -17,7 +17,7 @@ function openChat(id: number) {
   const chatWindowId = `msn-chat-${Date.now()}`;
   const contact = store.contacts.find((c) => c.id === id);
   windowsStore.open('msn-chat', {
-    title: `${contact?.name} - Conversation`,
+    title: `${contact?.name} - Conversa`,
   });
   store.setActiveChat(chatWindowId, id);
 }

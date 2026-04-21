@@ -28,12 +28,14 @@ const resizeDirections: ResizeDirection[] = ['n', 's', 'e', 'w', 'ne', 'nw', 'se
 
 function onTitlebarMousedown(e: MouseEvent) {
   if (!win.value || win.value.maximized) return
+  e.stopPropagation()
   windowsStore.focusWindow(props.windowId)
   startDrag(e, win.value.x, win.value.y)
 }
 
 function onResizeMousedown(e: MouseEvent, dir: ResizeDirection) {
   if (!win.value) return
+  e.stopPropagation()
   windowsStore.focusWindow(props.windowId)
   startResize(e, dir, win.value.x, win.value.y, win.value.width, win.value.height)
 }
