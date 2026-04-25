@@ -44,9 +44,9 @@ async function handleSend() {
 
 <template>
   <div class="chat" role="dialog" :aria-label="`Conversa com ${contact?.name}`">
-    <div class="chat__left">
+    <div class="chat__content">
       <div class="chat__toolbar">
-        <div class="chat__toolbar-actions">
+        <div class="chat__toolbar--actions">
           <button
             class="chat__toolbar--btn"
             aria-label="Convidar para conversa"
@@ -60,7 +60,7 @@ async function handleSend() {
             <span class="chat__toolbar-btn-icon">
               <img src="/images/xp/icons/send.png" alt="" />
             </span>
-            <span class="chat__toolbar-btn-text">Enviar arquivos</span>
+            <span class="chat__toolbar-btn-text">Arquivos</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
             <span class="chat__toolbar-btn-icon">
@@ -87,73 +87,96 @@ async function handleSend() {
             <span class="chat__toolbar-btn-text">Jogos</span>
           </button>
         </div>
-      </div>
-
-      <div
-        class="chat__messages"
-        role="log"
-        aria-label="Mensagens"
-        aria-live="polite"
-      >
-        <div class="chat__messages--header">
-          <span>Para:</span>
-        </div>
-        <div class="chat__messages--content">
-          <div
-            v-for="(msg, i) in messages"
-            :key="i"
-            class="chat__message"
-            :class="
-              msg.from === 'user'
-                ? 'chat__message--sent'
-                : 'chat__message--received'
-            "
-            :aria-label="`${msg.from === 'user' ? 'Você' : contact?.name}: ${msg.text}`"
-          >
-            <div class="chat__message-name">
-              {{ msg.from === 'user' ? currentUser?.name : contact?.name }}
+        <div class="chat__toolbar--small-container">
+          <div class="chat__toolbar--left"></div>
+          <div class="chat__toolbar--center">
+            <div class="buttons">
+              <button>
+                <img
+                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-unblock.png
+"
+                  alt=""
+                />
+              </button>
+              <button>
+                <img
+                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.png
+"
+                  alt=""
+                />
+              </button>
             </div>
-            {{ msg.text }}
+          </div>
+          <div class="chat__toolbar--right"></div>
+          <div class="chat__toolbar--end"></div>
+        </div>
+      </div>
+      <div class="chat__area">
+        <div
+          class="chat__messages"
+          role="log"
+          aria-label="Mensagens"
+          aria-live="polite"
+        >
+          <div class="chat__messages--header">
+            <span>Para:</span>
+          </div>
+          <div class="chat__messages--content">
+            <div
+              v-for="(msg, i) in messages"
+              :key="i"
+              class="chat__message"
+              :class="
+                msg.from === 'user'
+                  ? 'chat__message--sent'
+                  : 'chat__message--received'
+              "
+              :aria-label="`${msg.from === 'user' ? 'Você' : contact?.name}: ${msg.text}`"
+            >
+              <div class="chat__message-name">
+                {{ msg.from === 'user' ? currentUser?.name : contact?.name }}
+              </div>
+              {{ msg.text }}
+            </div>
+          </div>
+          <div v-if="isTyping" class="chat__typing" aria-live="polite">
+            digitando...
           </div>
         </div>
-        <div v-if="isTyping" class="chat__typing" aria-live="polite">
-          digitando...
+        <div class="chat__avatar chat__avatar--contact" :title="contact?.name">
+          <span class="chat__avatar-initials">{{
+            contact?.name?.charAt(0)
+          }}</span>
         </div>
       </div>
 
-      <div class="chat__input-area">
-        <label for="chat-message" class="visually-hidden"
-          >Digite sua mensagem</label
-        >
-        <input
-          id="chat-message"
-          v-model="input"
-          class="chat__input"
-          type="text"
-          placeholder="Digite uma mensagem..."
-          aria-label="Digite sua mensagem"
-          @keyup.enter="handleSend"
-        />
-        <button
-          class="chat__send-btn"
-          @click="handleSend"
-          aria-label="Enviar mensagem"
-        >
-          Enviar
-        </button>
-      </div>
-    </div>
-
-    <div class="chat__right">
-      <div class="chat__avatar chat__avatar--contact" :title="contact?.name">
-        <span class="chat__avatar-initials">{{
-          contact?.name?.charAt(0)
-        }}</span>
-      </div>
-      <div class="chat__avatar chat__avatar--user" :title="currentUser?.name">
-        <span class="chat__avatar-initials">{{
-          currentUser?.name?.charAt(0)
-        }}</span>
+      <div class="chat__input-area-wrapper">
+        <div class="chat__input-area">
+          <label for="chat-message" class="visually-hidden"
+            >Digite sua mensagem</label
+          >
+          <input
+            id="chat-message"
+            v-model="input"
+            class="chat__input"
+            type="text"
+            placeholder="Digite uma mensagem..."
+            aria-label="Digite sua mensagem"
+            @keyup.enter="handleSend"
+          />
+          <button
+            class="chat__send-btn"
+            @click="handleSend"
+            aria-label="Enviar mensagem"
+          >
+            Enviar
+          </button>
+        </div>
+        <div class="chat__avatar chat__avatar--user" :title="currentUser?.name">
+          <span class="chat__avatar-initials">{{
+            currentUser?.name?.charAt(0)
+          }}</span>
+        </div>
       </div>
     </div>
   </div>
