@@ -51,39 +51,51 @@ async function handleSend() {
             class="chat__toolbar--btn"
             aria-label="Convidar para conversa"
           >
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/invite.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/invite.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Convidar</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Enviar arquivos">
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/send.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/send.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Arquivos</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/video.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/video.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Vídeo</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/voice.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/voice.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Voz</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/activities.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/activities.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Atividades</span>
           </button>
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
-            <span class="chat__toolbar-btn-icon">
-              <img src="/images/xp/icons/games.png" alt="" />
-            </span>
+            <img
+              class="chat__toolbar-btn-icon"
+              src="/images/xp/icons/games.png"
+              alt=""
+            />
             <span class="chat__toolbar-btn-text">Jogos</span>
           </button>
         </div>
@@ -144,7 +156,8 @@ async function handleSend() {
           </div>
         </div>
         <div class="chat__avatar chat__avatar--contact" :title="contact?.name">
-          <span class="chat__avatar-initials">{{
+          <img v-if="contact?.avatar" :src="contact.avatar" class="chat__avatar-img" :alt="contact?.name" />
+          <span v-else class="chat__avatar-initials">{{
             contact?.name?.charAt(0)
           }}</span>
         </div>
@@ -173,7 +186,8 @@ async function handleSend() {
           </button>
         </div>
         <div class="chat__avatar chat__avatar--user" :title="currentUser?.name">
-          <span class="chat__avatar-initials">{{
+          <img v-if="currentUser?.avatar" :src="currentUser.avatar" class="chat__avatar-img" :alt="currentUser?.name" />
+          <span v-else class="chat__avatar-initials">{{
             currentUser?.name?.charAt(0)
           }}</span>
         </div>
