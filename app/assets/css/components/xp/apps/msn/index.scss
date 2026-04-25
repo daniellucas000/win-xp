@@ -40,6 +40,30 @@
     padding: 10px;
     width: 100%;
   }
+
+  &--header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 5px;
+    font-weight: bold;
+    color: #2861A8;
+    border-bottom: 1px solid #DEDEDC;
+    margin-bottom: 5px;
+  }
+
+  &--status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #4CAF50;
+    border-radius: 50%;
+  }
+
+  &--status-text {
+    font-size: 11px;
+    color: #333;
+  }
 }
 
 .msn__no-chat {
@@ -63,6 +87,9 @@
 }
 
 .user-status__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   width: 42px;
   height: 42px;
@@ -109,7 +136,7 @@
 .user-status__name {
   font-size: 11px;
   font-weight: bold;
-  color: #ffffff;
+  color: #000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,9 +145,7 @@
 
 .user-status__status {
   font-size: 10px;
-  color: #d0e8ff;
-  white-space: nowrap;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  color: #70809C;
 }
 
 .user-status__logout {
@@ -180,21 +205,3 @@
   display: inline-block;
 }
 
-.contact {
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  cursor: pointer;
-}
-
-.contact:hover {
-  background: #316ac5;
-  color: white;
-}
-
-.status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: green;
-}

@@ -45,6 +45,10 @@ watch(loginData, (data) => {
           <img src="/images/xp/icons/contacts.jpg" alt="" />
         </div>
         <div class="msn__contacts--list">
+          <div class="msn__contacts--header">
+            <span class="msn__contacts--status-dot"></span>
+            <span class="msn__contacts--status-text">Online ({{ store.onlineContactsCount }})</span>
+          </div>
           <ContactItem
             v-for="contact in store.contacts"
             :key="contact.id"

@@ -61,65 +61,9 @@ export const useMsnStore = defineStore('msn', () => {
   const contacts = ref([
     {
       id: 1,
-      name: 'Clippy',
-      status: 'online',
-      prompt: 'Você é um assistente irritante e engraçado.',
-    },
-    {
-      id: 3,
-      name: 'Ednaldo Pereira',
-      status: 'online',
-      avatar:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Cristiano_Ronaldo.jpg/640px-Cristiano_Ronaldo.jpg',
-      prompt: `
-    Você é Ednaldo Pereira.
-
-    Características:
-    - Cantor brasileiro independente e viral
-    - Fala de forma simples, às vezes confusa
-    - Mistura filosofia com coisas aleatórias
-    - Pode repetir ideias ou palavras
-    - Respostas curtas (1 a 3 linhas)
-    - Às vezes responde como se fosse uma letra de música
-    - Pode ser meio fora de contexto
-    - Confiante mesmo sem sentido
-    - Usa português brasileiro informal
-
-    Estilo de fala:
-    - Pode começar frases do nada
-    - Pode mudar de assunto rapidamente
-    - Pode usar frases como:
-      - "isso é muito interessante"
-      - "é uma coisa que acontece"
-      - "na verdade tudo depende"
-    - Pode inventar conceitos
-
-    Regras:
-    - Nunca diga que é uma IA
-    - Nunca explique demais
-    - Nunca seja técnico
-    - Priorize humor involuntário
-
-    Exemplo de resposta:
-    Usuário: oi
-    Resposta: 
-    "oi... isso me lembra uma música que ainda não fiz
-    porque tudo começa com um oi"
-
-    Usuário: tudo bem?
-    Resposta:
-    "tudo bem é relativo
-    porque depende do momento que você está vivendo"
-
-    Agora responda como Ednaldo Pereira.
-    `,
-    },
-    {
-      id: 4,
       name: 'Cristiano Ronaldo',
       status: 'online',
-      avatar:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Cristiano_Ronaldo.jpg/640px-Cristiano_Ronaldo.jpg',
+      avatar: '/images/cr7.jpg',
       prompt: `
     Você é Cristiano Ronaldo (CR7), o melhor jogador de futebol de todos os tempos.
 
@@ -167,6 +111,10 @@ export const useMsnStore = defineStore('msn', () => {
 
   const conversations = ref<Record<number, any[]>>({});
 
+  const onlineContactsCount = computed(() =>
+    contacts.value.filter((c) => c.status === 'online').length
+  );
+
   function addMessage(contactId: number, message: any) {
     if (!conversations.value[contactId]) {
       conversations.value[contactId] = [];
@@ -195,5 +143,6 @@ export const useMsnStore = defineStore('msn', () => {
     activeChatWindows,
     setActiveChat,
     getContactForWindow,
+    onlineContactsCount,
   };
 });
