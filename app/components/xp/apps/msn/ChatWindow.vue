@@ -1,32 +1,56 @@
 <script setup lang="ts">
-const props = defineProps<{ win: any }>();
+import type { WindowState } from '~/stores/windows';
+
+import { useMsnStore } from '~/stores/msn';
+import { useAiAgent } from '~/composables/useAiAgent';
+import { useNudge } from '~/composables/useNudge';
+
+const props = defineProps<{ win: WindowState }>();
 
 const msnStore = useMsnStore();
 const { sendMessage } = useAiAgent();
 
 const input = ref('');
 const isTyping = ref(false);
+const messagesContent = ref<HTMLElement | null>(null);
 
 const contactId = computed(() => msnStore.getContactForWindow(props.win.id));
-
 const messages = computed(
   () => (contactId.value ? msnStore.conversations[contactId.value] : null) ?? []
 );
 const contact = computed(() =>
   msnStore.contacts.find((c) => c.id === contactId.value)
 );
-
 const currentUser = computed(() => msnStore.currentUser);
+
+const { isNudging, handleNudge } = useNudge({ window: props.win });
+
+async function scrollToBottom() {
+  await nextTick();
+  if (messagesContent.value) {
+    messagesContent.value.scrollTop = messagesContent.value.scrollHeight;
+  }
+}
+
+function send(text: string) {
+  msnStore.addMessage(contactId.value!, {
+    from: 'user',
+    text,
+  });
+}
+
+function receive(reply: string) {
+  msnStore.addMessage(contactId.value!, {
+    from: 'bot',
+    text: reply,
+  });
+}
 
 async function handleSend() {
   if (!input.value || !contactId.value) return;
 
   const text = input.value;
-
-  msnStore.addMessage(contactId.value, {
-    from: 'user',
-    text,
-  });
+  send(text);
 
   input.value = '';
   isTyping.value = true;
@@ -34,12 +58,12 @@ async function handleSend() {
   const reply = await sendMessage(text, contact.value?.prompt || '');
 
   isTyping.value = false;
-
-  msnStore.addMessage(contactId.value, {
-    from: 'bot',
-    text: reply,
-  });
+  receive(reply);
 }
+
+onMounted(scrollToBottom);
+watch(messages, scrollToBottom, { deep: true });
+watch(isTyping, scrollToBottom);
 </script>
 
 <template>
@@ -105,15 +129,13 @@ async function handleSend() {
             <div class="buttons">
               <button>
                 <img
-                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-unblock.png
-"
+                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-unblock.png"
                   alt=""
                 />
               </button>
               <button>
                 <img
-                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.png
-"
+                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.png"
                   alt=""
                 />
               </button>
@@ -133,7 +155,7 @@ async function handleSend() {
           <div class="chat__messages--header">
             <span>Para:</span>
           </div>
-          <div class="chat__messages--content">
+          <div ref="messagesContent" class="chat__messages--content">
             <div
               v-for="(msg, i) in messages"
               :key="i"
@@ -150,13 +172,18 @@ async function handleSend() {
               </div>
               {{ msg.text }}
             </div>
-          </div>
-          <div v-if="isTyping" class="chat__typing" aria-live="polite">
-            digitando...
+            <div v-if="isTyping" class="chat__typing" aria-live="polite">
+              digitando...
+            </div>
           </div>
         </div>
         <div class="chat__avatar chat__avatar--contact" :title="contact?.name">
-          <img v-if="contact?.avatar" :src="contact.avatar" class="chat__avatar-img" :alt="contact?.name" />
+          <img
+            v-if="contact?.avatar"
+            :src="contact.avatar"
+            class="chat__avatar-img"
+            :alt="contact?.name"
+          />
           <span v-else class="chat__avatar-initials">{{
             contact?.name?.charAt(0)
           }}</span>
@@ -165,28 +192,43 @@ async function handleSend() {
 
       <div class="chat__input-area-wrapper">
         <div class="chat__input-area">
-          <label for="chat-message" class="visually-hidden"
-            >Digite sua mensagem</label
-          >
-          <input
-            id="chat-message"
-            v-model="input"
-            class="chat__input"
-            type="text"
-            placeholder="Digite uma mensagem..."
-            aria-label="Digite sua mensagem"
-            @keyup.enter="handleSend"
-          />
-          <button
-            class="chat__send-btn"
-            @click="handleSend"
-            aria-label="Enviar mensagem"
-          >
-            Enviar
-          </button>
+          <div class="chat__input-toolbar">
+            <button class="chat__input-toolbar--btn" title="Fonte"></button>
+            <button
+              class="chat__input-toolbar--btn"
+              title="Cor da fonte"
+            ></button>
+            <button class="chat__input-toolbar--btn" title="Emoticons"></button>
+            <button
+              class="chat__input-toolbar--btn"
+              :disabled="isNudging"
+              title="Nudge"
+              @click="handleNudge"
+            ></button>
+          </div>
+          <div class="chat__input-row">
+            <label for="chat-message" class="visually-hidden"
+              >Digite sua mensagem</label
+            >
+            <input
+              id="chat-message"
+              v-model="input"
+              class="chat__input"
+              type="text"
+              placeholder="Digite uma mensagem..."
+              @keyup.enter="handleSend"
+            />
+            <button class="chat__send-btn" @click="handleSend">Enviar</button>
+          </div>
+          <div class="chat__input--footer"></div>
         </div>
         <div class="chat__avatar chat__avatar--user" :title="currentUser?.name">
-          <img v-if="currentUser?.avatar" :src="currentUser.avatar" class="chat__avatar-img" :alt="currentUser?.name" />
+          <img
+            v-if="currentUser?.avatar"
+            :src="currentUser.avatar"
+            class="chat__avatar-img"
+            :alt="currentUser?.name"
+          />
           <span v-else class="chat__avatar-initials">{{
             currentUser?.name?.charAt(0)
           }}</span>
@@ -197,17 +239,5 @@ async function handleSend() {
 </template>
 
 <style lang="scss" scoped>
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 @import '~/assets/css/components/xp/apps/msn/ChatWindow.scss';
 </style>

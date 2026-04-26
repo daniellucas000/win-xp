@@ -111,8 +111,8 @@ export const useMsnStore = defineStore('msn', () => {
 
   const conversations = ref<Record<number, any[]>>({});
 
-  const onlineContactsCount = computed(() =>
-    contacts.value.filter((c) => c.status === 'online').length
+  const onlineContactsCount = computed(
+    () => contacts.value.filter((c) => c.status === 'online').length
   );
 
   function addMessage(contactId: number, message: any) {
