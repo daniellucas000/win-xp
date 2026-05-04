@@ -11,6 +11,11 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'cloudflare-pages',
   },
+  vite: {
+    optimizeDeps: {
+      include: ['wasm-doom'],
+    },
+  },
   app: {
     head: {
       title: seoConfig.defaultTitle,

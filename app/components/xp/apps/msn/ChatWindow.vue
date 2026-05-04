@@ -133,12 +133,7 @@ watch(isTyping, scrollToBottom);
                   alt=""
                 />
               </button>
-              <button>
-                <img
-                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.webp"
-                  alt=""
-                />
-              </button>
+              
             </div>
           </div>
           <div class="chat__toolbar--right"></div>

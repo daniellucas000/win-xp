@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useDrag } from '~/composables/useDrag';
 import { useResize, type ResizeDirection } from '~/composables/useResize';
+import { useSounds } from '~/composables/useSounds';
 
 const props = defineProps<{ windowId: string }>();
 
 const windowsStore = useWindowsStore();
+const { playClick } = useSounds();
 
 provide('windowId', props.windowId);
 
@@ -59,6 +61,7 @@ function onResizeMousedown(e: MouseEvent, dir: ResizeDirection) {
 }
 
 function onClose() {
+  playClick();
   windowsStore.close(props.windowId);
 }
 </script>
@@ -104,7 +107,7 @@ function onClose() {
           <button
             class="window__titlebar--controls-btn"
             aria-label="Minimizar"
-            @click.stop="windowsStore.minimize(props.windowId)"
+            @click.stop="playClick(); windowsStore.minimize(props.windowId)"
           >
             <img
               src="/images/xp/icons/minimize.webp"
@@ -115,7 +118,7 @@ function onClose() {
           <button
             class="window__titlebar--controls-btn"
             :aria-label="win.maximized ? 'Restaurar' : 'Maximizar'"
-            @click.stop="windowsStore.maximize(props.windowId)"
+            @click.stop="playClick(); windowsStore.maximize(props.windowId)"
           >
             <img :src="maximizeIcon" alt="" aria-hidden="true" />
           </button>

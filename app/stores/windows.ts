@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export type AppName =
   | 'notepad'
-  | 'paint'
+  | 'doom'
   | 'ie'
   | 'mediaplayer'
   | 'explorer'
@@ -28,7 +28,7 @@ export interface WindowState {
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   notepad: { title: 'Untitled - Notepad', width: 500, height: 380 },
-  paint: { title: 'Untitled - Paint', width: 700, height: 500 },
+  doom: { title: 'DOOM', width: 640, height: 400 },
   ie: { title: 'Microsoft Internet Explorer', width: 800, height: 560 },
   mediaplayer: { title: 'Windows Media Player', width: 520, height: 400 },
   explorer: { title: 'Meu computador', width: 600, height: 420 },

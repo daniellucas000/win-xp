@@ -3,12 +3,14 @@ import { ref } from 'vue';
 import { pinnedApps, rightApps, allPrograms } from '~/data/startMenu';
 import type { AppName } from '~/stores/windows';
 import { useWindowlessApps } from '~/composables/useWindowlessApps';
+import { useSounds } from '~/composables/useSounds';
 import StartMenuItem from './StartMenuItem.vue';
 import StartMenuAllPrograms from './StartMenuAllPrograms.vue';
 
 const open = defineModel<boolean>();
 const store = useWindowsStore();
 const { openWindowlessApp } = useWindowlessApps();
+const { playClick } = useSounds();
 
 const WINDOWLESS_APPS = new Set<AppName>(['mediaplayer']);
 
@@ -27,6 +29,8 @@ function closeAllPrograms() {
 }
 
 function launch(data: { app: AppName; icon: string }) {
+  playClick();
+  
   if (WINDOWLESS_APPS.has(data.app)) {
     openWindowlessApp(data.app);
   } else {

@@ -2,6 +2,7 @@
 const winStore = useWindowsStore();
 const startMenuOpen = ref(false);
 const currentTime = ref('');
+const { playClick } = useSounds();
 
 let clockInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -31,14 +32,14 @@ onUnmounted(() => {
       class="taskbar__start"
       aria-label="Menu Iniciar"
       :aria-expanded="startMenuOpen"
-      @click="startMenuOpen = !startMenuOpen"
+      @click="playClick(); startMenuOpen = !startMenuOpen"
     />
 
     <button
       class="taskbar__show-desktop"
       aria-label="Mostrar desktop"
       title="Mostrar desktop"
-      @click="winStore.toggleShowDesktop"
+      @click="playClick(); winStore.toggleShowDesktop"
     >
       <img src="/images/xp/icons/desktop.png" alt="" aria-hidden="true" />
     </button>
@@ -54,7 +55,7 @@ onUnmounted(() => {
           },
         ]"
         :aria-label="`${win.title}, clique para minimizar`"
-        @click="winStore.minimize(win.id)"
+        @click="playClick(); winStore.minimize(win.id)"
       >
         <span class="taskbar__windows--btn-title">{{ win.title }}</span>
         <div

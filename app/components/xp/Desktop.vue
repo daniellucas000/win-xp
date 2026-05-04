@@ -4,6 +4,7 @@ import { onMounted, onBeforeUnmount, ref } from 'vue';
 import XpIeBrowser from '~/components/xp/apps/ie/IeBrowser.vue';
 import XpMsnChatWindow from '~/components/xp/apps/msn/ChatWindow.vue';
 import { useWindowlessApps } from '~/composables/useWindowlessApps';
+import { useSounds } from '~/composables/useSounds';
 import {
   useDesktopIcons,
   useDesktopSelection,
@@ -14,6 +15,7 @@ import {
 
 const store = useWindowsStore();
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps();
+const { playClick } = useSounds();
 
 const desktopRef = ref<HTMLElement | null>(null);
 
@@ -204,7 +206,8 @@ function handleDesktopClick() {
       :window-id="win?.id"
     >
       <XpAppsNotepad v-if="win?.app === 'notepad'" :win="win" />
-      <XpAppsPaint v-if="win?.app === 'paint'" :win="win" />
+      <XpAppsDoom v-if="win?.app === 'doom'" :win="win" />
+      
       <XpIeBrowser v-if="win?.app === 'ie'" :win="win" />
       <XpAppsExplorer v-if="win?.app === 'explorer'" :win="win" />
       <XpAppsMsn v-if="win?.app === 'msn'" :win="win" />

@@ -2,6 +2,7 @@ import { useWindowsStore } from '~/stores/windows';
 import { systemIcons, type DesktopIcon } from '~/data/desktop';
 import type { AppName } from '~/stores/windows';
 import { useFileSystem } from '~/composables/useFileSystem';
+import { useSounds } from '~/composables/useSounds';
 import { STORAGE_KEYS } from '~/constants/storage';
 import { useDebounceFn } from '@vueuse/core';
 
@@ -24,6 +25,7 @@ const TRASH_FOLDER_ID = -1;
 export function useDesktopIcons(options: UseDesktopIconsOptions) {
   const { store, openWindowlessApp } = options;
   const fileSystem = useFileSystem();
+  const { playClick } = useSounds();
 
   const desktopIcons = ref<DesktopIcon[]>([...systemIcons]);
 
@@ -123,6 +125,8 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
   }
 
   function openItem(item: DesktopIcon) {
+    playClick();
+    
     if (item.app === 'mediaplayer') {
       return openWindowlessApp(item.app);
     }

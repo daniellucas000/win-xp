@@ -22,13 +22,7 @@ export const pinnedApps: StartMenuApp[] = [
     label: 'Windows Media Player',
     app: 'mediaplayer',
   },
-  {
-    id: 'paint',
-    icon: '/images/xp/icons/paint.webp',
-    label: 'Paint',
-    app: 'paint',
-  },
-];
+  ];
 
 export const rightApps: StartMenuApp[] = [
   {
@@ -55,12 +49,6 @@ export const rightApps: StartMenuApp[] = [
 ];
 
 export const allPrograms: StartMenuApp[] = [
-  {
-    id: 'paint-program',
-    icon: '/images/xp/icons/paint.webp',
-    label: 'Paint',
-    app: 'paint',
-  },
   {
     id: 'notepad',
     icon: '/images/xp/icons/notepad.webp',
