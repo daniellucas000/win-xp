@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
       aria-label="Voltar"
       @click="emit('back')"
     >
-      <img src="/images/xp/icons/back.png" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/back.webp" alt="" aria-hidden="true" />
       Voltar
       <span class="explorer__btn--pointer">▼</span>
     </button>
@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
       @click="emit('forward')"
     >
       Avançar
-      <img src="/images/xp/icons/forward.png" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/forward.webp" alt="" aria-hidden="true" />
       <span class="explorer__btn--pointer">▼</span>
     </button>
 
@@ -82,18 +82,18 @@ onBeforeUnmount(() => {
       aria-label="Pasta acima"
       @click="emit('up')"
     >
-      <img src="/images/xp/icons/folder-up.png" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/file-text.webp" alt="" aria-hidden="true" />
     </button>
 
     <div class="explorer__separator" aria-hidden="true" />
 
     <button class="explorer__btn" aria-label="Pesquisar">
-      <img src="/images/xp/icons/search.png" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/search.webp" alt="" aria-hidden="true" />
       Pesquisar
     </button>
 
     <button class="explorer__btn" aria-label="Pastas">
-      <img src="/images/xp/icons/folders.png" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/folders.webp" alt="" aria-hidden="true" />
       Pastas
     </button>
 
@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
     </div>
 
     <button class="explorer__go-btn" aria-label="Ir para endereço">
-      <img src="/images/xp/icons/go.png" />
+      <img src="/images/xp/icons/go.webp" />
       Ir
     </button>
   </div>

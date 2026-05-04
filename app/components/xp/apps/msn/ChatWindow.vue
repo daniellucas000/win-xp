@@ -77,7 +77,7 @@ watch(isTyping, scrollToBottom);
           >
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/invite.png"
+              src="/images/xp/icons/invite.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Convidar</span>
@@ -85,7 +85,7 @@ watch(isTyping, scrollToBottom);
           <button class="chat__toolbar--btn" aria-label="Enviar arquivos">
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/send.png"
+              src="/images/xp/icons/send.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Arquivos</span>
@@ -93,7 +93,7 @@ watch(isTyping, scrollToBottom);
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/video.png"
+              src="/images/xp/icons/video.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Vídeo</span>
@@ -101,7 +101,7 @@ watch(isTyping, scrollToBottom);
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/voice.png"
+              src="/images/xp/icons/voice.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Voz</span>
@@ -109,7 +109,7 @@ watch(isTyping, scrollToBottom);
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/activities.png"
+              src="/images/xp/icons/activities.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Atividades</span>
@@ -117,7 +117,7 @@ watch(isTyping, scrollToBottom);
           <button class="chat__toolbar--btn" aria-label="Iniciar videochamada">
             <img
               class="chat__toolbar-btn-icon"
-              src="/images/xp/icons/games.png"
+              src="/images/xp/icons/games.webp"
               alt=""
             />
             <span class="chat__toolbar-btn-text">Jogos</span>
@@ -135,7 +135,7 @@ watch(isTyping, scrollToBottom);
               </button>
               <button>
                 <img
-                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.png"
+                  src="https://xp.quenq.com/res/msn-messenger/toolbar/small-paint.webp"
                   alt=""
                 />
               </button>

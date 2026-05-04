@@ -62,7 +62,7 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
         <button class="explorer__menu-item" role="menuitem">Ajuda</button>
       </div>
       <span class="explorer__menu-item--flag" aria-hidden="true">
-        <img src="/images/xp/icons/browserflag.png" alt="" />
+        <img src="/images/xp/icons/browserflag.webp" alt="" />
       </span>
     </div>
 
@@ -78,7 +78,8 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
         aria-label="Voltar"
         @click="ie.back()"
       >
-        <img src="/images/xp/icons/back.png" alt="" aria-hidden="true" /> Voltar
+        <img src="/images/xp/icons/back.webp" alt="" aria-hidden="true" />
+        Voltar
       </button>
       <button
         class="explorer__btn explorer__btn--nav"
@@ -88,27 +89,27 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
         @click="ie.forward()"
       >
         Avançar
-        <img src="/images/xp/icons/forward.png" alt="" aria-hidden="true" />
+        <img src="/images/xp/icons/forward.webp" alt="" aria-hidden="true" />
       </button>
       <button
         class="explorer__btn"
         aria-label="Atualizar"
         @click="triggerLoading"
       >
-        <img src="/images/xp/icons/refresh.png" alt="" aria-hidden="true" />
+        <img src="/images/xp/icons/refresh.webp" alt="" aria-hidden="true" />
       </button>
       <button
         class="explorer__btn"
         aria-label="Início"
         @click="ie.navigateTo(HOME_URL)"
       >
-        <img src="/images/xp/icons/home.png" alt="" aria-hidden="true" />
+        <img src="/images/xp/icons/home.webp" alt="" aria-hidden="true" />
       </button>
     </div>
 
     <div class="explorer__addressbar">
       <span class="explorer__address-label" id="address-label"
-        >Endereço <img src="/images/xp/icons/webpage.png" alt=""
+        >Endereço <img src="/images/xp/icons/webpage.webp" alt=""
       /></span>
       <div
         class="explorer__address-input"
@@ -122,7 +123,7 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
         aria-label="Ir para endereço"
         @click="navigate"
       >
-        <img src="/images/xp/icons/go.png" alt="" />
+        <img src="/images/xp/icons/go.webp" alt="" />
       </button>
     </div>
 
@@ -157,7 +158,7 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     <div class="ie__statusbar">
       <span>{{ loading ? 'Abrindo página...' : 'Concluído' }}</span>
       <span class="ie__statusbar-right"
-        ><img class="" src="/images/xp/icons/world.png" /> Internet</span
+        ><img class="" src="/images/xp/icons/world.webp" /> Internet</span
       >
     </div>
   </div>

@@ -22,8 +22,8 @@ const { start: startResize } = useResize((x, y, w, h) =>
 
 const maximizeIcon = computed(() =>
   win.value?.maximized
-    ? '/images/xp/icons/maximized.png'
-    : '/images/xp/icons/maximize.png'
+    ? '/images/xp/icons/maximized.webp'
+    : '/images/xp/icons/maximize.webp'
 );
 
 const resizeDirections: ResizeDirection[] = [
@@ -107,7 +107,7 @@ function onClose() {
             @click.stop="windowsStore.minimize(props.windowId)"
           >
             <img
-              src="/images/xp/icons/minimize.png"
+              src="/images/xp/icons/minimize.webp"
               alt=""
               aria-hidden="true"
             />
@@ -124,7 +124,7 @@ function onClose() {
             aria-label="Fechar"
             @click.stop="onClose"
           >
-            <img src="/images/xp/icons/close.png" alt="" aria-hidden="true" />
+            <img src="/images/xp/icons/close.webp" alt="" aria-hidden="true" />
           </button>
         </div>
       </div>

@@ -42,12 +42,14 @@ watch(loginData, (data) => {
 
       <div class="msn__contacts" role="listbox" aria-label="Lista de contatos">
         <div class="msn__contacts--side-bar">
-          <img src="/images/xp/icons/contacts.jpg" alt="" />
+          <img src="/images/xp/icons/contacts.webp" alt="" />
         </div>
         <div class="msn__contacts--list">
           <div class="msn__contacts--header">
             <span class="msn__contacts--status-dot"></span>
-            <span class="msn__contacts--status-text">Online ({{ store.onlineContactsCount }})</span>
+            <span class="msn__contacts--status-text"
+              >Online ({{ store.onlineContactsCount }})</span
+            >
           </div>
           <ContactItem
             v-for="contact in store.contacts"

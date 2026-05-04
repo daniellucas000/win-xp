@@ -81,7 +81,7 @@ function updateWindowTitle() {
   winStore.updateWindowTitle(
     props.win.id,
     title,
-    '/images/xp/icons/folder.png'
+    '/images/xp/icons/folder.webp'
   );
 }
 
@@ -194,13 +194,6 @@ function deleteSelectedItems() {
     if (item && !item.isSystem) fileSystem.deleteItem(id);
   }
   sel.clearSelection();
-  if (ids.length > 0) {
-    notifStore.show(
-      'Lixeira',
-      `${ids.length} item(ns) movido(s) para a Lixeira.`,
-      { icon: 'info' }
-    );
-  }
 }
 
 function onRightClick(e: MouseEvent, item?: FileSystemItem) {
@@ -256,7 +249,7 @@ onUnmounted(() => {
         <button class="explorer__menu-item" role="menuitem">Ajuda</button>
       </div>
       <span class="explorer__menu-item--flag" aria-hidden="true">
-        <img src="/images/xp/icons/browserflag.png" alt="" />
+        <img src="/images/xp/icons/browserflag.webp" alt="" />
       </span>
     </div>
 
@@ -283,11 +276,11 @@ onUnmounted(() => {
               class="explorer__sidebar-link"
               @click="startCreate('folder')"
             >
-              <img src="/images/xp/icons/new-folder.png" alt="" />
+              <img src="/images/xp/icons/new-folder.webp" alt="" />
               Criar nova pasta
             </button>
             <button class="explorer__sidebar-link" @click="startCreate('file')">
-              <img src="/images/xp/icons/file-text.png" alt="" />
+              <img src="/images/xp/icons/file-text.webp" alt="" />
               Criar novo arquivo
             </button>
           </div>
@@ -297,15 +290,15 @@ onUnmounted(() => {
           <div class="explorer__sidebar-title">Outros Locais</div>
           <div class="explorer__sidebar-content">
             <button class="explorer__sidebar-link" @click="navigateTo(null)">
-              <img src="/images/xp/icons/mycomputer.png" alt="" />
+              <img src="/images/xp/icons/mycomputer.webp" alt="" />
               Meu Computador
             </button>
             <button class="explorer__sidebar-link" @click="navigateTo(1)">
-              <img src="/images/xp/icons/my-documents.png" alt="" />
+              <img src="/images/xp/icons/my-documents.webp" alt="" />
               Meus Documentos
             </button>
             <button class="explorer__sidebar-link" @click="navigateTo(0)">
-              <img src="/images/xp/icons/recycle-bin-full.png" alt="" />
+              <img src="/images/xp/icons/recycle-bin-full.webp" alt="" />
               Lixeira
             </button>
           </div>
@@ -345,7 +338,7 @@ onUnmounted(() => {
         >
           <div class="explorer__icon-wrapper">
             <img
-              src="/images/xp/icons/folder.png"
+              src="/images/xp/icons/folder.webp"
               class="explorer__icon-img"
               alt=""
               aria-hidden="true"
@@ -367,7 +360,7 @@ onUnmounted(() => {
         >
           <div class="explorer__icon-wrapper">
             <img
-              src="/images/xp/icons/file-text.png"
+              src="/images/xp/icons/file-text.webp"
               class="explorer__icon-img"
               alt=""
               aria-hidden="true"
@@ -427,17 +420,6 @@ onUnmounted(() => {
             <span v-else class="explorer__icon-label">{{ item.name }}</span>
           </div>
         </button>
-
-        <div
-          v-if="
-            items.sortedItems.value.length === 0 &&
-            !isCreatingFolder &&
-            !isCreatingFile
-          "
-          class="explorer__empty"
-        >
-          <p>Esta pasta está vazia.</p>
-        </div>
       </div>
 
       <div
@@ -477,12 +459,6 @@ onUnmounted(() => {
             </tr>
           </tbody>
         </table>
-        <div
-          v-if="items.sortedItems.value.length === 0"
-          class="explorer__empty"
-        >
-          <p>Esta pasta está vazia.</p>
-        </div>
       </div>
     </div>
 

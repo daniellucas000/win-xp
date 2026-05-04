@@ -22,7 +22,7 @@ function handleSubmit() {
 <template>
   <div class="login">
     <div class="login__logo">
-      <img src="/images/xp/icons/msn.png" alt="MSN" />
+      <img src="/images/xp/icons/msn.webp" alt="MSN" />
     </div>
 
     <h2 class="login__title">Entrar no MSN Messenger</h2>

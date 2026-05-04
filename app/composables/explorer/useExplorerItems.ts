@@ -11,21 +11,21 @@ const DRIVES: FileSystemItem[] = [
     parentId: null,
     name: 'Disco Local (C:)',
     type: FileType.Folder,
-    icon: '/images/xp/icons/hd-drive.png',
+    icon: '/images/xp/icons/hd-drive.webp',
   },
   {
     id: -2,
     parentId: null,
     name: 'Disco Local (D:)',
     type: FileType.Folder,
-    icon: '/images/xp/icons/hd-drive.png',
+    icon: '/images/xp/icons/hd-drive.webp',
   },
   {
     id: -3,
     parentId: null,
     name: 'DVD Drive (E:)',
     type: FileType.Folder,
-    icon: '/images/xp/icons/dvd-drive.png',
+    icon: '/images/xp/icons/dvd-drive.webp',
   },
 ];
 
@@ -65,12 +65,12 @@ export function useExplorerItems(
   );
 
   const currentPathIcon = computed(() => {
-    if (isTrashMode.value) return '/images/xp/icons/recycle-bin-empty.png';
+    if (isTrashMode.value) return '/images/xp/icons/recycle-bin-empty.webp';
     if (currentFolderId.value === null)
-      return '/images/xp/icons/mycomputer.png';
+      return '/images/xp/icons/mycomputer.webp';
     return (
       fileSystem.getItem(currentFolderId.value)?.icon ??
-      '/images/xp/icons/folder.png'
+      '/images/xp/icons/folder.webp'
     );
   });
 
@@ -120,7 +120,7 @@ export function useExplorerItems(
         parentId: null,
         name: item.label || item.name,
         type: item.type === 'folder' ? FileType.Folder : FileType.Txt,
-        icon: item.icon || '/images/xp/icons/file-text.png',
+        icon: item.icon || '/images/xp/icons/file-text.webp',
         content: item.content,
       }));
     } catch {

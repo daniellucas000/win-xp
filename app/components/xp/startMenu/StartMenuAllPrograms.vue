@@ -32,7 +32,11 @@ const emit = defineEmits<{
       aria-haspopup="true"
     >
       <span>Todos os programas</span>
-      <img src="/images/xp/icons/program-arrow.png" alt="" aria-hidden="true" />
+      <img
+        src="/images/xp/icons/program-arrow.webp"
+        alt=""
+        aria-hidden="true"
+      />
     </button>
 
     <div v-if="open" class="start-menu__all-programs--submenu" role="menu">

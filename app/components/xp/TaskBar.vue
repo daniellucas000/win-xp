@@ -71,7 +71,7 @@ onUnmounted(() => {
 
     <div class="taskbar__tray" aria-label="Área de notificação">
       <img
-        src="/images/xp/icons/sound-small.png"
+        src="/images/xp/icons/sound-small.webp"
         class="taskbar__tray--icon"
         alt=""
         aria-hidden="true"

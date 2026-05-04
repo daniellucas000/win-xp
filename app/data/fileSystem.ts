@@ -19,26 +19,23 @@ export interface FileSystemItem {
 }
 
 const ICONS = {
-  myDocuments: '/images/xp/icons/my-documents.png',
+  myDocuments: '/images/xp/icons/my-documents.webp',
   sharedDocuments: '/images/xp/icons/shared-documents.png',
   programFiles: '/images/xp/icons/program-files.png',
   windows: '/images/xp/icons/windows.png',
-  fileText: '/images/xp/icons/file-text.png',
-  myPictures: '/images/xp/icons/my-pictures.png',
-  myMusics: '/images/xp/icons/my-musics.png',
-  myVideos: '/images/xp/icons/my-videos.png',
+  fileText: '/images/xp/icons/file-text.webp',
+  myPictures: '/images/xp/icons/my-pictures.webp',
+  myMusics: '/images/xp/icons/my-musics.webp',
   imageFile: '/images/xp/icons/image-file.png',
   audioFile: '/images/xp/icons/audio-file.png',
   sharedPictures: '/images/xp/icons/shared-pictures.png',
   sharedMusic: '/images/xp/icons/shared-music.png',
-  iexplorer: '/images/xp/icons/iexplorer.png',
-  mediaPlayer: '/images/xp/icons/media-player.png',
-  msn: '/images/xp/icons/msn.png',
+  iexplorer: '/images/xp/icons/iexplorer.webp',
+  mediaPlayer: '/images/xp/icons/media-player.webp',
+  msn: '/images/xp/icons/msn.webp',
   movieMaker: '/images/xp/icons/movie-maker.png',
   system32: '/images/xp/icons/system32.png',
   explorer: '/images/xp/icons/explorer-icon.png',
-  notepad: '/images/xp/icons/notepad.png',
-  cmd: '/images/xp/icons/cmd.png',
 } as const;
 
 export const defaultFileSystem: readonly FileSystemItem[] = Object.freeze([
@@ -132,14 +129,6 @@ export const defaultFileSystem: readonly FileSystemItem[] = Object.freeze([
     isSystem: true,
   },
   {
-    id: 12,
-    parentId: 1,
-    name: 'Meus Vídeos',
-    type: FileType.Folder,
-    icon: ICONS.myVideos,
-    isSystem: true,
-  },
-  {
     id: 13,
     parentId: 1,
     name: 'readme.txt',
@@ -230,14 +219,6 @@ export const defaultFileSystem: readonly FileSystemItem[] = Object.freeze([
     isSystem: true,
   },
   {
-    id: 72,
-    parentId: 4,
-    name: 'notepad.exe',
-    type: FileType.Exe,
-    icon: ICONS.notepad,
-    isSystem: true,
-  },
-  {
     id: 73,
     parentId: 4,
     name: 'win.ini',
@@ -246,23 +227,6 @@ export const defaultFileSystem: readonly FileSystemItem[] = Object.freeze([
     isSystem: true,
     content:
       '; for 16-bit app support\n[extensions]\n[fonts]\n[MCI Extensions.BAK]\n[files]\n[MCI]',
-  },
-
-  {
-    id: 80,
-    parentId: 70,
-    name: 'cmd.exe',
-    type: FileType.Exe,
-    icon: ICONS.cmd,
-    isSystem: true,
-  },
-  {
-    id: 81,
-    parentId: 70,
-    name: 'notepad.exe',
-    type: FileType.Exe,
-    icon: ICONS.notepad,
-    isSystem: true,
   },
 ]);
 export interface FileSystemIndexes {

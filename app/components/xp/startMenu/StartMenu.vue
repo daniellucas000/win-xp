@@ -85,12 +85,12 @@ function launch(data: { app: AppName; icon: string }) {
 
     <div class="start-menu__footer">
       <button class="start-menu__footer--btn">
-        <img src="/images/xp/icons/log-off.png" alt="" aria-hidden="true" />
+        <img src="/images/xp/icons/log-off.webp" alt="" aria-hidden="true" />
         <span>Fazer logoff</span>
       </button>
 
       <button class="start-menu__footer--btn">
-        <img src="/images/xp/icons/power-off.png" alt="" aria-hidden="true" />
+        <img src="/images/xp/icons/power-off.webp" alt="" aria-hidden="true" />
         <span>Desligar o computador</span>
       </button>
     </div>

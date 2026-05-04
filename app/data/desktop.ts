@@ -14,7 +14,7 @@ export interface DesktopIcon {
 export const systemIcons: DesktopIcon[] = [
   {
     id: -1,
-    icon: '/images/xp/icons/recycle-bin-empty.png',
+    icon: '/images/xp/icons/recycle-bin-empty.webp',
     label: 'Lixeira',
     app: 'explorer',
     type: 'trash',
@@ -23,7 +23,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 2,
-    icon: '/images/xp/icons/mycomputer.png',
+    icon: '/images/xp/icons/mycomputer.webp',
     label: 'Meu computador',
     app: 'explorer',
     type: 'app',
@@ -31,7 +31,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 3,
-    icon: '/images/xp/icons/iexplorer.png',
+    icon: '/images/xp/icons/iexplorer.webp',
     label: 'Internet Explorer',
     app: 'ie',
     type: 'app',
@@ -39,7 +39,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 4,
-    icon: '/images/xp/icons/msn.png',
+    icon: '/images/xp/icons/msn.webp',
     label: 'MSN Messenger',
     app: 'msn',
     type: 'app',
@@ -47,7 +47,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 5,
-    icon: '/images/xp/icons/notepad.png',
+    icon: '/images/xp/icons/notepad.webp',
     label: 'Bloco de notas',
     app: 'notepad',
     type: 'app',
@@ -55,7 +55,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 6,
-    icon: '/images/xp/icons/paint.png',
+    icon: '/images/xp/icons/paint.webp',
     label: 'Paint',
     app: 'paint',
     type: 'app',
@@ -63,7 +63,7 @@ export const systemIcons: DesktopIcon[] = [
   },
   {
     id: 8,
-    icon: '/images/xp/icons/media-player.png',
+    icon: '/images/xp/icons/media-player.webp',
     label: 'Media Player',
     app: 'mediaplayer',
     type: 'app',
