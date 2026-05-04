@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { initialTracks } from '~/data/mediaPlayer'
+import { initialTracks } from '~/data/mediaPlayer';
 
-const containerRef = ref<HTMLDivElement | null>(null)
+const containerRef = ref<HTMLDivElement | null>(null);
 
 onMounted(async () => {
-  await nextTick()
-  if (!containerRef.value) return
+  await nextTick();
+  if (!containerRef.value) return;
 
-  const { default: Webamp } = await import('webamp')
+  const { default: Webamp } = await import('webamp');
 
-  const webamp = new Webamp({ initialTracks })
+  const webamp = new Webamp({ initialTracks });
 
-  webamp.renderWhenReady(containerRef.value)
-})
+  webamp.renderWhenReady(containerRef.value);
+});
 </script>
 
 <template>
@@ -20,5 +20,5 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/apps/MediaPlayer.scss';
+@use '~/assets/scss/components/xp/apps/MediaPlayer.scss';
 </style>

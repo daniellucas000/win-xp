@@ -422,7 +422,7 @@ function toggleStatusBar() {
 </style>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/apps/Notepad.scss';
+@use '~/assets/scss/components/xp/apps/Notepad.scss';
 
 .notepad__save-overlay {
   position: fixed;

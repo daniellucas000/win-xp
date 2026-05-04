@@ -98,5 +98,5 @@ function launch(data: { app: AppName; icon: string }) {
 </template>
 
 <style scoped lang="scss">
-@import '~/assets/css/components/xp/StartMenu.scss';
+@use '~/assets/scss/components/xp/StartMenu.scss';
 </style>

@@ -499,5 +499,5 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/apps/Explorer.scss';
+@use '~/assets/scss/components/xp/apps/Explorer.scss';
 </style>

@@ -65,5 +65,5 @@ watch(loginData, (data) => {
 </template>
 
 <style>
-@import '~/assets/css/components/xp/apps/msn/index.scss';
+@use '~/assets/scss/components/xp/apps/msn/index.scss';
 </style>

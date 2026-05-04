@@ -153,5 +153,5 @@ function onClose() {
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/Window.scss';
+@use '~/assets/scss/components/xp/Window.scss';
 </style>

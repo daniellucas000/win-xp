@@ -100,5 +100,5 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/TaskBar.scss';
+@use '~/assets/scss/components/xp/TaskBar.scss';
 </style>

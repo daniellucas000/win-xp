@@ -1,8 +1,7 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss">
-@import '~/assets/css/components/xp/pages.scss';
+@use '~/assets/scss/components/xp/pages.scss';
 </style>
 
 <template>

@@ -239,5 +239,5 @@ watch(isTyping, scrollToBottom);
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/apps/msn/ChatWindow.scss';
+@use '~/assets/scss/components/xp/apps/msn/ChatWindow.scss';
 </style>

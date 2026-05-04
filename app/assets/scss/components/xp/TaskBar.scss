@@ -1,4 +1,4 @@
-@import '~/assets/css/_variables.scss';
+@use "~/assets/scss/variables" as *;
 
 .taskbar {
   position: absolute;

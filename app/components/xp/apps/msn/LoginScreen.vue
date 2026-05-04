@@ -59,5 +59,5 @@ function handleSubmit() {
 </template>
 
 <style>
-@import '~/assets/css/components/xp/apps/msn/LoginScreen.css';
+@use '~/assets/scss/components/xp/apps/msn/LoginScreen.css';
 </style>

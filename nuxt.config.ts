@@ -7,16 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     GROQ_API_KEY: process.env.GROQ_API_KEY,
   },
-  css: ['~/assets/css/main.scss'],
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          silenceDeprecations: ['import', 'legacy-js-api'],
-        },
-      },
-    },
-  },
+  css: ['~/assets/scss/main.scss'],
   nitro: {
     preset: 'cloudflare-pages',
   },

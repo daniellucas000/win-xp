@@ -2,31 +2,33 @@ import {
   defaultFileSystem,
   getChildren,
   getItemById,
+  FileType,
   type FileSystemItem,
 } from '~/data/fileSystem';
 
 const STORAGE_KEY = 'xp-file-system';
 
-const FILE_ICONS: Record<string, string> = {
-  txt: '/images/xp/icons/file-text.webp',
-  jpg: '/images/xp/icons/image-file.png',
-  mp3: '/images/xp/icons/audio-file.png',
-  exe: '/images/xp/icons/exe-file.png',
-  html: '/images/xp/icons/html-file.png',
-  doc: '/images/xp/icons/doc-file.png',
+const FILE_ICONS: Record<FileType, string> = {
+  [FileType.Folder]: '/images/xp/icons/folder.webp',
+  [FileType.Txt]: '/images/xp/icons/file-text.webp',
+  [FileType.Jpg]: '/images/xp/icons/file-text.webp',
+  [FileType.Mp3]: '/images/xp/icons/file-text.webp',
+  [FileType.Exe]: '/images/xp/icons/file-text.webp',
+  [FileType.Html]: '/images/xp/icons/file-text.webp',
+  [FileType.Doc]: '/images/xp/icons/file-text.webp',
 };
 
-const VALID_TYPES = new Set(['txt', 'jpg', 'mp3', 'exe', 'html', 'doc']);
+const VALID_TYPES = new Set(Object.keys(FILE_ICONS));
 
 function generateId(): number {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
 
-function resolveFileType(ext: string): FileSystemItem['type'] {
-  return (VALID_TYPES.has(ext) ? ext : 'txt') as FileSystemItem['type'];
+function resolveFileType(extension: string): FileType {
+  return VALID_TYPES.has(extension) ? (extension as FileType) : FileType.Txt;
 }
 
-function parseStoredFileSystem(): FileSystemItem[] {
+function loadFromStorage(): FileSystemItem[] {
   if (typeof window === 'undefined') return [...defaultFileSystem];
 
   try {
@@ -35,41 +37,71 @@ function parseStoredFileSystem(): FileSystemItem[] {
 
     const userItems: FileSystemItem[] = JSON.parse(raw);
     const systemIds = new Set(
-      defaultFileSystem.filter((i) => i.isSystem).map((i) => i.id)
+      defaultFileSystem.filter((item) => item.isSystem).map((item) => item.id)
     );
 
-    const merged = [...defaultFileSystem];
-    for (const user of userItems) {
-      if (systemIds.has(user.id)) continue;
-      const existingIndex = merged.findIndex((i) => i.id === user.id);
-      if (existingIndex >= 0) {
-        merged[existingIndex] = user;
-      } else {
-        merged.push(user);
-      }
-    }
-    return merged;
+    return mergeFileSystems(defaultFileSystem, userItems, systemIds);
   } catch {
-    console.warn('[FileSystem] Falha ao carregar do localStorage');
     return [...defaultFileSystem];
   }
 }
 
-function persistFileSystem(items: FileSystemItem[]) {
+function mergeFileSystems(
+  system: readonly FileSystemItem[],
+  user: FileSystemItem[],
+  systemIds: Set<number>
+): FileSystemItem[] {
+  const merged = [...system];
+
+  for (const item of user) {
+    if (systemIds.has(item.id)) continue;
+
+    const existingIndex = merged.findIndex((i) => i.id === item.id);
+    if (existingIndex >= 0) {
+      merged[existingIndex] = item;
+    } else {
+      merged.push(item);
+    }
+  }
+
+  return merged;
+}
+
+function saveToStorage(items: FileSystemItem[]): void {
   if (typeof window === 'undefined') return;
-  const userItems = items.filter((i) => !i.isSystem);
+
+  const userItems = items.filter((item) => !item.isSystem);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(userItems));
 }
 
-const items = ref<FileSystemItem[]>(parseStoredFileSystem());
+function collectDescendants(
+  items: FileSystemItem[],
+  folderId: number
+): Set<number> {
+  const toDelete = new Set<number>([folderId]);
 
-export function useFileSystem() {
-  function persist() {
-    persistFileSystem(items.value);
+  function traverse(id: number): void {
+    const children = getChildren(items, id);
+    for (const child of children) {
+      toDelete.add(child.id);
+      if (child.type === FileType.Folder) traverse(child.id);
+    }
   }
 
-  function getChildrenOf(parentId: number | null): FileSystemItem[] {
-    return getChildren(items.value, parentId === 0 ? null : parentId);
+  traverse(folderId);
+  return toDelete;
+}
+
+const items = ref<FileSystemItem[]>(loadFromStorage());
+
+function persist(): void {
+  saveToStorage(items.value);
+}
+
+export function useFileSystem() {
+  function getChildrenOf(parentId: number | null): readonly FileSystemItem[] {
+    const targetParent = parentId === 0 ? null : parentId;
+    return getChildren(items.value, targetParent);
   }
 
   function getItem(id: number | null): FileSystemItem | undefined {
@@ -81,9 +113,10 @@ export function useFileSystem() {
       id: generateId(),
       parentId,
       name,
-      type: 'folder',
+      type: FileType.Folder,
       icon: '/images/xp/icons/folder.webp',
     };
+
     items.value = [...items.value, folder];
     persist();
     return folder;
@@ -94,57 +127,52 @@ export function useFileSystem() {
     name: string,
     content = ''
   ): FileSystemItem {
-    const ext = name.split('.').pop()?.toLowerCase() ?? '';
-    const type = resolveFileType(ext);
+    const extension = name.split('.').pop()?.toLowerCase() ?? '';
+    const type = resolveFileType(extension);
+    const icon = FILE_ICONS[type];
+
     const file: FileSystemItem = {
       id: generateId(),
       parentId,
       name,
       type,
-      icon: FILE_ICONS[type] ?? FILE_ICONS.txt,
-      content: type === 'txt' ? content : undefined,
+      icon,
+      content: type === FileType.Txt ? content : undefined,
     };
+
     items.value = [...items.value, file];
     persist();
     return file;
   }
 
-  function renameItem(id: number, newName: string) {
-    items.value = items.value.map((i) =>
-      i.id === id && !i.isSystem ? { ...i, name: newName } : i
+  function renameItem(id: number, newName: string): void {
+    items.value = items.value.map((item) =>
+      item.id === id && !item.isSystem ? { ...item, name: newName } : item
     );
     persist();
   }
 
-  function deleteItem(id: number) {
+  function deleteItem(id: number): void {
     const item = items.value.find((i) => i.id === id);
     if (!item || item.isSystem) return;
 
-    const toDelete = new Set<number>([id]);
-
-    function collectDescendants(folderId: number) {
-      for (const child of getChildren(items.value, folderId)) {
-        toDelete.add(child.id);
-        if (child.type === 'folder') collectDescendants(child.id);
-      }
-    }
-
-    if (item.type === 'folder') collectDescendants(id);
-
-    items.value = items.value.filter((i) => !toDelete.has(i.id));
+    const toDelete = collectDescendants(items.value, id);
+    items.value = items.value.filter((item) => !toDelete.has(item.id));
     persist();
   }
 
-  function moveItem(id: number, newParentId: number | null) {
-    items.value = items.value.map((i) =>
-      i.id === id && !i.isSystem ? { ...i, parentId: newParentId } : i
+  function moveItem(id: number, newParentId: number | null): void {
+    items.value = items.value.map((item) =>
+      item.id === id && !item.isSystem
+        ? { ...item, parentId: newParentId }
+        : item
     );
     persist();
   }
 
-  function updateContent(id: number, content: string) {
-    items.value = items.value.map((i) =>
-      i.id === id && i.type === 'txt' ? { ...i, content } : i
+  function updateContent(id: number, content: string): void {
+    items.value = items.value.map((item) =>
+      item.id === id && item.type === FileType.Txt ? { ...item, content } : item
     );
     persist();
   }

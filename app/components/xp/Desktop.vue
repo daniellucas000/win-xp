@@ -235,5 +235,5 @@ function handleDesktopClick() {
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/Desktop.scss';
+@use '~/assets/scss/components/xp/Desktop.scss';
 </style>

@@ -1,4 +1,5 @@
-@import '~/assets/css/_variables.scss';
+
+@use "~/assets/scss/variables" as *;
 
 .notepad {
   display: flex;

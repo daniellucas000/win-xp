@@ -138,5 +138,5 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '~/assets/css/components/xp/ContextMenu.scss';
+@use '~/assets/scss/components/xp/ContextMenu.scss';
 </style>
