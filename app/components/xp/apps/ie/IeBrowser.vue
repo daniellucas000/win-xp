@@ -140,9 +140,8 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     </div>
 
     <div class="ie__content">
-      <div v-if="loading" class="ie__loading">Carregando...</div>
       <component
-        v-else-if="currentPage"
+        v-if="currentPage"
         :is="currentPage"
         :query="currentQuery"
         class="ie-page"
@@ -156,7 +155,12 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     </div>
 
     <div class="ie__statusbar">
-      <span>{{ loading ? 'Abrindo página...' : 'Concluído' }}</span>
+      <div class="ie__statusbar-left">
+        <span>{{ loading ? 'Abrindo página...' : 'Concluído' }}</span>
+        <div v-if="loading" class="ie__progress-bar">
+          <div class="ie__progress-fill"></div>
+        </div>
+      </div>
       <span class="ie__statusbar-right"
         ><img class="" src="/images/xp/icons/world.webp" /> Internet</span
       >

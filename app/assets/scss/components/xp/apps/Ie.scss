@@ -75,6 +75,35 @@
     font-size: 11px;
   }
 
+  &__statusbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__progress-bar {
+    width: 100px;
+    height: 10px;
+    background: #fff;
+    border: 1px solid #7f9db9;
+    display: flex;
+    align-items: center;
+    padding: 1px;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    background: linear-gradient(to bottom, #3b90e6 0%, #3b90e6 50%, #3b90e6 50%, #3b90e6 100%);
+    width: 0%;
+    animation: ie-progress 1.5s ease-in-out infinite;
+  }
+
+  @keyframes ie-progress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+  }
+
   &__statusbar-right {
     display: flex;
     align-items: center;
