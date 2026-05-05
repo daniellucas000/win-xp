@@ -99,7 +99,7 @@
       padding: 4px 8px;
       background: none;
       border: none;
-      color: white;
+      color: #fff;
       font-size: 11px;
       border-radius: 3px;
 
@@ -124,7 +124,7 @@
 
     &:hover {
       background: #316AC5;
-      color: white;
+      color: #fff;
     }
 
     &--icon {
@@ -144,7 +144,7 @@
 
     &--active {
       background: #316ac5;
-      color: white;
+      color: #fff;
     }
   }
 
@@ -154,10 +154,10 @@
 
     &:hover {
       background: #316ac5;
-      color: white;
+      color: #fff;
 
       .start-menu__all-programs-trigger {
-        color: white;
+        color: #fff;
       }
     }
 

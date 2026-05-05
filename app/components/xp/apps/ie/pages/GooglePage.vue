@@ -13,13 +13,8 @@ function search() {
 
 <template>
   <div class="google">
-    <img
-      class="google__logo"
-      src="/images/xp/google.png"
-      alt="Google"
-      width="200"
-    />
-    <div class="google__search">
+    <img src="/images/xp/google.png" alt="Google" width="200" />
+    <div>
       <input
         v-model="query"
         class="google__input"
@@ -27,8 +22,10 @@ function search() {
         autofocus
       />
       <div class="google__buttons">
-        <button class="google__btn" @click="search">Pesquisa Google</button>
-        <button class="google__btn">Estou com sorte</button>
+        <button class="google__buttons--btn" @click="search">
+          Pesquisa Google
+        </button>
+        <button class="google__buttons--btn">Estou com sorte</button>
       </div>
     </div>
   </div>
@@ -50,10 +47,10 @@ function search() {
   &__buttons {
     display: flex;
     justify-content: center;
-  }
 
-  &__btn {
-    all: revert;
+    &--btn {
+      all: revert;
+    }
   }
 }
 </style>

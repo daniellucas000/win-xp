@@ -6,9 +6,6 @@ export const pages: Record<string, Component> = {
   'http://www.google.com': defineAsyncComponent(
     () => import('~/components/xp/apps/ie/pages/GooglePage.vue')
   ),
-  'http://www.youtube.com': defineAsyncComponent(
-    () => import('~/components/xp/apps/ie/pages/YoutubePage.vue')
-  ),
 };
 
 export const favorites = Object.keys(pages).map((url) => ({

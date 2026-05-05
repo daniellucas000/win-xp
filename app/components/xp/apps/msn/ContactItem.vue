@@ -39,7 +39,7 @@ defineProps<{ contact: any }>();
     height: 32px;
     border-radius: 4px;
     background: linear-gradient(135deg, #6db3f2 0%, #1e90ff 100%);
-    color: white;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;

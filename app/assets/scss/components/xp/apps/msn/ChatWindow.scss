@@ -2,7 +2,7 @@
   flex: 1;
   display: flex;
   flex-direction: row;
-  background: white linear-gradient(to bottom, white, #eef2f6, #dfe7ef, #cadaeb, #dfe7ef, #eef2f6, white);
+  background: #fff linear-gradient(to bottom, #fff, #eef2f6, #dfe7ef, #cadaeb, #dfe7ef, #eef2f6, #fff);
   height: 100%;
 
   &__content {
@@ -123,7 +123,7 @@
   }
 
   &__avatar-initials {
-    color: white;
+    color: #fff;
     font-size: 36px;
     font-weight: bold;
     text-transform: uppercase;

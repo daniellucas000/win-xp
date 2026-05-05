@@ -11,6 +11,11 @@ const inputUrl = ref(ie.url ?? '');
 const loading = ref(false);
 
 let loadingTimer: ReturnType<typeof setTimeout> | null = null;
+let progressTimer: ReturnType<typeof setInterval> | null = null;
+const progressFill = ref<HTMLElement | null>(null);
+const progressBar = ref<HTMLElement | null>(null);
+
+const BLOCK_SIZE = 10;
 
 watch(
   () => ie.url,
@@ -20,11 +25,43 @@ watch(
   }
 );
 
+function stopProgress() {
+  if (progressTimer) {
+    clearInterval(progressTimer);
+    progressTimer = null;
+  }
+}
+
+function startProgress() {
+  stopProgress();
+
+  nextTick(() => {
+    if (!progressBar.value || !progressFill.value) return;
+
+    const numBlocks = Math.ceil(progressBar.value.offsetWidth / BLOCK_SIZE);
+    const stepDuration = 800 / numBlocks;
+    let current = 0;
+
+    progressFill.value.style.width = '0px';
+
+    progressTimer = setInterval(() => {
+      if (!progressFill.value) return;
+      current++;
+      progressFill.value.style.width = current * BLOCK_SIZE + 'px';
+      if (current >= numBlocks) {
+        stopProgress();
+      }
+    }, stepDuration);
+  });
+}
+
 function triggerLoading() {
   loading.value = true;
   if (loadingTimer) clearTimeout(loadingTimer);
+  startProgress();
   loadingTimer = setTimeout(() => {
     loading.value = false;
+    stopProgress();
   }, 800);
 }
 
@@ -44,6 +81,7 @@ const currentQuery = computed(() => {
 
 onUnmounted(() => {
   if (loadingTimer) clearTimeout(loadingTimer);
+  stopProgress();
 });
 
 provide('ieNavigate', ie.navigateTo);
@@ -128,11 +166,11 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     </div>
 
     <div class="ie__favbar">
-      <span class="ie__favbar-label">Favoritos:</span>
+      <span class="ie__favbar--label">Favoritos:</span>
       <button
         v-for="fav in favorites"
         :key="fav.url"
-        class="ie__fav-btn"
+        class="ie__favbar--btn"
         @click="ie.navigateTo(fav.url)"
       >
         {{ fav.label }}
@@ -140,12 +178,7 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     </div>
 
     <div class="ie__content">
-      <component
-        v-if="currentPage"
-        :is="currentPage"
-        :query="currentQuery"
-        class="ie-page"
-      />
+      <component v-if="currentPage" :is="currentPage" :query="currentQuery" />
       <div v-else class="ie__error">
         <h2>Não é possível exibir a página</h2>
         <p>
@@ -155,15 +188,22 @@ provide('ieCurrentUrl', readonly(toRef(ie, 'url')));
     </div>
 
     <div class="ie__statusbar">
-      <div class="ie__statusbar-left">
-        <span>{{ loading ? 'Abrindo página...' : 'Concluído' }}</span>
-        <div v-if="loading" class="ie__progress-bar">
-          <div class="ie__progress-fill"></div>
+      <div class="ie__statusbar--left">
+        <span
+          ><img src="/images/xp/icons/webpage.webp" alt="" />
+          {{ loading ? 'Abrindo página...' : 'Concluído' }}
+        </span>
+        <div
+          v-if="loading"
+          ref="progressBar"
+          class="ie__statusbar--progress-bar"
+        >
+          <div ref="progressFill" class="ie__statusbar--progress-fill"></div>
         </div>
       </div>
-      <span class="ie__statusbar-right"
-        ><img class="" src="/images/xp/icons/world.webp" /> Internet</span
-      >
+      <span class="ie__statusbar--right">
+        <img src="/images/xp/icons/world.webp" /> Internet
+      </span>
     </div>
   </div>
 </template>
