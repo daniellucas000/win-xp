@@ -73,13 +73,6 @@ watch(
         </div>
       </div>
     </div>
-
-    <div class="gsr__statusbar">
-      <span>{{
-        loading ? 'Transferring data from google.com...' : 'Done'
-      }}</span>
-      <span>Internet</span>
-    </div>
   </div>
 </template>
 

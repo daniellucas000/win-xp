@@ -29,7 +29,7 @@ export interface WindowState {
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
   notepad: { title: 'Untitled - Notepad', width: 500, height: 380 },
   doom: { title: 'DOOM', width: 640, height: 400 },
-  ie: { title: 'Microsoft Internet Explorer', width: 800, height: 560 },
+  ie: { title: 'Microsoft Internet Explorer', width: 800, height: 560, maximized: true },
   mediaplayer: { title: 'Windows Media Player', width: 520, height: 400 },
   explorer: { title: 'Meu computador', width: 600, height: 420 },
   msn: { title: 'MSN Messenger', width: 280, height: 450 },
