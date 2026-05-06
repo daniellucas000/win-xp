@@ -1,17 +1,17 @@
 export interface Track {
   metaData: {
-    artist: string
-    title: string
-  }
-  url: string
+    artist: string;
+    title: string;
+  };
+  url: string;
 }
 
 export const initialTracks: Track[] = [
   {
     metaData: {
-      artist: 'Brian Eno',
-      title: 'Windows XP Startup',
+      artist: 'Black Sabbath',
+      title: 'Neon Knights',
     },
-    url: 'https://archive.org/download/windows-xp-startup_202401/Windows%20XP%20Startup.wav',
+    url: 'https://dn720709.ca.archive.org/0/items/heaven-and-hell_202506/01.%20Neon%20Knights.mp3',
   },
-]
+];

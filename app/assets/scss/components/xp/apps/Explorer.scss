@@ -441,23 +441,13 @@
     &:hover { background: #d0cdc4; }
   }
 
-  &__tr {
-    &:hover { 
-      background: #e8f0fb; 
-    }
-    
-    &--selected { 
-      background: #316ac5; 
-      color: #fff; 
-    }
-  }
+
 
   &__td {
     padding: 2px 8px;
     white-space: nowrap;
     display: table-cell;
     align-items: center;
-    gap: 4px;
   }
 
   &__list-icon {

@@ -51,12 +51,13 @@ onUnmounted(() => {
         :class="[
           'taskbar__windows--btn',
           {
-            'taskbar__windows--btn-active': true,
+            'taskbar__windows--btn-active': win.focused,
           },
         ]"
         :aria-label="`${win.title}, clique para minimizar`"
         @click="playClick(); winStore.minimize(win.id)"
       >
+        <img v-if="win.icon" :src="win.icon" alt="" class="taskbar__windows--btn-icon" />
         <span class="taskbar__windows--btn-title">{{ win.title }}</span>
         <div
           v-if="win.progress !== undefined"

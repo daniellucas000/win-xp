@@ -79,6 +79,7 @@ function onClose() {
       ]"
       role="dialog"
       :aria-label="win.title"
+      :data-window-id="win.id"
       :style="{
         left: win.maximized ? '0' : `${win.x}px`,
         top: win.maximized ? '0' : `${win.y}px`,

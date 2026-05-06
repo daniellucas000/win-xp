@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ContextMenuSubmenu from '~/components/xp/contextMenu/ContextMenuSubmenu.vue';
 import type { FileSystemItem } from '~/data/fileSystem';
 
 defineProps<{
@@ -105,32 +106,26 @@ const emit = defineEmits<{
       >
         Colar
       </button>
-      <div
-        v-if="currentFolderId !== null && !isTrashMode"
-        class="context-menu__divider"
-        role="separator"
-      />
+
       <button
         v-if="currentFolderId !== null && !isTrashMode"
         class="context-menu__item"
         role="menuitem"
-        @click="
-          emit('createFolder');
-          emit('close');
-        "
       >
-        Novo > Pasta
-      </button>
-      <button
-        v-if="currentFolderId !== null && !isTrashMode"
-        class="context-menu__item"
-        role="menuitem"
-        @click="
-          emit('createFile');
-          emit('close');
-        "
-      >
-        Novo > Documento de Texto
+        <span class="context-menu__item--label">Novo</span>
+        <span class="context-menu__item--arrow" aria-hidden="true">▶</span>
+        <ContextMenuSubmenu
+          :items="[
+            { label: 'Pasta', action: () => emit('createFolder') },
+            { label: 'Documento de Texto', action: () => emit('createFile') },
+          ]"
+          @select="
+            (item) => {
+              item.action?.();
+              emit('close');
+            }
+          "
+        />
       </button>
       <div v-if="!isTrashMode" class="context-menu__divider" role="separator" />
       <button class="context-menu__item" role="menuitem" @click="emit('close')">

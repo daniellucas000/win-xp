@@ -71,22 +71,27 @@
       align-items: center;
       border-radius: 3px 3px 0 0;
       font-size: 11px;
-
-      background: linear-gradient(to bottom, #1951b9, #1a50b8);
-      box-shadow: inset 1px 1px 0 #1848a6, inset 0 -2px 2px #2156b7, 0 -1px 0 #2266d5;
-      border: 1px solid #123d94;
-      border-left: 1px solid #082970;
+      background: linear-gradient(to bottom, #3a80f3, #3980f4);
+      box-shadow: inset 1px 1px 2px #68a7f7, inset 0 -2px 2px #316fe8, inset 1px 0 0 #6da4f6;
+      border: 1px solid;
+      border-color: #3172da #2653b8 #2653b8 #3172da;
       color: #fff;
 
       &-active {
-        background: linear-gradient(to bottom, #3a80f3, #3980f4);
-        box-shadow: inset 1px 1px 2px #68a7f7, inset 0 -2px 2px #316fe8, inset 1px 0 0 #6da4f6;
-        border: 1px solid;
-        border-color: #3172da #2653b8 #2653b8 #3172da;
+        background: linear-gradient(to bottom, #1951b9, #1a50b8);
+        box-shadow: inset 1px 1px 0 #1848a6, inset 0 -2px 2px #2156b7, 0 -1px 0 #2266d5;
+        border: 1px solid #123d94;
+        border-left: 1px solid #082970;
       }
 
       &:hover {
         filter: brightness(1.1);
+      }
+
+      &-icon {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
       }
 
       &-title {

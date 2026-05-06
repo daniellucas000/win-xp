@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const store = useMsnStore();
+const windowsStore = useWindowsStore();
 
 const statusLabels: Record<string, string> = {
   online: 'Online',
@@ -7,6 +8,12 @@ const statusLabels: Record<string, string> = {
   busy: 'Ocupado',
   invisible: 'Invisível',
 };
+
+function handleLogout() {
+  const chatWindows = windowsStore.windows.filter((w) => w.app === 'msn-chat');
+  chatWindows.forEach((w) => windowsStore.close(w.id));
+  store.logout();
+}
 </script>
 
 <template>
@@ -19,19 +26,12 @@ const statusLabels: Record<string, string> = {
 
     <div class="user-status__info">
       <span class="user-status__name">{{ store.currentUser?.name }}</span>
-      <span
-        class="user-status__status"
-        :aria-label="`Status: ${statusLabels[store.currentUser?.status || 'online']}`"
-      >
-        ({{ statusLabels[store.currentUser?.status || 'online'] }})
+      <span class="user-status__status">
+        ({{ statusLabels[store.currentUser?.status || 'Online'] }})
       </span>
     </div>
 
-    <button
-      class="user-status__logout"
-      aria-label="Sair"
-      @click="store.logout()"
-    >
+    <button class="user-status__logout" aria-label="Sair" @click="handleLogout">
       Sair
     </button>
   </div>

@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
       aria-label="Pasta acima"
       @click="emit('up')"
     >
-      <img src="/images/xp/icons/file-text.webp" alt="" aria-hidden="true" />
+      <img src="/images/xp/icons/folder-up.webp" alt="" aria-hidden="true" />
     </button>
 
     <div class="explorer__separator" aria-hidden="true" />

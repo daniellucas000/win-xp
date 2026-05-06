@@ -24,6 +24,7 @@ const TRASH_FOLDER_ID = -1;
 
 export function useDesktopIcons(options: UseDesktopIconsOptions) {
   const { store, openWindowlessApp } = options;
+  const windowsStore = useWindowsStore();
   const fileSystem = useFileSystem();
   const { playClick } = useSounds();
 
@@ -98,6 +99,15 @@ export function useDesktopIcons(options: UseDesktopIconsOptions) {
   }, 300);
 
   function onRightClick(e: MouseEvent, icon?: DesktopIcon) {
+    const target = e.target as HTMLElement;
+    const windowEl = target.closest('[data-window-id]');
+    if (windowEl) {
+      const windowId = windowEl.getAttribute('data-window-id');
+      const win = windowsStore.windows.find(w => w.id === windowId);
+      if (win && win.app !== 'explorer') {
+        return;
+      }
+    }
     e.preventDefault();
     contextMenu.value = {
       open: true,

@@ -38,7 +38,6 @@ export default defineNuxtConfig({
         },
         { property: 'og:locale', content: seoConfig.locale },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:site', content: seoConfig.twitterHandle },
         { name: 'twitter:title', content: seoConfig.defaultTitle },
         { name: 'twitter:description', content: seoConfig.defaultDescription },
         {
