@@ -30,7 +30,7 @@ function closeAllPrograms() {
 
 function launch(data: { app: AppName; icon: string }) {
   playClick();
-  
+
   if (WINDOWLESS_APPS.has(data.app)) {
     openWindowlessApp(data.app);
   } else {
@@ -100,7 +100,3 @@ function launch(data: { app: AppName; icon: string }) {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-@use '~/assets/scss/components/xp/StartMenu.scss';
-</style>

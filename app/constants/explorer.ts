@@ -9,7 +9,3 @@ export const FILE_TYPE_LABELS: Record<FileType, string> = {
   [FileType.Html]: 'Arquivo HTML',
   [FileType.Doc]: 'Documento',
 };
-
-export function fileTypeLabel(type: string) {
-  return FILE_TYPE_LABELS[type as FileType] ?? 'Arquivo';
-}

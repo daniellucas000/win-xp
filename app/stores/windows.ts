@@ -27,13 +27,44 @@ export interface WindowState {
 }
 
 const APP_DEFAULTS: Record<AppName, Partial<WindowState>> = {
-  notepad: { title: 'Untitled - Notepad', width: 500, height: 380, icon: '/images/xp/icons/notepad.webp' },
+  notepad: {
+    title: 'Untitled - Notepad',
+    width: 500,
+    height: 380,
+    icon: '/images/xp/icons/notepad.webp',
+  },
   doom: { title: 'DOOM', width: 640, height: 400, icon: '/images/doom.png' },
-  ie: { title: 'Microsoft Internet Explorer', width: 800, height: 560, maximized: true, icon: '/images/xp/icons/iexplorer.webp' },
-  mediaplayer: { title: 'Windows Media Player', width: 520, height: 400, icon: '/images/xp/icons/media-player.webp' },
-  explorer: { title: 'Meu computador', width: 600, height: 420, icon: '/images/xp/icons/folder.webp' },
-  msn: { title: 'MSN Messenger', width: 280, height: 450, icon: '/images/xp/icons/msn.webp' },
-  'msn-chat': { title: 'Conversation', width: 580, height: 450, icon: '/images/xp/icons/msn.webp' },
+  ie: {
+    title: 'Microsoft Internet Explorer',
+    width: 800,
+    height: 560,
+    maximized: true,
+    icon: '/images/xp/icons/iexplorer.webp',
+  },
+  mediaplayer: {
+    title: 'Windows Media Player',
+    width: 520,
+    height: 400,
+    icon: '/images/xp/icons/media-player.webp',
+  },
+  explorer: {
+    title: 'Meu computador',
+    width: 600,
+    height: 420,
+    icon: '/images/xp/icons/folder.webp',
+  },
+  msn: {
+    title: 'MSN Messenger',
+    width: 280,
+    height: 450,
+    icon: '/images/xp/icons/msn.webp',
+  },
+  'msn-chat': {
+    title: 'Conversation',
+    width: 580,
+    height: 450,
+    icon: '/images/xp/icons/msn.webp',
+  },
 };
 
 let zCounter = 100;

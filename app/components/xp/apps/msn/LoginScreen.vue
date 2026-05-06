@@ -28,7 +28,7 @@ function handleSubmit() {
     <h2 class="login__title">Entrar no MSN Messenger</h2>
 
     <form @submit.prevent="handleSubmit" class="login__form">
-      <div class="login__field">
+      <div class="login__form--field">
         <label for="msn-name">Seu nome:</label>
         <input
           id="msn-name"
@@ -39,7 +39,7 @@ function handleSubmit() {
         />
       </div>
 
-      <div class="login__field">
+      <div class="login__form--field">
         <select id="msn-status" v-model="status">
           <option value="online">Online</option>
           <option value="away">Ausente</option>
@@ -48,7 +48,7 @@ function handleSubmit() {
         </select>
       </div>
 
-      <div class="login__field login__field--checkbox">
+      <div class="login__form--checkbox">
         <input id="msn-remember" v-model="remember" type="checkbox" />
         <label for="msn-remember">Lembrar de mim</label>
       </div>
@@ -58,6 +58,6 @@ function handleSubmit() {
   </div>
 </template>
 
-<style>
-@use '~/assets/scss/components/xp/apps/msn/LoginScreen.css';
+<style lang="scss" scoped>
+@use '~/assets/scss/components/xp/apps/msn/LoginScreen.scss';
 </style>

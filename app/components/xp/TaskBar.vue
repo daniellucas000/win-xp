@@ -27,19 +27,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="taskbar" @click.stop>
+  <div class="taskbar">
     <button
       class="taskbar__start"
       aria-label="Menu Iniciar"
       :aria-expanded="startMenuOpen"
-      @click="playClick(); startMenuOpen = !startMenuOpen"
+      @click="
+        playClick();
+        startMenuOpen = !startMenuOpen;
+      "
     />
 
     <button
       class="taskbar__show-desktop"
       aria-label="Mostrar desktop"
       title="Mostrar desktop"
-      @click="playClick(); winStore.toggleShowDesktop"
+      @click="
+        playClick();
+        winStore.toggleShowDesktop();
+      "
     >
       <img src="/images/xp/icons/desktop.png" alt="" aria-hidden="true" />
     </button>
@@ -55,9 +61,17 @@ onUnmounted(() => {
           },
         ]"
         :aria-label="`${win.title}, clique para minimizar`"
-        @click="playClick(); winStore.minimize(win.id)"
+        @click="
+          playClick();
+          winStore.minimize(win.id);
+        "
       >
-        <img v-if="win.icon" :src="win.icon" alt="" class="taskbar__windows--btn-icon" />
+        <img
+          v-if="win.icon"
+          :src="win.icon"
+          alt=""
+          class="taskbar__windows--btn-icon"
+        />
         <span class="taskbar__windows--btn-title">{{ win.title }}</span>
         <div
           v-if="win.progress !== undefined"

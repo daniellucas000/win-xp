@@ -133,7 +133,6 @@ watch(isTyping, scrollToBottom);
                   alt=""
                 />
               </button>
-              
             </div>
           </div>
           <div class="chat__toolbar--right"></div>

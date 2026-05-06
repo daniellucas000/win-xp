@@ -207,7 +207,7 @@ function handleDesktopClick() {
     >
       <XpAppsNotepad v-if="win?.app === 'notepad'" :win="win" />
       <XpAppsDoom v-if="win?.app === 'doom'" :win="win" />
-      
+
       <XpIeBrowser v-if="win?.app === 'ie'" :win="win" />
       <XpAppsExplorer v-if="win?.app === 'explorer'" :win="win" />
       <XpAppsMsn v-if="win?.app === 'msn'" :win="win" />

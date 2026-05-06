@@ -63,7 +63,3 @@ watch(loginData, (data) => {
     </template>
   </div>
 </template>
-
-<style>
-@use '~/assets/scss/components/xp/apps/msn/index.scss';
-</style>

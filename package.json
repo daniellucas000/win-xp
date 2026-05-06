@@ -18,7 +18,7 @@
     "vue": "^3.5.30",
     "vue-router": "^5.0.4",
     "wasm-doom": "^1.2.0",
-    "webamp": "^1.5.0"
+    "webamp": "^1.4.2"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
