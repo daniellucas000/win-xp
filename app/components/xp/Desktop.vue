@@ -12,10 +12,10 @@ import {
   useDesktopTrash,
   useDesktopShortcuts,
 } from '~/composables/desktop';
+import type { DesktopIcon } from '~/data/desktop';
 
 const store = useWindowsStore();
 const { isWindowlessAppOpen, openWindowlessApp } = useWindowlessApps();
-const { playClick } = useSounds();
 
 const desktopRef = ref<HTMLElement | null>(null);
 
@@ -26,14 +26,22 @@ function getCurrentRenameInput() {
   return renameInputs.get(renamingItem.value) || null;
 }
 
-const iconClasses = computed(() => (item, index) => [
-  'desktop__icons--icon',
-  {
-    'desktop__icons--icon-renaming': renamingItem.value === item?.id,
-    'desktop__icons--icon-focused': focusedIconIndex.value === index,
-    'desktop__icons--icon-selected': selectedIcons.value.has(item?.id),
-  },
-]);
+const iconClasses = computed(
+  () =>
+    (
+      item: DesktopIcon | undefined,
+      index: number
+    ): (string | Record<string, boolean>)[] => [
+      'desktop__icons--icon',
+      {
+        'desktop__icons--icon-renaming': renamingItem.value === item?.id,
+        'desktop__icons--icon-focused': focusedIconIndex.value === index,
+        'desktop__icons--icon-selected': item
+          ? selectedIcons.value.has(item.id)
+          : false,
+      },
+    ]
+);
 
 const {
   desktopIcons,
