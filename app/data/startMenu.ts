@@ -22,7 +22,13 @@ export const pinnedApps: StartMenuApp[] = [
     label: 'Windows Media Player',
     app: 'mediaplayer',
   },
-  ];
+  {
+    id: 'doom',
+    icon: '/images/doom.png',
+    label: 'DOOM',
+    app: 'doom',
+  },
+];
 
 export const rightApps: StartMenuApp[] = [
   {

@@ -15,12 +15,16 @@ const props = defineProps<{ win?: WindowState }>();
 
 const fileSystem = useFileSystem();
 const winStore = useWindowsStore();
-const isTrashMode = computed(() => (props.win?.folderId ?? 0) < 0);
+const isTrashModeFromProps = computed(() => (props.win?.folderId ?? 0) < 0);
 const initialFolderId = computed(() =>
-  isTrashMode.value ? null : (props.win?.folderId ?? null)
+  isTrashModeFromProps.value ? null : (props.win?.folderId ?? null)
 );
 
-const nav = useExplorerNav(initialFolderId, isTrashMode);
+const nav = useExplorerNav(initialFolderId, isTrashModeFromProps);
+
+const isTrashMode = computed(() => {
+  return isTrashModeFromProps.value || nav.currentFolderId.value === -1;
+});
 const sel = useExplorerSelection();
 const items = useExplorerItems(nav.currentFolderId, isTrashMode, fileSystem);
 const clip = useExplorerClipboard(fileSystem, sel.activeIds);
@@ -226,6 +230,10 @@ onMounted(() => {
   window.addEventListener('storage', onStorageChange);
 });
 
+watch(isTrashMode, (newValue) => {
+  if (newValue) items.loadTrashItems();
+});
+
 onUnmounted(() => {
   window.removeEventListener('storage', onStorageChange);
 });
@@ -297,7 +305,7 @@ onUnmounted(() => {
               <img src="/images/xp/icons/my-documents.webp" alt="" />
               Meus Documentos
             </button>
-            <button class="explorer__sidebar-link" @click="navigateTo(0)">
+            <button class="explorer__sidebar-link" @click="navigateTo(-1)">
               <img src="/images/xp/icons/recycle-bin-full.webp" alt="" />
               Lixeira
             </button>
